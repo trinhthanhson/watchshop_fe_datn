@@ -22,6 +22,7 @@ const Home = () => {
   const productsCustomer = useSelector(
     (state) => state.productsCustomer.productsCustomer.data
   )
+
   const [display, setDisplay] = useState(5)
 
   useEffect(() => {

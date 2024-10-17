@@ -13,18 +13,19 @@ const CardProductItem = ({ product }) => {
   const coupons = useSelector((state) => state.coupons.coupons.data)
   const [discountedPrice, setDiscountedPrice] = useState(null)
   const [priceDiscount, setPriceDiscount] = useState(null)
+
   const {
     product_id,
     product_name,
-    priceUpdateDetails,
+    updatePrices,
     image,
     category,
     brand,
     status,
     quantity
   } = product
-
-  const price = priceUpdateDetails[0]?.price_new || 0
+  console.log(product)
+  const price = updatePrices[0]?.price_new || 0
   const formattedPrice = price.toLocaleString('en')
   console.log(status)
   useEffect(() => {
@@ -70,8 +71,8 @@ const CardProductItem = ({ product }) => {
   const handleAddToCart = () => {
     dispatch(
       addCartRequest({
-        product_name: `${product_name}`,
-        price: priceDiscount || price
+        product_id: `${product_id}`,
+        quantity: 1
       })
     )
   }
