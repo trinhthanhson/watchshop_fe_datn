@@ -28,7 +28,6 @@ const ProductByBrand = () => {
   const brands = useSelector((state) => state.brands.brands?.data || [])
   const loadingBrands = useSelector((state) => state.brands.loading)
   const errorBrands = useSelector((state) => state.brands.error)
-  console.log(brands)
   useEffect(() => {
     dispatch(getAllCategoriesRequest())
     dispatch(getAllProductsCustomerRequest())
@@ -77,7 +76,6 @@ const ProductByBrand = () => {
     setCategoryFilter('')
     setPriceRangeFilter('')
   }
-
   return (
     <>
       <section className="relative bg-gradient-to-b from-white to-grayWhite h-[310px] md:h-[350px]">

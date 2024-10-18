@@ -9,8 +9,7 @@ const Cart = () => {
   const navigate = useNavigate()
   const cart = useSelector((state) => state.cart.cart)
   const cartDetailRef = useRef(null)
-  console.log(cart)
-
+ 
   const getAllCart = useCallback(() => {
     dispatch(getAllCartRequest())
   }, [dispatch])
@@ -34,8 +33,8 @@ const Cart = () => {
 
   // Calculate the total price excluding out-of-stock items
   const calculateTotalPrice = () => {
-    if (cart?.data?.cartDetails) {
-      return cart.data.cartDetails
+    if (cart?.data) {
+      return cart.data
         .filter((item) => item.product?.quantity > 0) // Filter out out-of-stock items
         .reduce((total, item) => total + item.price * item.quantity, 0)
     }
@@ -59,8 +58,8 @@ const Cart = () => {
       <div className="lg:grid grid-cols-3 lg:px-16 relative my-10">
         <div className="lg:col-span-2 lg:px-5 ">
           <div className="space-y-3">
-            {cart?.data?.cartDetails.length > 0 ? (
-              cart.data.cartDetails.map((item, index) => (
+            {cart?.data?.length > 0 ? (
+              cart.data.map((item, index) => (
                 <CartItem
                   key={index}
                   cart={item}
@@ -82,7 +81,7 @@ const Cart = () => {
             )}
           </div>
         </div>
-        {cart?.data?.cartDetails?.length > 0 && (
+        {cart?.data?.length > 0 && (
           <div
             className="fixed px-4 lg:col-span-1 right-[60px] w-[30%] top-[330px]"
             ref={cartDetailRef}

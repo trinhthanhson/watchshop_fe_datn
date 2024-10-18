@@ -7,16 +7,16 @@ import RemoveIcon from '@mui/icons-material/Remove'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
-  const { product, price } = cart
+  const { product_cart, price } = cart
   const [quantity, setQuantity] = useState(cart.quantity)
-
+  console.log(product_cart)
   // Function to handle quantity change
   const handleQuantityChange = async (newQuantity) => {
-    if (newQuantity >= 1 && newQuantity <= product?.quantity) {
+    if (newQuantity >= 1 && newQuantity <= product_cart?.quantity) {
       try {
         const apiUrl = 'http://localhost:9999/api/customer/cart/update/quantity'
         const requestBody = {
-          product_id: product?.product_id,
+          product_cart_id: product_cart?.product_cart_id,
           quantity: newQuantity
         }
         const token = localStorage.getItem('token')
@@ -27,10 +27,8 @@ const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
             'Content-Type': 'application/json'
           }
         })
-
-        console.log('Cart updated successfully:', response.data)
         setQuantity(newQuantity)
-        onQuantityChange(product?.product_id, newQuantity)
+        onQuantityChange(product_cart?.product_cart_id, newQuantity)
       } catch (error) {
         console.error('Failed to update cart quantity:', error)
       }
@@ -42,7 +40,7 @@ const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
     try {
       const apiUrl = 'http://localhost:9999/api/customer/cart/delete/item'
       const requestBody = {
-        product_id: product?.product_id
+        product_cart_id: product_cart?.product_cart_id
       }
       const token = localStorage.getItem('token')
 
@@ -52,36 +50,33 @@ const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
           'Content-Type': 'application/json'
         }
       })
-
-      console.log('Delete items successfully:', response.data)
       onDeleteSuccess()
     } catch (error) {
       console.error('Failed to delete cart items:', error)
     }
   }
-
   return (
     <div className="p-3 shadow-lg rounded-md border-neutral-200 border-2">
       <div className="flex items-center mt-2">
         <div className="w-[12rem] h-[12rem] ml-5">
           <img
             className="w-full h-full object-cover object-top"
-            src={product?.image}
-            alt={product?.product_name}
+            src={product_cart?.image}
+            alt={product_cart?.product_cart_name}
             loading="lazy"
           />
         </div>
         <div className="ml-8 space-y-1">
-          <p className="font-bold text-lg">{product?.product_name}</p>
+          <p className="font-bold text-lg">{product_cart?.product_name}</p>
           <p className="opacity-80 mt-3 text-sm">
-            Category: {product?.category?.category_name}
+            Category: {product_cart?.category_product?.category_name}
           </p>
           <p className="text-main font-semibold text-lg">
-            {price.toLocaleString('en')} VNĐ
+            {product_cart?.updatePrices[0]?.price_new.toLocaleString('en')} VNĐ
           </p>
         </div>
         <div className="lg:flex items-center lg:space-x-5 pt-2 ml-[30%]">
-          {product?.quantity === 0 ? (
+          {product_cart?.quantity === 0 ? (
             <p className="text-red-500 font-semibold text-lg">Hết hàng</p>
           ) : (
             <div className="flex items-center justify-center mt-4 h-[42px] px-[10px] rounded-lg shadow-md">
@@ -105,7 +100,7 @@ const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
               <IconButton
                 onClick={() =>
                   handleQuantityChange(
-                    Math.min(quantity + 1, product?.quantity)
+                    Math.min(quantity + 1, product_cart?.quantity)
                   )
                 }
                 aria-label="add"

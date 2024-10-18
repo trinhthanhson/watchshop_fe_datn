@@ -13,7 +13,7 @@ function* addCart(action) {
     }
 
     const response = yield call(
-      axios.put,
+      axios.post,
       'http://localhost:9999/api/customer/cart/add',
       body,
       {

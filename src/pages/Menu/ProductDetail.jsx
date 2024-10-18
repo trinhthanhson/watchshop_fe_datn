@@ -22,7 +22,7 @@ const ProductDetail = () => {
   )
   const coupons = useSelector((state) => state.coupons.coupons.data)
   const reviews = useSelector((state) => state.reviewProduct?.reviews)
-  console.log(reviews)
+  console.log(productsCustomer)
   const selectedProduct = productsCustomer
     ? productsCustomer.find((item) => item.product_id === id)
     : null
@@ -60,7 +60,7 @@ const ProductDetail = () => {
             )
           )
 
-          const price = selectedProduct.priceUpdateDetails[0]?.price_new || 0
+          const price = selectedProduct.updatePrices[0]?.price_new || 0
           const discountAmount = price * maxPercent
           const newPrice = price - discountAmount
           setDiscountedPrice(Math.ceil(newPrice).toLocaleString('en'))
@@ -73,8 +73,7 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     dispatch(
       addCartRequest({
-        product_name: `${selectedProduct?.product_name}`,
-        price: priceDiscount || selectedProduct.priceUpdateDetails[0].price_new,
+        product_name: `${selectedProduct?.product_id}`,
         quantity: quantity
       })
     )
@@ -97,7 +96,7 @@ const ProductDetail = () => {
       state: {
         product: selectedProduct,
         quantity: quantity,
-        price: priceDiscount || selectedProduct.priceUpdateDetails[0]?.price_new
+        price: priceDiscount || selectedProduct.updatePrices[0]?.price_new
       }
     })
   }
@@ -158,11 +157,11 @@ const ProductDetail = () => {
                   <p className="text-main font-RobotoMedium text-[18px] lg:text-[17px] 3xl:text-[20px]">
                     {discountedPrice
                       ? `${discountedPrice} VNĐ`
-                      : `${selectedProduct?.priceUpdateDetails[0]?.price_new.toLocaleString('en')} VNĐ`}
+                      : `${selectedProduct?.updatePrices[0]?.price_new.toLocaleString('en')} VNĐ`}
                   </p>
                   {discountedPrice && (
                     <p className="text-sm text-red-500 line-through">
-                      {selectedProduct?.priceUpdateDetails[0]?.price_new.toLocaleString(
+                      {selectedProduct?.updatePrices[0]?.price_new.toLocaleString(
                         'en'
                       )}{' '}
                       VNĐ
@@ -174,7 +173,7 @@ const ProductDetail = () => {
                     Loại
                   </p>
                   <p className="text-main font-RobotoMedium text-[18px] lg:text-[17px] 3xl:text-[20px]">
-                    {selectedProduct?.category?.category_name}
+                    {selectedProduct?.category_product?.category_name}
                   </p>
                 </div>
                 <div className="col-span-12 sm:col-span-6 mb-2 sm:mb-0 pr-[10px] mr-[10px]  mt-[20px]">
@@ -182,7 +181,7 @@ const ProductDetail = () => {
                     Hãng
                   </p>
                   <p className="text-main font-RobotoMedium text-[18px] lg:text-[17px] 3xl:text-[20px]">
-                    {selectedProduct?.brand?.brand_name}
+                    {selectedProduct?.brand_product?.brand_name}
                   </p>
                 </div>
               </div>
@@ -322,59 +321,57 @@ const ProductDetail = () => {
         </div>
       </section>
       <section className="pt-[30px] pb-[50px] bg-gray-100 w-full">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-primary mb-6">
-            Thông Tin Chi Tiết
-          </h2>
-          <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 md:col-span-6">
-              <h3 className="text-xl font-semibold text-primary mb-2">
-                Chi tiết sản phẩm
-              </h3>
-              <p className="text-justify text-justify font-semibold text-primary mb-2">
-                Công nghệ: {selectedProduct?.technology}
-              </p>
-              <p className="text-justify text-justify font-semibold text-primary mb-2">
-                Kính: {selectedProduct?.glass}
-              </p>
-              <p className="text-justify text-justify font-semibold text-primary mb-2">
-                Chức năng: {selectedProduct?.func}
-              </p>
-              <p className="text-justify text-justify font-semibold text-primary mb-2">
-                Màu sắc: {selectedProduct?.color}
-              </p>
-              <p className="text-justify text-justify font-semibold text-primary mb-2">
-                Loại máy: {selectedProduct?.machine}
-              </p>
-              <p className="text-justify text-justify font-semibold text-primary mb-2">
-                Giới tính: {selectedProduct?.sex}
-              </p>
-              <p className="text-justify text-justify font-semibold text-primary mb-2">
-                Độ chính xác: {selectedProduct?.accuracy}
-              </p>
-              <p className="text-justify text-justify font-semibold text-primary mb-2">
-                Tuổi thọ pin: {selectedProduct?.battery_life}
-              </p>
-              <p className="text-justify text-justify font-semibold text-primary mb-2">
-                Khả năng chống nước: {selectedProduct?.water_resistance}
-              </p>
-              <p className="text-justify text-justify font-semibold text-primary mb-2">
-                Trọng lương: {selectedProduct?.weight}
-              </p>
-              <p className="text-justify text-justify font-semibold text-primary mb-2">
-                Các tính năng khác: {selectedProduct?.other_features}
-              </p>
-            </div>
-            <div className="col-span-12 md:col-span-6">
-              <h3 className="text-xl font-semibold text-primary mb-2">Mô tả</h3>
-              <p className="text-justify font-semibold text-primary mb-2">
-                {selectedProduct?.detail}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+  <div className="container mx-auto px-4">
+    
 
+    {/* Description section on top */}
+    <div className="mb-6">
+    <h2 className="text-3xl font-bold text-primary mb-6">
+      Mô tả
+    </h2>
+  {/* Tách đoạn văn theo dấu chấm và map từng câu */}
+  {selectedProduct?.detail?.split('.').map((sentence, index) => (
+    // Kiểm tra xem câu có nội dung không, tránh render những phần tử rỗng
+    sentence.trim() && (
+      <p key={index} className="text-justify font-semibold text-primary mb-2 leading-relaxed">
+        {sentence.trim()}.
+      </p>
+    )
+  ))}
+</div>
+              <hr/>
+              <br/>
+              <h2 className="text-3xl font-bold text-primary mb-6">
+      Thông Tin Chi Tiết
+    </h2>
+    {/* Grid layout for product details */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {Object.entries({
+        "Band Material": selectedProduct?.band_material,
+        "Band Width": selectedProduct?.band_width,
+        "Case Diameter": selectedProduct?.case_diameter,
+        "Case Material": selectedProduct?.case_material,
+        "Case Thickness": selectedProduct?.case_thickness,
+        "Color": selectedProduct?.color,
+        "Dial Type": selectedProduct?.dial_type,
+        "Functions": selectedProduct?.func,
+        "Gender": selectedProduct?.gender,
+        "Model": selectedProduct?.model,
+        "Movement": selectedProduct?.machine_movement,
+        "Series": selectedProduct?.series,
+        "Water Resistance": selectedProduct?.water_resistance,
+      })
+        // Sort alphabetically by key
+        .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+        .map(([key, value], index) => (
+          <div key={index} className="border p-4 text-primary flex justify-between">
+            <p className="font-semibold">{key}:</p>
+            <p>{value || 'N/A'}</p>
+          </div>
+        ))}
+    </div>
+  </div>
+</section>
       <section className="relative bg-white py-[50px] md:py-[80px]">
         <div className="container mx-auto">
           <div className="w-full mb-10">
