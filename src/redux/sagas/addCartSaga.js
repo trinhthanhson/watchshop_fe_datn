@@ -5,11 +5,11 @@ import { getAllCartRequest } from '../actions/actions'
 function* addCart(action) {
   try {
     const token = localStorage.getItem('token')
-    const { product_name, price } = action.payload
+    const { product_id, quantity } = action.payload
 
     const body = {
-      product_name,
-      price
+      product_id,
+      quantity
     }
 
     const response = yield call(

@@ -10,7 +10,7 @@ import axios from 'axios'
 const Navbar = () => {
   const dispatch = useDispatch()
   const cart = useSelector((state) => state.cart.cart.data)
-  const cartQuantity = cart?.total_quantity
+  const cartQuantity = Array.isArray(cart) ? cart.reduce((total, item) => total + item.quantity, 0) : 0;
   const [showAboutMenu, setShowAboutMenu] = useState(false)
   const [showMenuCategory, setShowMenuCategory] = useState(false)
   const [showMenuBrand, setShowMenuBrand] = useState(false)
@@ -348,7 +348,7 @@ const Navbar = () => {
                   <a href="/cart" style={{ color: 'black' }}>
                     <FaShoppingCart fontSize={25} />
                     <span
-                      className="bg-white text-main w-5 h-5 flex items-center justify-center rounded-full absolute top-[18px] right-[88px]"
+                      className="bg-red text-main w-5 h-5 flex items-center justify-center rounded-full absolute top-[18px] right-[88px]"
                       style={{ color: 'black' }}
                     >
                       {cartQuantity}

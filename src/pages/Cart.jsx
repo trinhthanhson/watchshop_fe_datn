@@ -9,7 +9,6 @@ const Cart = () => {
   const navigate = useNavigate()
   const cart = useSelector((state) => state.cart.cart)
   const cartDetailRef = useRef(null)
- 
   const getAllCart = useCallback(() => {
     dispatch(getAllCartRequest())
   }, [dispatch])

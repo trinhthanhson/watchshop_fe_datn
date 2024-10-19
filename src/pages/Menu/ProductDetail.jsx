@@ -73,10 +73,11 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     dispatch(
       addCartRequest({
-        product_name: `${selectedProduct?.product_id}`,
-        quantity: quantity
+        quantity: quantity,
+        product_id: `${selectedProduct?.product_id}`
       })
     )
+
   }
 
   const handleQuantityChange = (event) => {
