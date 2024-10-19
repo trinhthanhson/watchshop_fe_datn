@@ -77,7 +77,6 @@ const ProductDetail = () => {
         product_id: `${selectedProduct?.product_id}`
       })
     )
-
   }
 
   const handleQuantityChange = (event) => {
@@ -204,7 +203,7 @@ const ProductDetail = () => {
               <div className="mb-5 w-full">
                 <label
                   htmlFor="quantity"
-                  className="font-serif text-sub text-[18px] 3xl:text-[17px]"
+                  className=" text-sub text-[18px] 3xl:text-[17px]"
                 >
                   Số lượng
                 </label>
@@ -235,37 +234,25 @@ const ProductDetail = () => {
                       <div className="flex justify-center items-center p-3 text-center border border-grey text-primary hover:text-white hover:bg-primary hover:border-none rounded-lg">
                         <button
                           onClick={handleAddToCart}
-                          className="font-serif text-[16px] lg:text-[17px] sm:text-lg text-inherit 3xl:text-[20px]"
+                          className="font-serif text-[16px] lg:text-[17px] sm:text-lg text-inherit 3xl:text-[20px] w-full"
                         >
                           Thêm Vào Giỏ
                         </button>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                          className={`ml-1 w-4 h-4 sm:ml-2 sm:w-5 sm:h-5`}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
-                          />
-                        </svg>
                       </div>
                     </div>
 
                     <div className="w-full">
                       <a className="block">
-                        <div
-                          onClick={handleBuyNow}
-                          className="font-serif rounded-lg p-3 text-center border border-grey bg-primary text-white hover:bg-[#271A15] hover:text-white"
-                        >
-                          <p className="text-[16px] lg:text-[17px] sm:text-lg text-inherit 3xl:text-[20px] hover:border-none">
-                            Mua Ngay
-                          </p>
-                        </div>
+                        <button className="w-full">
+                          <div
+                            onClick={handleBuyNow}
+                            className="font-serif rounded-lg p-3 text-center border border-grey bg-primary text-white hover:bg-[#271A15] hover:text-white"
+                          >
+                            <p className="text-[16px] lg:text-[17px] sm:text-lg text-inherit 3xl:text-[20px] hover:border-none">
+                              Mua Ngay
+                            </p>
+                          </div>
+                        </button>
                       </a>
                     </div>
                   </>
@@ -322,57 +309,60 @@ const ProductDetail = () => {
         </div>
       </section>
       <section className="pt-[30px] pb-[50px] bg-gray-100 w-full">
-  <div className="container mx-auto px-4">
-    
-
-    {/* Description section on top */}
-    <div className="mb-6">
-    <h2 className="text-3xl font-bold text-primary mb-6">
-      Mô tả
-    </h2>
-  {/* Tách đoạn văn theo dấu chấm và map từng câu */}
-  {selectedProduct?.detail?.split('.').map((sentence, index) => (
-    // Kiểm tra xem câu có nội dung không, tránh render những phần tử rỗng
-    sentence.trim() && (
-      <p key={index} className="text-justify font-semibold text-primary mb-2 leading-relaxed">
-        {sentence.trim()}.
-      </p>
-    )
-  ))}
-</div>
-              <hr/>
-              <br/>
-              <h2 className="text-3xl font-bold text-primary mb-6">
-      Thông Tin Chi Tiết
-    </h2>
-    {/* Grid layout for product details */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {Object.entries({
-        "Band Material": selectedProduct?.band_material,
-        "Band Width": selectedProduct?.band_width,
-        "Case Diameter": selectedProduct?.case_diameter,
-        "Case Material": selectedProduct?.case_material,
-        "Case Thickness": selectedProduct?.case_thickness,
-        "Color": selectedProduct?.color,
-        "Dial Type": selectedProduct?.dial_type,
-        "Functions": selectedProduct?.func,
-        "Gender": selectedProduct?.gender,
-        "Model": selectedProduct?.model,
-        "Movement": selectedProduct?.machine_movement,
-        "Series": selectedProduct?.series,
-        "Water Resistance": selectedProduct?.water_resistance,
-      })
-        // Sort alphabetically by key
-        .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
-        .map(([key, value], index) => (
-          <div key={index} className="border p-4 text-primary flex justify-between">
-            <p className="font-semibold">{key}:</p>
-            <p>{value || 'N/A'}</p>
+        <div className="container mx-auto px-4">
+          {/* Description section on top */}
+          <div className="mb-6">
+            <h2 className="text-3xl font-bold text-primary mb-6">Mô tả</h2>
+            {/* Tách đoạn văn theo dấu chấm và map từng câu */}
+            {selectedProduct?.detail?.split('.').map(
+              (sentence, index) =>
+                // Kiểm tra xem câu có nội dung không, tránh render những phần tử rỗng
+                sentence.trim() && (
+                  <p
+                    key={index}
+                    className="text-justify font-semibold text-primary mb-2 leading-relaxed"
+                  >
+                    {sentence.trim()}.
+                  </p>
+                )
+            )}
           </div>
-        ))}
-    </div>
-  </div>
-</section>
+          <hr />
+          <br />
+          <h2 className="text-3xl font-bold text-primary mb-6">
+            Thông Tin Chi Tiết
+          </h2>
+          {/* Grid layout for product details */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {Object.entries({
+              'Band Material': selectedProduct?.band_material,
+              'Band Width': selectedProduct?.band_width,
+              'Case Diameter': selectedProduct?.case_diameter,
+              'Case Material': selectedProduct?.case_material,
+              'Case Thickness': selectedProduct?.case_thickness,
+              Color: selectedProduct?.color,
+              'Dial Type': selectedProduct?.dial_type,
+              Functions: selectedProduct?.func,
+              Gender: selectedProduct?.gender,
+              Model: selectedProduct?.model,
+              Movement: selectedProduct?.machine_movement,
+              Series: selectedProduct?.series,
+              'Water Resistance': selectedProduct?.water_resistance
+            })
+              // Sort alphabetically by key
+              .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+              .map(([key, value], index) => (
+                <div
+                  key={index}
+                  className="border p-4 text-primary flex justify-between"
+                >
+                  <p className="font-semibold">{key}:</p>
+                  <p>{value || 'N/A'}</p>
+                </div>
+              ))}
+          </div>
+        </div>
+      </section>
       <section className="relative bg-white py-[50px] md:py-[80px]">
         <div className="container mx-auto">
           <div className="w-full mb-10">

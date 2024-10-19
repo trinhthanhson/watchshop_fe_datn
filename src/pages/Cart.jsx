@@ -34,14 +34,18 @@ const Cart = () => {
   const calculateTotalPrice = () => {
     if (cart?.data) {
       return cart.data
-        .filter((item) => item.product?.quantity > 0) // Filter out out-of-stock items
-        .reduce((total, item) => total + item.price * item.quantity, 0)
+        .filter((item) => item.product_cart?.quantity > 0) // Filter out out-of-stock items
+        .reduce(
+          (total, item) => total + item?.product_cart.price * item.quantity,
+          0
+        )
     }
+
     return 0
   }
 
-  const totalPrice = calculateTotalPrice()
-
+  const totalPrice = cart?.data[0].product_cart?.updatePrices[0].price_new
+  console.log('ddddd', totalPrice)
   return (
     <>
       <section className="relative flex flex-col-reverse md:flex-row items-center bg-[url('https://www.highlandscoffee.com.vn/vnt_upload/cake/SPECIALTYCOFFEE/Untitled-1-01.png')]">
@@ -95,7 +99,7 @@ const Cart = () => {
                 <div className="flex justify-between pt-3 text-black ">
                   <span>Tổng</span>
                   <span style={{ justifyContent: 'flex-end' }}>
-                    {totalPrice.toLocaleString('en')} VNĐ
+                    {/* {totalPrice.toLocaleString('en')} VNĐ */}
                   </span>
                 </div>
 
