@@ -1,21 +1,22 @@
 import axios from 'axios'
 import PropTypes from 'prop-types'
-import { useState ,useEffect} from 'react'
+import { useState, useEffect } from 'react'
 import { IconButton } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { useSelector,useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { getAllCartRequest } from '../../redux/actions/actions'
 
 const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
   const dispatch = useDispatch()
-  const { product_cart, price } = cart
+  const { product_cart } = cart
   const cart_get = useSelector((state) => state.cart.cart.data)
+  
+  
   // Function to handle quantity change
   const handleQuantityChange = async (newQuantity) => {
     if (newQuantity <= product_cart?.quantity) {
-      console.log("kdkdk",product_cart.product_id)
       try {
         const apiUrl = 'http://localhost:9999/api/customer/cart/update/quantity'
         const requestBody = {
@@ -36,13 +37,12 @@ const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
       }
     }
   }
-
   // Function to handle item deletion
   const handleDelete = async () => {
     try {
       const apiUrl = 'http://localhost:9999/api/customer/cart/delete/item'
       const requestBody = {
-        product_cart_id: product_cart?.product_cart_id
+        product_id: product_cart?.product_id
       }
       const token = localStorage.getItem('token')
 
@@ -60,7 +60,7 @@ const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
   useEffect(() => {
     dispatch(getAllCartRequest())
   }, [dispatch])
-  
+
   return (
     <div className="p-3 shadow-lg rounded-md border-neutral-200 border-2">
       <div className="flex items-center mt-2">
@@ -93,19 +93,21 @@ const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
                 <RemoveIcon />
               </IconButton>
               <input
-                type={'text'}
+                type="text"
                 className="input-small w-10 mx-2 text-center"
                 step={null}
                 min={1}
                 inputMode="numeric"
                 pattern="[0-9]*"
-                value={cart_get[0]?.quantity}
+                value={
+                  cart_get.find(
+                    (item) => item.product_id === product_cart?.product_id
+                  )?.quantity || 0
+                }
                 readOnly={true}
               />
               <IconButton
-                onClick={() =>
-                  handleQuantityChange(1)
-                }
+                onClick={() => handleQuantityChange(1)}
                 aria-label="add"
               >
                 <AddIcon />

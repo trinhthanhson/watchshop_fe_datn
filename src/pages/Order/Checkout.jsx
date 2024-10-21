@@ -14,7 +14,6 @@ const Checkout = () => {
   const navigate = useNavigate()
   const cart = useSelector((state) => state.cart.cart)
   // const user = useSelector((state) => state.user.user.data)
-  console.log(cart.data)
   const [address, setAddress] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [recipientName, setRecipientName] = useState('')
@@ -46,9 +45,8 @@ const Checkout = () => {
   // }
 
   const token = localStorage.getItem('token')
-
   // Calculate total price
-  // const totalPrice = quantity * product.priceUpdateDetails[0].price_new
+  // const totalPrice = quantity * product.updatePrices[0].price_new
 
   const handleOpenModal = () => setIsModalOpen(true)
   const handleCloseModal = () => setIsModalOpen(false)
@@ -100,7 +98,6 @@ const Checkout = () => {
     setLoading(true)
     setError(null)
     setSuccess(null)
-    const total_price = cart?.data?.total_price + 20000
     try {
       const response = await fetch(
         'http://localhost:9999/api/customer/order/buy-cart',
@@ -148,7 +145,6 @@ const Checkout = () => {
 
     setLoading(true)
     setError(null)
-    const total_price = cart?.data?.total_price + 20000
     try {
       const response = await fetch(
         'http://localhost:9999/api/customer/payment/cart',
@@ -186,6 +182,13 @@ const Checkout = () => {
       setLoading(false)
     }
   }
+
+  const total_price = Array.isArray(cart?.data)
+  ? cart.data.reduce((total, item) => {
+      const price = item.product_cart?.updatePrices[0]?.price_new || 0; // Lấy giá mới nhất của sản phẩm
+      const quantity = item.quantity || 0; // Số lượng của sản phẩm
+      return total + (price * quantity); // Tính tổng giá trị cho từng sản phẩm
+    }, 0): 0;
   return (
     <>
       <section className="relative flex flex-col-reverse md:flex-row items-center bg-[url('https://www.highlandscoffee.com.vn/vnt_upload/cake/SPECIALTYCOFFEE/Untitled-1-01.png')]">
@@ -306,25 +309,14 @@ const Checkout = () => {
                 <div className="flex justify-between pt-3 text-black ">
                   <span>Tổng</span>
                   <span style={{ justifyContent: 'flex-end' }}>
-                    {cart?.data?.total_price.toLocaleString('en')} VNĐ
-                  </span>
-                </div>
-
-                <div className="flex justify-between">
-                  <span>Giảm Giá</span>
-                  <span className="text-green-700">0 VNĐ</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Phí Vận Chuyển</span>
-                  <span className="text-green-700">
-                    {(20000).toLocaleString('en')} VNĐ
+                    {total_price.toLocaleString('en')} VNĐ
                   </span>
                 </div>
                 <hr />
                 <div className="flex justify-between font-bold text-lg">
                   <span>Thanh Toán</span>
                   <span className="text-green-700">
-                    {(cart?.data?.total_price + 20000).toLocaleString('en')} VNĐ
+                    {(total_price).toLocaleString('en')} VNĐ
                   </span>
                 </div>
               </div>
@@ -351,8 +343,8 @@ const Checkout = () => {
           <div className="lg:col-span-2 lg:px-5 ">
             <div className="space-y-3">
               {cart.data &&
-                cart?.data?.cartDetails.length > 0 &&
-                cart?.data?.cartDetails.map((item, index) => (
+                cart?.data?.length > 0 &&
+                cart?.data?.map((item, index) => (
                   <CartItem key={index} cart={item} />
                 ))}
             </div>

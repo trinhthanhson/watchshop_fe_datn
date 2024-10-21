@@ -29,23 +29,28 @@ const Cart = () => {
     navigate('/checkout')
     // dispatch(addOrderRequest())
   }
-
+  const totalPrice = Array.isArray(cart?.data)
+  ? cart.data.reduce((total, item) => {
+      const price = item.product_cart?.updatePrices[0]?.price_new || 0; // Lấy giá mới nhất của sản phẩm
+      const quantity = item.quantity || 0; // Số lượng của sản phẩm
+      return total + (price * quantity); // Tính tổng giá trị cho từng sản phẩm
+    }, 0): 0;
   // Calculate the total price excluding out-of-stock items
-  const calculateTotalPrice = () => {
-    if (cart?.data) {
-      return cart.data
-        .filter((item) => item.product_cart?.quantity > 0) // Filter out out-of-stock items
-        .reduce(
-          (total, item) => total + item?.product_cart.price * item.quantity,
-          0
-        )
-    }
+  // const calculateTotalPrice = () => {
+  //   if (cart?.data) {
+  //     return cart.data
+  //       .filter((item) => item.product_cart?.quantity > 0) // Filter out out-of-stock items
+  //       .reduce(
+  //         (total, item) => total + item?.product_cart.price * item.quantity,
+  //         0
+  //       )
+  //   }
 
-    return 0
-  }
+  //   return 0
+  // }
 
-  const totalPrice = cart?.data[0].product_cart?.updatePrices[0].price_new
-  console.log('ddddd', totalPrice)
+  // const totalPrice = cart?.data[0].product_cart?.updatePrices[0].price_new
+  // console.log('ddddd', totalPrice)
   return (
     <>
       <section className="relative flex flex-col-reverse md:flex-row items-center bg-[url('https://www.highlandscoffee.com.vn/vnt_upload/cake/SPECIALTYCOFFEE/Untitled-1-01.png')]">
@@ -99,25 +104,14 @@ const Cart = () => {
                 <div className="flex justify-between pt-3 text-black ">
                   <span>Tổng</span>
                   <span style={{ justifyContent: 'flex-end' }}>
-                    {/* {totalPrice.toLocaleString('en')} VNĐ */}
-                  </span>
-                </div>
-
-                <div className="flex justify-between">
-                  <span>Giảm Giá</span>
-                  <span className="text-green-700">0 VNĐ</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Phí Vận Chuyển</span>
-                  <span className="text-green-700">
-                    {(20000).toLocaleString('en')} VNĐ
+                    {totalPrice.toLocaleString('en')} VNĐ
                   </span>
                 </div>
                 <hr />
                 <div className="flex justify-between font-bold text-lg">
                   <span>Thanh Toán</span>
                   <span className="text-green-700">
-                    {(totalPrice + 20000).toLocaleString('en')} VNĐ
+                    {(totalPrice).toLocaleString('en')} VNĐ
                   </span>
                 </div>
               </div>

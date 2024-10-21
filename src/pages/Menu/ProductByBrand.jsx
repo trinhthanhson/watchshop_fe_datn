@@ -52,7 +52,7 @@ const ProductByBrand = () => {
     }
     if (priceRangeFilter) {
       const [min, max] = priceRangeFilter.split('-').map(Number)
-      const productPrice = parseInt(product?.priceUpdateDetails[0]?.price_new)
+      const productPrice = parseInt(product?.updatePrices[0]?.price_new)
       if ((min && productPrice < min) || (max && productPrice > max)) {
         return false
       }
@@ -62,8 +62,8 @@ const ProductByBrand = () => {
 
   const sortProducts = (products) => {
     return products.sort((a, b) => {
-      const priceA = parseInt(a.priceUpdateDetails[0]?.price_new)
-      const priceB = parseInt(b.priceUpdateDetails[0]?.price_new)
+      const priceA = parseInt(a.updatePrices[0]?.price_new)
+      const priceB = parseInt(b.updatePrices[0]?.price_new)
       return sortOrder === 'asc' ? priceA - priceB : priceB - priceA
     })
   }

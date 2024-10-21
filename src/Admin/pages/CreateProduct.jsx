@@ -20,24 +20,26 @@ const CreateProduct = () => {
     file: '',
     data: {
       product_name: '',
-      status: 'Active',
-      quantity: 0,
-      price: 0,
-      detail: '',
-      technology: '',
-      glass: '',
-      func: '',
-      color: '',
-      machine: '',
-      sex: '',
-      accuracy: '',
-      battery_life: '',
-      water_resistance: '',
-      weight: '',
-      other_features: '',
-      brand_name: '',
-      category_name: '',
-      image: ''
+          status: 'Active',
+          quantity: 0,
+          price: 0,
+          detail: '',
+          band_material: '',
+          band_width: '',
+          case_diameter: '',
+          case_material: '',
+          case_thickness: '',
+          color: '',
+          dial_type: '',
+          func: '',
+          gender: '',
+          machine_movement: '',
+          model: '',
+          series: '',
+          water_resistance: '',
+          brand_name: '',
+          category_name: '',
+          image: ''
     }
   })
   const navigate = useNavigate()
@@ -98,10 +100,6 @@ const CreateProduct = () => {
       ...formData.data,
       image: imageUrl // Cập nhật với URL hình ảnh mới
     }
-
-    // Log dữ liệu để kiểm tra
-    console.log('Data to send:', JSON.stringify(dataToSend))
-
     // Gửi yêu cầu để cập nhật sản phẩm
     dispatch(addProductRequest(dataToSend))
   }
@@ -116,17 +114,19 @@ const CreateProduct = () => {
           quantity: 0,
           price: 0,
           detail: '',
-          technology: '',
-          glass: '',
-          func: '',
+          band_material: '',
+          band_width: '',
+          case_diameter: '',
+          case_material: '',
+          case_thickness: '',
           color: '',
-          machine: '',
-          sex: '',
-          accuracy: '',
-          battery_life: '',
+          dial_type: '',
+          func: '',
+          gender: '',
+          machine_movement: '',
+          model: '',
+          series: '',
           water_resistance: '',
-          weight: '',
-          other_features: '',
           brand_name: '',
           category_name: ''
         }
@@ -222,21 +222,21 @@ const CreateProduct = () => {
             </div>
             <div className="flex justify-between">
               <div className="flex-1">
-                <label className="text-[14px] block font-bold">Accuracy:</label>
+                <label className="text-[14px] block font-bold">Band Material:</label>
                 <textarea
                   className="border-b-2"
-                  name="accuracy"
+                  name="band_material"
                   onChange={handleChange}
                   style={{ marginTop: '20px' }}
                 />
               </div>
               <div className="flex-1">
                 <label className="text-[14px] block font-bold">
-                  Battery Life:
+                Band Width:
                 </label>
                 <textarea
                   className="border-b-2"
-                  name="battery_life"
+                  name="band_width"
                   onChange={handleChange}
                   style={{ marginTop: '20px' }}
                 />
@@ -244,7 +244,36 @@ const CreateProduct = () => {
             </div>
             <div className="flex justify-between">
               <div className="flex-1">
-                <label className="text-[14px] block font-bold">Color:</label>
+                <label className="text-[14px] block font-bold">Case Diameter:</label>
+                <textarea
+                  className="border-b-2"
+                  name="case_diameter"
+                  onChange={handleChange}
+                  style={{ marginTop: '20px' }}
+                />
+              </div>
+              <div className="flex-1">
+                <label className="text-[14px] block font-bold">Case Material:</label>
+                <textarea
+                  className="border-b-2"
+                  name="case_material"
+                  onChange={handleChange}
+                  style={{ marginTop: '20px' }}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <div className="flex-1">
+                <label className="text-[14px] block font-bold">Case Thickness:</label>
+                <textarea
+                  className="border-b-2"
+                  name="case_thickness"
+                  onChange={handleChange}
+                  style={{ marginTop: '20px' }}
+                />
+              </div>
+              <div className="flex-1">
+                <label className="text-[14px] block font-bold"> Color:</label>
                 <textarea
                   className="border-b-2"
                   name="color"
@@ -252,8 +281,34 @@ const CreateProduct = () => {
                   style={{ marginTop: '20px' }}
                 />
               </div>
+            </div>
+            
+            <div className="flex justify-between">
               <div className="flex-1">
-                <label className="text-[14px] block font-bold">Function:</label>
+                <label className="text-[14px] block font-bold">
+                Dial Type
+                </label>
+                <textarea
+                  className="border-b-2"
+                  name="dial_type"
+                  onChange={handleChange}
+                  style={{ marginTop: '20px' }}
+                />
+              </div>
+              <div className="flex-1">
+                <label className="text-[14px] block font-bold">Quantity:</label>
+                <input
+                  className="border-b-2"
+                  name="quantity"
+                  type='number'
+                  onChange={handleChange}
+                  style={{ marginTop: '20px' }}
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <div className="flex-1">
+                <label className="text-[14px] block font-bold">Functions:</label>
                 <textarea
                   className="border-b-2"
                   name="func"
@@ -261,22 +316,13 @@ const CreateProduct = () => {
                   style={{ marginTop: '20px' }}
                 />
               </div>
-            </div>
-            <div className="flex justify-between">
               <div className="flex-1">
-                <label className="text-[14px] block font-bold">Glass:</label>
+                <label className="text-[14px] block font-bold">
+                Gender:
+                </label>
                 <textarea
                   className="border-b-2"
-                  name="glass"
-                  onChange={handleChange}
-                  style={{ marginTop: '20px' }}
-                />
-              </div>
-              <div className="flex-1">
-                <label className="text-[14px] block font-bold">Machine:</label>
-                <textarea
-                  className="border-b-2"
-                  name="machine"
+                  name="gender"
                   onChange={handleChange}
                   style={{ marginTop: '20px' }}
                 />
@@ -285,42 +331,20 @@ const CreateProduct = () => {
             <div className="flex justify-between">
               <div className="flex-1">
                 <label className="text-[14px] block font-bold">
-                  Other Features:
+                Model:
                 </label>
                 <textarea
                   className="border-b-2"
-                  name="other_features"
+                  name="model"
                   onChange={handleChange}
                   style={{ marginTop: '20px' }}
                 />
               </div>
               <div className="flex-1">
-                <label className="text-[14px] block font-bold">Quantity:</label>
+                <label className="text-[14px] block font-bold"> Movement:</label>
                 <textarea
                   className="border-b-2"
-                  name="quantity"
-                  onChange={handleChange}
-                  style={{ marginTop: '20px' }}
-                />
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <div className="flex-1">
-                <label className="text-[14px] block font-bold">Sex:</label>
-                <textarea
-                  className="border-b-2"
-                  name="sex"
-                  onChange={handleChange}
-                  style={{ marginTop: '20px' }}
-                />
-              </div>
-              <div className="flex-1">
-                <label className="text-[14px] block font-bold">
-                  Technology:
-                </label>
-                <textarea
-                  className="border-b-2"
-                  name="technology"
+                  name="machine_movement"
                   onChange={handleChange}
                   style={{ marginTop: '20px' }}
                 />
@@ -329,20 +353,20 @@ const CreateProduct = () => {
             <div className="flex justify-between">
               <div className="flex-1">
                 <label className="text-[14px] block font-bold">
-                  Water Resistance:
+                Series:
                 </label>
+                <textarea
+                  className="border-b-2"
+                  name="series"
+                  onChange={handleChange}
+                  style={{ marginTop: '20px' }}
+                />
+              </div>
+              <div className="flex-1">
+                <label className="text-[14px] block font-bold"> Water Resistance:</label>
                 <textarea
                   className="border-b-2"
                   name="water_resistance"
-                  onChange={handleChange}
-                  style={{ marginTop: '20px' }}
-                />
-              </div>
-              <div className="flex-1">
-                <label className="text-[14px] block font-bold">Weight:</label>
-                <textarea
-                  className="border-b-2"
-                  name="weight"
                   onChange={handleChange}
                   style={{ marginTop: '20px' }}
                 />

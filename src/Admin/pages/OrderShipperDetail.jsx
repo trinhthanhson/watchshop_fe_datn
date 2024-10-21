@@ -227,7 +227,7 @@ const OrderShipperDetail = () => {
                   </td>
                   <td>{orderItem?.quantity}</td>
                   <td>
-                    {orderItem.product.priceUpdateDetails[0].price_new.toLocaleString(
+                    {orderItem.product.updatePrices[0].price_new.toLocaleString(
                       'en'
                     )}{' '}
                     VNĐ

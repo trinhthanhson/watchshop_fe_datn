@@ -82,7 +82,7 @@ const CardProductItem = ({ product }) => {
       state: {
         product: product,
         quantity: 1,
-        price: priceDiscount || product.priceUpdateDetails[0]?.price_new
+        price: priceDiscount || product.updatePrices[0]?.price_new
       }
     })
   }

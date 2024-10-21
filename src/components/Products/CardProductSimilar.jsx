@@ -4,15 +4,15 @@ const CardProductSimilar = ({ product }) => {
   const {
     product_id,
     product_name,
-    priceUpdateDetails,
+    updatePrices,
     image,
-    category,
-    brand,
+    category_product,
+    brand_product,
     status
   } = product
   const formattedPrice =
-    priceUpdateDetails.length > 0
-      ? priceUpdateDetails[0].price_new.toLocaleString('en')
+  updatePrices.length > 0
+      ? updatePrices[0].price_new.toLocaleString('en')
       : ''
 
   return (
@@ -20,11 +20,11 @@ const CardProductSimilar = ({ product }) => {
       <div>
         <div className="bg-primary rounded-bl-[35px] py-2 pl-8 pr-5 text-center absolute top-0 right-0 w-fit">
           <p className="text-white font-RobotoMedium text-sm 3xl:text-base">
-            {category.category_name}
+            {category_product.category_name}
           </p>
 
           <p className="text-white font-RobotoMedium text-sm 3xl:text-base">
-            {brand.brand_name}
+            {brand_product.brand_name}
           </p>
         </div>
         <div className="mb-0 md:h-[200px] lg:h-[250px] xl:h-[35vh]">
