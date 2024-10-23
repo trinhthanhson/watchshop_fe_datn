@@ -214,20 +214,20 @@ const OrderShipperDetail = () => {
                   <td className="flex items-center">
                     <img
                       className="w-[60px] mt-[2px] rounded-full shadow-md mr-2"
-                      src={orderItem?.product.image}
-                      alt={orderItem?.product.product_name}
+                      src={orderItem?.product_order.image}
+                      alt={orderItem?.product_order.product_name}
                     />
                   </td>
 
                   <td>
-                    <p>{orderItem?.product.product_name}</p>
+                    <p>{orderItem?.product_order.product_name}</p>
                     <span className="text-[12px]">
-                      {orderItem?.product.category.category_name}
+                      {orderItem?.product_order.category.category_name}
                     </span>
                   </td>
                   <td>{orderItem?.quantity}</td>
                   <td>
-                    {orderItem.product.updatePrices[0].price_new.toLocaleString(
+                    {orderItem.product_order.updatePrices[0].price_new.toLocaleString(
                       'en'
                     )}{' '}
                     VNĐ

@@ -106,7 +106,7 @@ const OrderDetail = () => {
       const token = localStorage.getItem('token')
       axios
         .put(
-          `http://localhost:9999/api/customer/order/${id}/status`,
+          `http://localhost:9999/api/user/order/${id}/status`,
           { status: 6 },
           {
             headers: {
@@ -282,12 +282,12 @@ const OrderDetail = () => {
                     <td className="flex items-center ">
                       <img
                         className="w-[60px] mt-[2px] rounded-full shadow-md mr-2"
-                        src={orderItem?.product.image}
-                        alt={orderItem?.product.product_name}
+                        src={orderItem?.product_order.image}
+                        alt={orderItem?.product_order.product_name}
                       />
                     </td>
                     <td>
-                      <p>{orderItem?.product.product_name}</p>
+                      <p>{orderItem?.product_order.product_name}</p>
                     </td>
                     <td>{orderItem?.quantity}</td>
                     <td>{orderItem.price.toLocaleString('en')} VNĐ</td>

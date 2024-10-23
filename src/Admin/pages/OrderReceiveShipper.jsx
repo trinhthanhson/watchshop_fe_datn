@@ -190,7 +190,7 @@ const OrderReceiveShipper = () => {
                   {[
                     ...new Map(
                       order.orderDetails.map((item) => [
-                        item.product.image,
+                        item.product_order.image,
                         item
                       ])
                     ).values()
@@ -198,9 +198,13 @@ const OrderReceiveShipper = () => {
                     <img
                       key={index}
                       className="w-[50px] mt-[2px] rounded-full shadow-md mr-2"
-                      src={uniqueItem.product && uniqueItem.product.image}
+                      src={
+                        uniqueItem.product_order &&
+                        uniqueItem.product_order.image
+                      }
                       alt={
-                        uniqueItem.product && uniqueItem.product.product_name
+                        uniqueItem.product_order &&
+                        uniqueItem.product_order.product_name
                       }
                     />
                   ))}
@@ -208,7 +212,7 @@ const OrderReceiveShipper = () => {
                 <td>
                   {order.orderDetails.map((item, index) => (
                     <div key={index}>
-                      {item.product && item.product.product_name}
+                      {item.product_order && item.product_order.product_name}
                     </div>
                   ))}
                 </td>

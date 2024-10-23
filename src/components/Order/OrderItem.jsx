@@ -34,13 +34,15 @@ const OrderItem = ({ order }) => {
         <div className="w-full flex items-center justify-between">
           <div className="py-8 ml-1.5 flex justify-center items-center">
             {orderDetails.map((orderDetail, index) => (
-              <img
-                key={index}
-                className="w-[100px] rounded-full shadow-md bg-whiteYellow object-cover object-top"
-                src={orderDetail?.product?.image}
-                alt={orderDetail?.product?.product_name}
-                loading="lazy"
-              />
+              <>
+                <img
+                  key={index}
+                  className="w-[100px] rounded-full shadow-md bg-whiteYellow object-cover object-top"
+                  src={orderDetail?.product_order?.image}
+                  alt={orderDetail?.product_order?.product_name || 'Product'}
+                  loading="lazy"
+                />
+              </>
             ))}
           </div>
 
