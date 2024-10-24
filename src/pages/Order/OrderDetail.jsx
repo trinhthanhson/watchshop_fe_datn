@@ -23,6 +23,8 @@ const OrderDetail = () => {
   })
 
   const handleRateButtonClick = (productId, order_detail_id) => {
+    console.log("id",productId)
+    console.log("id_or",order_detail_id)
     setRatingData((prevData) => ({
       ...prevData,
       productId,
@@ -72,7 +74,7 @@ const OrderDetail = () => {
           {
             order_detail_id: ratingData.order_detail_id,
             product_id: ratingData.productId,
-            content: ratingData.text,
+            content: ratingData.content,
             star: ratingData.rating
           },
           {
@@ -106,7 +108,7 @@ const OrderDetail = () => {
       const token = localStorage.getItem('token')
       axios
         .put(
-          `http://localhost:9999/api/user/order/${id}/status`,
+          `http://localhost:9999/api/customer/order/${id}/status`,
           { status: 6 },
           {
             headers: {
@@ -134,7 +136,6 @@ const OrderDetail = () => {
         }
       )
       const review = response.data.data
-      console.log(review)
       if (review) {
         setRatingData({
           ...ratingData,
@@ -196,14 +197,7 @@ const OrderDetail = () => {
                 {orderDetail?.address}
               </span>
             </p>
-            <p className="p-5">
-              <span className="text-primary font-RobotoMedium mr-2">
-                Email:
-              </span>
-              <span className="text-primary font-RobotoSemibold">
-                {orderDetail?.customer_created?.email}
-              </span>
-            </p>
+
             <p className="p-5">
               <span className="text-primary font-RobotoMedium mr-2">
                 Số Điện Thoại:
@@ -239,19 +233,11 @@ const OrderDetail = () => {
             </p>
             <p className="p-5">
               <span className="text-primary font-RobotoMedium mr-2">
-                Phí vận chuyển:
-              </span>
-              <span className="text-primary font-RobotoSemibold">
-                {(20000).toLocaleString('en')} VNĐ
-              </span>
-            </p>
-            <p className="p-5">
-              <span className="text-primary font-RobotoMedium mr-2">
                 Thanh toán:
               </span>
               {orderDetail?.total_price && (
                 <span className="text-primary font-RobotoSemibold">
-                  {(orderDetail.total_price + 20000).toLocaleString('en')} VNĐ
+                  {orderDetail.total_price.toLocaleString('en')} VNĐ
                 </span>
               )}
             </p>
@@ -263,12 +249,12 @@ const OrderDetail = () => {
           <table className="w-full text-gray-700 border border-gray-300">
             <thead className="text-white font-RobotoSemibold text-[18px]">
               <tr className="bg-primary">
-                <td className="rounded-s-md">STT</td>
-                <td>Hình Ảnh</td>
-                <td>Sản Phẩm</td>
-                <td>Số Lượng</td>
-                <td>Đơn Giá</td>
-                <td>Ngày Đặt</td>
+                <td className="rounded-s-md border border-gray-300">STT</td>
+                <td className="border border-gray-300">Hình Ảnh</td>
+                <td className="border border-gray-300">Sản Phẩm</td>
+                <td className="border border-gray-300">Số Lượng</td>
+                <td className="border border-gray-300">Đơn Giá</td>
+                <td className="border border-gray-300">Ngày Đặt</td>
                 {orderDetail?.status === '5' && (
                   <td className="border border-gray-300">Đánh Giá</td>
                 )}
@@ -278,31 +264,35 @@ const OrderDetail = () => {
               {orderDetail?.orderDetails &&
                 orderDetail.orderDetails.map((orderItem, index) => (
                   <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td className="flex items-center ">
+                    <td className="border border-gray-300">{index + 1}</td>
+                    <td className="flex items-center border border-gray-300">
                       <img
                         className="w-[60px] mt-[2px] rounded-full shadow-md mr-2"
                         src={orderItem?.product_order.image}
                         alt={orderItem?.product_order.product_name}
                       />
                     </td>
-                    <td>
+                    <td className="border border-gray-300">
                       <p>{orderItem?.product_order.product_name}</p>
                     </td>
-                    <td>{orderItem?.quantity}</td>
-                    <td>{orderItem.price.toLocaleString('en')} VNĐ</td>
-                    <td>
+                    <td className="border border-gray-300">
+                      {orderItem?.quantity}
+                    </td>
+                    <td className="border border-gray-300">
+                      {orderItem.price.toLocaleString('en')} VNĐ
+                    </td>
+                    <td className="border border-gray-300">
                       {new Date(orderDetail.created_at).toLocaleDateString()}
                     </td>
                     {orderDetail?.status === '5' && (
-                      <td>
-                        {isReviewed(orderItem.order_detail_id) ? (
+                      <td className="border border-gray-300">
+                        {isReviewed(orderItem?.order_detail_id) ? (
                           <button
                             className="bg-blue-500 text-white px-4 py-2 rounded-md border border-gray-300"
                             onClick={() =>
                               handleRateButtonClick(
-                                orderItem.product.product_id,
-                                orderItem.order_detail_id
+                                orderItem?.product_order?.product_id,
+                                orderItem?.order_detail_id
                               )
                             }
                           >
@@ -313,8 +303,8 @@ const OrderDetail = () => {
                             className="bg-blue-500 text-white px-4 py-2 rounded-md border border-gray-300"
                             onClick={() =>
                               handleRateButtonClick(
-                                orderItem.product.product_id,
-                                orderItem.order_detail_id
+                                orderItem?.product_order?.product_id,
+                                orderItem?.order_detail_id
                               )
                             }
                           >
@@ -327,7 +317,6 @@ const OrderDetail = () => {
                 ))}
             </tbody>
           </table>
-
           {showModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="bg-white p-6 rounded-md shadow-md w-[600px] relative">

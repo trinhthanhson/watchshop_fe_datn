@@ -184,9 +184,9 @@ const AdminOrderDetail = () => {
                   </td>
 
                   <td>
-                    <p>{orderItem?.product.product_name}</p>
+                    <p>{orderItem?.product_order?.product_name}</p>
                     <span className="text-[12px]">
-                      {orderItem?.product_order.category.category_name}
+                      {orderItem?.product_order?.category_product?.category_name}
                     </span>
                   </td>
                   <td>{orderItem?.quantity}</td>

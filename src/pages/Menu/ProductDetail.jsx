@@ -22,7 +22,6 @@ const ProductDetail = () => {
   )
   const coupons = useSelector((state) => state.coupons.coupons.data)
   const reviews = useSelector((state) => state.reviewProduct?.reviews)
-  console.log(productsCustomer)
   const selectedProduct = productsCustomer
     ? productsCustomer.find((item) => item.product_id === id)
     : null

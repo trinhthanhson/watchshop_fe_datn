@@ -184,11 +184,12 @@ const Checkout = () => {
   }
 
   const total_price = Array.isArray(cart?.data)
-  ? cart.data.reduce((total, item) => {
-      const price = item.product_cart?.updatePrices[0]?.price_new || 0; // Lấy giá mới nhất của sản phẩm
-      const quantity = item.quantity || 0; // Số lượng của sản phẩm
-      return total + (price * quantity); // Tính tổng giá trị cho từng sản phẩm
-    }, 0): 0;
+    ? cart.data.reduce((total, item) => {
+        const price = item.product_cart?.updatePrices[0]?.price_new || 0 // Lấy giá mới nhất của sản phẩm
+        const quantity = item.quantity || 0 // Số lượng của sản phẩm
+        return total + price * quantity // Tính tổng giá trị cho từng sản phẩm
+      }, 0)
+    : 0
   return (
     <>
       <section className="relative flex flex-col-reverse md:flex-row items-center bg-[url('https://www.highlandscoffee.com.vn/vnt_upload/cake/SPECIALTYCOFFEE/Untitled-1-01.png')]">
@@ -219,7 +220,7 @@ const Checkout = () => {
           </div>
           {success && <p className="text-green mt-4">{success}</p>}
           {isModalOpen && (
-            <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50">
+            <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
               <div
                 className="bg-white border border-gray-200 p-5 rounded-lg shadow-lg w-80"
                 style={{ width: 600 }}
@@ -238,7 +239,7 @@ const Checkout = () => {
                     className="border border-gray-300 p-2 rounded w-full"
                   />
                   {errors.recipientName && (
-                    <p className="text-red mt-1">{errors.recipientName}</p>
+                    <p className="text-red-500 mt-1">{errors.recipientName}</p>
                   )}
                 </div>
                 <div className="mb-4">
@@ -252,7 +253,9 @@ const Checkout = () => {
                     className="border border-gray-300 p-2 rounded w-full"
                   />
                   {errors.shippingAddress && (
-                    <p className="text-red mt-1">{errors.shippingAddress}</p>
+                    <p className="text-red-500 mt-1">
+                      {errors.shippingAddress}
+                    </p>
                   )}
                 </div>
                 <div className="mb-4">
@@ -266,7 +269,7 @@ const Checkout = () => {
                     className="border border-gray-300 p-2 rounded w-full"
                   />
                   {errors.recipientPhone && (
-                    <p className="text-red">{errors.recipientPhone}</p>
+                    <p className="text-red-500 mt-1">{errors.recipientPhone}</p>
                   )}
                 </div>
                 <div className="mb-4">
@@ -280,7 +283,7 @@ const Checkout = () => {
                 </div>
                 <div className="flex justify-end">
                   <button
-                    className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2 "
+                    className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2"
                     style={{ marginTop: 10 }}
                     onClick={handleAddressSave}
                   >
@@ -297,6 +300,7 @@ const Checkout = () => {
               </div>
             </div>
           )}
+
           <div className="flex-[1.5]">
             <div
               className="border p-5 bg-white shadow-lg rounded-md"
@@ -316,7 +320,7 @@ const Checkout = () => {
                 <div className="flex justify-between font-bold text-lg">
                   <span>Thanh Toán</span>
                   <span className="text-green-700">
-                    {(total_price).toLocaleString('en')} VNĐ
+                    {total_price.toLocaleString('en')} VNĐ
                   </span>
                 </div>
               </div>
