@@ -93,7 +93,6 @@ const UpdateProduct = () => {
       setImageSrc(productDetail?.data.image)
     }
   }, [productDetail])
-  console.log(formData)
   const handleChange = (e) => {
     const { name, value } = e.target
     if (name === 'quantity' && value < 0) {
@@ -126,38 +125,33 @@ const UpdateProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setLoading(true) // Start loading
-    setErrorMessage('') // Clear any existing error message
+    setLoading(true)
+    setErrorMessage('') 
 
     if (!formData.data.file && !formData.data.image) {
       setErrorMessage('Vui lòng chọn hình ảnh.')
-      setLoading(false) // Stop loading
+      setLoading(false)
       return
     }
-    let imageUrl = formData.data.image // Giữ URL hình ảnh hiện tại nếu không có hình ảnh mới
 
+    let imageUrl = formData.data.image 
     if (formData.data.file) {
       try {
-        // Tải lên hình ảnh mới vào Firebase và lấy URL
+
         imageUrl = await uploadImageToFirebase(formData.data.file)
       } catch (error) {
         console.error('Error uploading image:', error)
         setErrorMessage('Đã xảy ra lỗi khi tải lên hình ảnh.')
-        setLoading(false) // Stop loading
+        setLoading(false) 
         return
       }
     }
 
-    // Tạo đối tượng mới để gửi đến máy chủ
     const dataToSend = {
       ...formData.data,
-      image: imageUrl // Cập nhật với URL hình ảnh mới
+      image: imageUrl 
     }
 
-    // Log dữ liệu để kiểm tra
-    console.log('Data to send:', JSON.stringify(dataToSend))
-
-    // Dispatch action để Saga xử lý
     dispatch(updateProductRequest(id, dataToSend))
   }
 

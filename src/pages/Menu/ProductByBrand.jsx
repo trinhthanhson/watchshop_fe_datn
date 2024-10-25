@@ -43,11 +43,11 @@ const ProductByBrand = () => {
   const filterProducts = (product) => {
     if (
       categoryFilter &&
-      product?.category?.category_id !== parseInt(categoryFilter)
+      product?.category_product?.category_id !== parseInt(categoryFilter)
     ) {
       return false
     }
-    if (brandFilter && product?.brand?.brand_id !== parseInt(brandFilter)) {
+    if (brandFilter && product?.brand_product?.brand_id !== parseInt(brandFilter)) {
       return false
     }
     if (priceRangeFilter) {

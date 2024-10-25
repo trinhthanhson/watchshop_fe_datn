@@ -5,7 +5,6 @@ const OrderBuyNow = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { product, quantity, price } = location.state || {}
-  console.log(price)
   const [address, setAddress] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [recipientName, setRecipientName] = useState('')

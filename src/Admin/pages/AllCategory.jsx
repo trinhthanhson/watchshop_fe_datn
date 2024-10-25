@@ -76,7 +76,6 @@ const AllCategory = () => {
   }
 
   const handleUpdateCategory = async (categoryId) => {
-    console.log('update category', categoryId)
     try {
       const token = localStorage.getItem('token')
 

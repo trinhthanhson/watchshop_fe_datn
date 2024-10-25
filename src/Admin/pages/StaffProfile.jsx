@@ -60,7 +60,6 @@ const StaffProfile = () => {
           }
         }
       )
-      console.log('Profile updated:', response.data)
       setIsEditing(false)
       dispatch(getUserProfileRequest())
     } catch (error) {

@@ -15,7 +15,7 @@ const Contact = () => {
       )
 
       if (response.ok) {
-        console.log('Biểu mẫu đã được gửi thành công!')
+        console.succ('Biểu mẫu đã được gửi thành công!')
       } else {
         throw new Error('Có lỗi xảy ra khi gửi biểu mẫu.')
       }

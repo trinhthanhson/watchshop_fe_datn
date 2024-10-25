@@ -40,7 +40,6 @@ const ProductByCategory = () => {
       setCategoryFilter(category_id)
     }
   }, [category_id])
-  console.log(productsCustomer)
 
   const filterProducts = (product) => {
     if (

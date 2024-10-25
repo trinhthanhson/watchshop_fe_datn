@@ -24,10 +24,8 @@ const CardProductItem = ({ product }) => {
     status,
     quantity
   } = product
-  console.log(product)
   const price = updatePrices[0]?.price_new || 0
   const formattedPrice = price.toLocaleString('en')
-  console.log(status)
   useEffect(() => {
     dispatch(getAllCouponsRequest())
   }, [dispatch])

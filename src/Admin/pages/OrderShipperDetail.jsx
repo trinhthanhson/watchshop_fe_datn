@@ -54,7 +54,6 @@ const OrderShipperDetail = () => {
       const token = localStorage.getItem('token')
       const currentStatus = parseInt(orderDetail?.status, 10)
       const newStatus = (currentStatus + 1).toString()
-      console.log(newStatus)
       axios
         .put(
           `http://localhost:9999/api/staff/order/${id}/status`,

@@ -13,8 +13,6 @@ function App() {
       mainControls.start('visible')
     }
   }, [isInView])
-  console.log('isInView', isInView)
-
   return (
     <div ref={ref}>
       <motion.div

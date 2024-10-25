@@ -14,7 +14,6 @@ const AllProducts = () => {
   const products = useSelector((state) => state.products.products)
   const [deletedProductId, setDeletedProductId] = useState(null)
   const [sortOrder, setSortOrder] = useState('all') // Trạng thái bộ lọc
-  console.log(products)
   useEffect(() => {
     try {
       dispatch(getAllProductsRequest())

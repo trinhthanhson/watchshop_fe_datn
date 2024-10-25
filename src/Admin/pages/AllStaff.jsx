@@ -79,7 +79,6 @@ const AllStaff = () => {
           }
         }
       )
-      console.log(response)
       if (response.data.status === 201) {
         alert('Thêm nhân viên thành công')
         handleCancel() // Reset dữ liệu và đóng modal

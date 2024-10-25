@@ -9,7 +9,6 @@ const CustomerProfile = () => {
   const dispatch = useDispatch()
   const token = localStorage.getItem('token')
   const user = useSelector((state) => state.user.user.data)
-
   const [isEditing, setIsEditing] = useState(false)
   const [isChangingPassword, setIsChangingPassword] = useState(false)
   const [formData, setFormData] = useState({
@@ -68,7 +67,7 @@ const CustomerProfile = () => {
   const handleSave = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:9999/api/customer/update-info`,
+        `http://localhost:9999/api/user/update-info`,
         formData,
         {
           headers: {
@@ -76,7 +75,6 @@ const CustomerProfile = () => {
           }
         }
       )
-      console.log('Profile updated:', response.data)
       setIsEditing(false)
       dispatch(getUserProfileRequest())
     } catch (error) {
@@ -90,7 +88,7 @@ const CustomerProfile = () => {
       return
     }
     try {
-      // eslint-disable-next-line no-unused-vars
+      
       const response = await axios.put(
         `http://localhost:9999/api/user/change-password`,
         passwordData,
@@ -121,7 +119,7 @@ const CustomerProfile = () => {
               <div className="w-1/2 border-b-[0px] sm:border-b-[1px] sm:border border-primary"></div>
               <div className="absolute top-[-1px] w-[15%] border-b-[0px] sm:border-b-[2px] sm:border-main"></div>
             </div>
-            <h1 className="uppercase text-center sm:text-left font-RobotoMedium text-primary hover:text-lightYellow text-3xl md:text-3xl xl:text-[3rem] mb-5 mt-0 sm:mt-5 md:leading-tight cursor-pointer">
+            <h1 className="uppercase text-center sm:text-left font-RobotoMedium text-primary hover:text-lightYellow text-3xl md:text-3xl xl:text-[3rem] mb-5 mt-0 sm:mt-5 md:leading-tight">
               User Profile
             </h1>
           </div>

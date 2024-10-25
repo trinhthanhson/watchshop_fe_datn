@@ -56,13 +56,13 @@ const ProductByCategory = () => {
   const filterProducts = (productsCustomer) => {
     if (
       categoryFilter &&
-      productsCustomer?.category?.category_id !== parseInt(categoryFilter)
+      productsCustomer?.category_product?.category_id !== parseInt(categoryFilter)
     ) {
       return false
     }
     if (
       brandFilter &&
-      productsCustomer?.brand?.brand_id !== parseInt(brandFilter)
+      productsCustomer?.brand_product?.brand_id !== parseInt(brandFilter)
     ) {
       return false
     }

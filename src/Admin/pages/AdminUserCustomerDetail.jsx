@@ -29,7 +29,6 @@ const AdminUserCustomerDetail = () => {
           }
         )
         const user = response.data.data
-        console.log(user)
         setFormData({
           firstname: user.first_name,
           lastname: user.last_name,

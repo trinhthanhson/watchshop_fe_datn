@@ -72,7 +72,6 @@ const AllBrand = () => {
   }
 
   const handleUpdateBrand = async (brandId) => {
-    console.log('update brand', brandId)
     try {
       const token = localStorage.getItem('token')
 

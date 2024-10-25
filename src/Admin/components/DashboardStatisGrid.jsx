@@ -47,7 +47,6 @@ const DashboardStatisGrid = () => {
           response.data.data.length > 0
         ) {
           setDoanhThu(response.data?.data[0].total_price)
-          console.log('price: ' + response.data.data[0].total_price)
         } else {
           console.error('Unexpected response format:', response.data)
         }

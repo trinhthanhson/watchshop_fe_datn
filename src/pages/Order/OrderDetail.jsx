@@ -23,8 +23,6 @@ const OrderDetail = () => {
   })
 
   const handleRateButtonClick = (productId, order_detail_id) => {
-    console.log("id",productId)
-    console.log("id_or",order_detail_id)
     setRatingData((prevData) => ({
       ...prevData,
       productId,
@@ -84,8 +82,6 @@ const OrderDetail = () => {
           }
         )
       }
-
-      console.log('Rating submitted:', response.data)
       dispatch(getOrderDetailRequest(id))
       dispatch(getAllReviewCustomerRequest())
       setShowModal(false)

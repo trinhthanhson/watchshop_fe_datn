@@ -41,7 +41,6 @@ const AllCouponDetail = () => {
       }
     }
   }
-  console.log(coupondetail)
   return (
     <>
       <div className="flex flex-col gap-4 w-[80%] ml-[18%] rounded-md shadow-md bg-white mt-5">

@@ -35,22 +35,7 @@ const Cart = () => {
       const quantity = item.quantity || 0; // Số lượng của sản phẩm
       return total + (price * quantity); // Tính tổng giá trị cho từng sản phẩm
     }, 0): 0;
-  // Calculate the total price excluding out-of-stock items
-  // const calculateTotalPrice = () => {
-  //   if (cart?.data) {
-  //     return cart.data
-  //       .filter((item) => item.product_cart?.quantity > 0) // Filter out out-of-stock items
-  //       .reduce(
-  //         (total, item) => total + item?.product_cart.price * item.quantity,
-  //         0
-  //       )
-  //   }
-
-  //   return 0
-  // }
-
-  // const totalPrice = cart?.data[0].product_cart?.updatePrices[0].price_new
-  // console.log('ddddd', totalPrice)
+    
   return (
     <>
       <section className="relative flex flex-col-reverse md:flex-row items-center bg-[url('https://www.highlandscoffee.com.vn/vnt_upload/cake/SPECIALTYCOFFEE/Untitled-1-01.png')]">

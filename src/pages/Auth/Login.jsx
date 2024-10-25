@@ -66,7 +66,6 @@ const Login = () => {
           localStorage.setItem('token', token)
           // Dispatch action to fetch user profile
           await dispatch(getUserProfileRequest())
-
           console.log('Đăng nhập thành công')
         } else {
           setMessage(

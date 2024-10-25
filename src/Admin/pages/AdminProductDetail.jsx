@@ -15,7 +15,6 @@ const AdminProductDetail = () => {
   )
   const reviews = useSelector((state) => state.reviewProduct?.reviews?.data)
   let latestReviews = []
-  console.log(productDetail)
   useEffect(() => {
     try {
       dispatch(getProductDetailRequest(id))
