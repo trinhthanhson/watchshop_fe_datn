@@ -106,7 +106,7 @@ const UpdateProduct = () => {
         }
       })
     } else if (e.target.name === 'status') {
-      const newStatus = e.target.checked ? 'Active' : 'Inactive'
+      const newStatus = e.target.checked ? 'ACTIVE' : 'INACTIVE'
       setFormData({
         data: {
           ...formData.data,
@@ -126,7 +126,7 @@ const UpdateProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    setErrorMessage('') 
+    setErrorMessage('')
 
     if (!formData.data.file && !formData.data.image) {
       setErrorMessage('Vui lòng chọn hình ảnh.')
@@ -134,22 +134,21 @@ const UpdateProduct = () => {
       return
     }
 
-    let imageUrl = formData.data.image 
+    let imageUrl = formData.data.image
     if (formData.data.file) {
       try {
-
         imageUrl = await uploadImageToFirebase(formData.data.file)
       } catch (error) {
         console.error('Error uploading image:', error)
         setErrorMessage('Đã xảy ra lỗi khi tải lên hình ảnh.')
-        setLoading(false) 
+        setLoading(false)
         return
       }
     }
 
     const dataToSend = {
       ...formData.data,
-      image: imageUrl 
+      image: imageUrl
     }
 
     dispatch(updateProductRequest(id, dataToSend))
@@ -487,7 +486,7 @@ const UpdateProduct = () => {
                 type="checkbox"
                 name="status"
                 onChange={handleChange}
-                checked={formData.data.status === 'Active'}
+                checked={formData.data.status === 'ACTIVE'}
               />
               <span className="slider round"></span>
             </label>

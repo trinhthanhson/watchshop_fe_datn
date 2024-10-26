@@ -48,16 +48,16 @@ export function getOrderStatus(status) {
 export function getStatus(status) {
   if (typeof status === 'string') {
     switch (status) {
-      case 'Inactive':
+      case 'INACTIVE':
         return (
           <span className="capitalize py-1 px-2 rounded-md text-xs text-white bg-main">
-            {status.split('_').join(' ').toLowerCase()}
+            {status.split('_').join(' ')}
           </span>
         )
       default:
         return (
           <span className="capitalize py-1 px-2 rounded-md text-xs text-white bg-green">
-            {status.split('_').join(' ').toLowerCase()}
+            {status.split('_').join(' ')}
           </span>
         )
     }
@@ -69,10 +69,10 @@ export function getStatus(status) {
 export function getStatusText(status) {
   if (typeof status === 'string') {
     switch (status) {
-      case 'Inactive':
-        return 'Inactive'
-      case 'Active':
-        return 'Active'
+      case 'INACTIVE':
+        return ''
+      case 'ACTIVE':
+        return 'ACTIVE'
       default:
         return status.split('_').join(' ').toLowerCase() // Đối với các trạng thái khác, chuyển đổi chữ hoa thành chữ thường và thay thế dấu gạch dưới
     }

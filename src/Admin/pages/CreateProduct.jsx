@@ -4,9 +4,11 @@ import { useNavigate } from 'react-router-dom'
 import {
   addProductRequest,
   getAllCategoriesRequest,
-  getAllBrandRequest
+  getAllBrandRequest,
+  addProductRequestBatch
 } from '../../redux/actions/actions'
 import { uploadImageToFirebase } from '../../firebase' // Import the function
+import * as XLSX from 'xlsx'
 
 const CreateProduct = () => {
   const dispatch = useDispatch()
@@ -20,26 +22,26 @@ const CreateProduct = () => {
     file: '',
     data: {
       product_name: '',
-          status: 'Active',
-          quantity: 0,
-          price: 0,
-          detail: '',
-          band_material: '',
-          band_width: '',
-          case_diameter: '',
-          case_material: '',
-          case_thickness: '',
-          color: '',
-          dial_type: '',
-          func: '',
-          gender: '',
-          machine_movement: '',
-          model: '',
-          series: '',
-          water_resistance: '',
-          brand_name: '',
-          category_name: '',
-          image: ''
+      status: 'ACTIVE',
+      quantity: 0,
+      price: 0,
+      detail: '',
+      band_material: '',
+      band_width: '',
+      case_diameter: '',
+      case_material: '',
+      case_thickness: '',
+      color: '',
+      dial_type: '',
+      func: '',
+      gender: '',
+      machine_movement: '',
+      model: '',
+      series: '',
+      water_resistance: '',
+      brand_name: '',
+      category_name: '',
+      image: ''
     }
   })
   const navigate = useNavigate()
@@ -136,6 +138,67 @@ const CreateProduct = () => {
     }
   }, [message, navigate])
 
+  const handleChangeExcel = (e) => {
+    console.log('dđ')
+    if (e.target.name === 'file') {
+      setFormData({ ...formData, file: e.target.files[0] })
+    } else if (e.target.name === 'excel') {
+      handleExcelFile(e.target.files[0])
+    } else {
+      setFormData({
+        ...formData,
+        data: { ...formData.data, [e.target.name]: e.target.value }
+      })
+    }
+  }
+
+  const handleExcelFile = (file) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target.result)
+      const workbook = XLSX.read(data, { type: 'array' })
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]]
+      const jsonData = XLSX.utils.sheet_to_json(worksheet)
+      console.log('Excel Data:', jsonData) // Log to check data structure
+      handleSendExcelData(jsonData)
+    }
+    reader.onerror = () => {
+      console.error('Failed to read the Excel file')
+    }
+    reader.readAsArrayBuffer(file)
+  }
+
+  const handleSendExcelData = (data) => {
+    // Create an array of product data
+    const productDataArray = data.map((item) => ({
+      product_name: item.product_name || formData.data.product_name,
+      status: formData.data.status,
+      quantity: item.quantity || formData.data.quantity,
+      price: item.price || formData.data.price,
+      detail: item.detail || formData.data.detail,
+      band_material: item.band_material || formData.data.band_material,
+      band_width: item.band_width || formData.data.band_width,
+      case_diameter: item.case_diameter || formData.data.case_diameter,
+      case_material: item.case_material || formData.data.case_material,
+      case_thickness: item.case_thickness || formData.data.case_thickness,
+      color: item.color || formData.data.color,
+      dial_type: item.dial_type || formData.data.dial_type,
+      func: item.func || formData.data.func,
+      gender: item.gender || formData.data.gender,
+      machine_movement: item.machine_movement || formData.data.machine_movement,
+      model: item.model || formData.data.model,
+      series: item.series || formData.data.series,
+      water_resistance: item.water_resistance || formData.data.water_resistance,
+      brand_name: item.brand_name || formData.data.brand_name,
+      category_name: item.category_name || formData.data.category_name,
+      image: item.image || formData.data.image
+    }))
+
+    console.log('dd', productDataArray)
+
+    // Dispatch the entire array in a single request
+    dispatch(addProductRequestBatch(productDataArray)) // Ensure your API is ready to handle an array
+  }
   return (
     <>
       <div className="flex flex-col justify-center items-center ml-[18%]">
@@ -222,7 +285,9 @@ const CreateProduct = () => {
             </div>
             <div className="flex justify-between">
               <div className="flex-1">
-                <label className="text-[14px] block font-bold">Band Material:</label>
+                <label className="text-[14px] block font-bold">
+                  Band Material:
+                </label>
                 <textarea
                   className="border-b-2"
                   name="band_material"
@@ -232,7 +297,7 @@ const CreateProduct = () => {
               </div>
               <div className="flex-1">
                 <label className="text-[14px] block font-bold">
-                Band Width:
+                  Band Width:
                 </label>
                 <textarea
                   className="border-b-2"
@@ -244,7 +309,9 @@ const CreateProduct = () => {
             </div>
             <div className="flex justify-between">
               <div className="flex-1">
-                <label className="text-[14px] block font-bold">Case Diameter:</label>
+                <label className="text-[14px] block font-bold">
+                  Case Diameter:
+                </label>
                 <textarea
                   className="border-b-2"
                   name="case_diameter"
@@ -253,7 +320,9 @@ const CreateProduct = () => {
                 />
               </div>
               <div className="flex-1">
-                <label className="text-[14px] block font-bold">Case Material:</label>
+                <label className="text-[14px] block font-bold">
+                  Case Material:
+                </label>
                 <textarea
                   className="border-b-2"
                   name="case_material"
@@ -264,7 +333,9 @@ const CreateProduct = () => {
             </div>
             <div className="flex justify-between">
               <div className="flex-1">
-                <label className="text-[14px] block font-bold">Case Thickness:</label>
+                <label className="text-[14px] block font-bold">
+                  Case Thickness:
+                </label>
                 <textarea
                   className="border-b-2"
                   name="case_thickness"
@@ -282,12 +353,10 @@ const CreateProduct = () => {
                 />
               </div>
             </div>
-            
+
             <div className="flex justify-between">
               <div className="flex-1">
-                <label className="text-[14px] block font-bold">
-                Dial Type
-                </label>
+                <label className="text-[14px] block font-bold">Dial Type</label>
                 <textarea
                   className="border-b-2"
                   name="dial_type"
@@ -300,7 +369,7 @@ const CreateProduct = () => {
                 <input
                   className="border-b-2"
                   name="quantity"
-                  type='number'
+                  type="number"
                   onChange={handleChange}
                   style={{ marginTop: '20px' }}
                 />
@@ -308,7 +377,9 @@ const CreateProduct = () => {
             </div>
             <div className="flex justify-between">
               <div className="flex-1">
-                <label className="text-[14px] block font-bold">Functions:</label>
+                <label className="text-[14px] block font-bold">
+                  Functions:
+                </label>
                 <textarea
                   className="border-b-2"
                   name="func"
@@ -317,9 +388,7 @@ const CreateProduct = () => {
                 />
               </div>
               <div className="flex-1">
-                <label className="text-[14px] block font-bold">
-                Gender:
-                </label>
+                <label className="text-[14px] block font-bold">Gender:</label>
                 <textarea
                   className="border-b-2"
                   name="gender"
@@ -330,9 +399,7 @@ const CreateProduct = () => {
             </div>
             <div className="flex justify-between">
               <div className="flex-1">
-                <label className="text-[14px] block font-bold">
-                Model:
-                </label>
+                <label className="text-[14px] block font-bold">Model:</label>
                 <textarea
                   className="border-b-2"
                   name="model"
@@ -341,7 +408,10 @@ const CreateProduct = () => {
                 />
               </div>
               <div className="flex-1">
-                <label className="text-[14px] block font-bold"> Movement:</label>
+                <label className="text-[14px] block font-bold">
+                  {' '}
+                  Movement:
+                </label>
                 <textarea
                   className="border-b-2"
                   name="machine_movement"
@@ -352,9 +422,7 @@ const CreateProduct = () => {
             </div>
             <div className="flex justify-between">
               <div className="flex-1">
-                <label className="text-[14px] block font-bold">
-                Series:
-                </label>
+                <label className="text-[14px] block font-bold">Series:</label>
                 <textarea
                   className="border-b-2"
                   name="series"
@@ -363,7 +431,10 @@ const CreateProduct = () => {
                 />
               </div>
               <div className="flex-1">
-                <label className="text-[14px] block font-bold"> Water Resistance:</label>
+                <label className="text-[14px] block font-bold">
+                  {' '}
+                  Water Resistance:
+                </label>
                 <textarea
                   className="border-b-2"
                   name="water_resistance"
@@ -425,6 +496,21 @@ const CreateProduct = () => {
                 onChange={handleChange}
                 style={{ marginTop: '20px', width: '700px', height: '200px' }}
               />
+            </div>
+            {/* Thêm nút chọn file Excel */}
+            <div className="relative">
+              <input
+                type="file"
+                name="excel"
+                accept=".xlsx, .xls"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                onChange={handleChangeExcel}
+              />
+              <div className="bg-gray-200 rounded-md py-2 px-4 flex items-center justify-center gap-2 cursor-pointer">
+                <span className="text-primary font-RobotoMedium">
+                  Chọn file Excel
+                </span>
+              </div>
             </div>
 
             <div className="flex justify-center">

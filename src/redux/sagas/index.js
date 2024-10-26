@@ -22,6 +22,7 @@ import reviewCustomerSaga from './reviewCustomerSaga'
 import couponDetailSaga from './coupondetailSaga'
 import reviewProductSaga from './reviewProductSaga'
 import roleSaga from './roleSaga'
+import watchAddProductsBatch from './addProductBatchSaga'
 
 export default function* rootSaga() {
   yield all([
@@ -33,6 +34,7 @@ export default function* rootSaga() {
     orderDetailSaga(),
     productDetailSaga(),
     postAddProduct(),
+    watchAddProductsBatch(),
     categoriesSaga(),
     brandSaga(),
     staffSaga(),

@@ -220,7 +220,7 @@ const ProductDetail = () => {
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4 items-center sm:justify-between w-full">
-                {selectedProduct?.status === 'Inactive' ? (
+                {selectedProduct?.status === '' ? (
                   <button
                     disabled
                     className="w-full p-3 text-center bg-gray-300 text-gray-700 border border-gray-300 rounded-lg cursor-not-allowed"

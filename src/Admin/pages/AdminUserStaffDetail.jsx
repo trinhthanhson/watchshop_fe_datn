@@ -154,8 +154,8 @@ const AdminUserStaffDetail = () => {
               onChange={handleChange}
               className="border rounded p-2 w-full"
             >
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
+              <option value="ACTIVE">ACTIVE</option>
+              <option value="INACTIVE">INACTIVE</option>
             </select>
           </label>
           <button type="submit" className="bg-blue-500 text-white p-2 rounded">

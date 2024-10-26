@@ -22,6 +22,7 @@ import reviewCustomerReducer from './reviewCustomerReducer'
 import couponDetailReducer from './coupondetailReducer'
 import reviewProductReducer from './reviewProductReducer'
 import roleReducer from './roleReducer'
+import addProductsBatchReducers from './addProductBatchReducers'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
   orderDetail: orderDetailReducer,
   productDetail: productDetailReducer,
   addProduct: addProductReducer,
+  addProductBatch: addProductsBatchReducers,
   categories: categoriesReducer,
   brands: brandReducer,
   staffs: staffsReducer,

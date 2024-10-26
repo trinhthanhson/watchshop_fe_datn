@@ -22,6 +22,9 @@ import {
   ADD_PRODUCT_REQUEST,
   ADD_PRODUCT_SUCCESS,
   ADD_PRODUCT_FAILURE,
+  ADD_PRODUCT_REQUEST_BATCH,
+  ADD_PRODUCT_SUCCESS_BATCH,
+  ADD_PRODUCT_FAILURE_BATCH,
   GET_ALL_CATEGORIES_REQUEST,
   GET_ALL_CATEGORIES_SUCCESS,
   GET_ALL_CATEGORIES_FAILURE,
@@ -71,7 +74,7 @@ import {
   GET_ALL_REVIEW_PRODUCT_FAILURE,
   GET_ALL_ROLE_REQUEST,
   GET_ALL_ROLE_SUCCESS,
-  GET_ALL_ROLE_FAILURE,
+  GET_ALL_ROLE_FAILURE
 } from './types'
 
 export const addCouponRequest = (formData) => ({
@@ -365,6 +368,24 @@ export const addProductSuccess = (data) => ({
 
 export const addProductFailure = (error) => ({
   type: ADD_PRODUCT_FAILURE,
+  error
+})
+
+// Action creator để gửi yêu cầu thêm hàng loạt sản phẩm
+export const addProductRequestBatch = (products) => ({
+  type: ADD_PRODUCT_REQUEST_BATCH,
+  payload: { products }
+})
+
+// Action creator khi thêm sản phẩm thành công
+export const addProductSuccessBatch = (responseData) => ({
+  type: ADD_PRODUCT_SUCCESS_BATCH,
+  payload: responseData
+})
+
+// Action creator khi thêm sản phẩm thất bại
+export const addProductFailureBatch = (error) => ({
+  type: ADD_PRODUCT_FAILURE_BATCH,
   error
 })
 

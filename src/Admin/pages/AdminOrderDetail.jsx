@@ -33,7 +33,7 @@ const AdminOrderDetail = () => {
       axios
         .put(
           `http://localhost:9999/api/staff/order/${id}/status`,
-          { status: '4' },
+          { status: '6' },
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -185,7 +185,10 @@ const AdminOrderDetail = () => {
                   <td>
                     <p>{orderItem?.product_order?.product_name}</p>
                     <span className="text-[12px]">
-                      {orderItem?.product_order?.category_product?.category_name}
+                      {
+                        orderItem?.product_order?.category_product
+                          ?.category_name
+                      }
                     </span>
                   </td>
                   <td>{orderItem?.quantity}</td>
