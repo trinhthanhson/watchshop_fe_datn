@@ -29,8 +29,8 @@ const Sidebar = () => {
     window.location.href = '/login'
   }
   const [hoveredIndex, setHoveredIndex] = useState(null)
-  const isManager = user?.user?.role.role_name === 'MANAGER'
-  const isAdmin = user?.user?.role.role_name === 'ADMIN'
+  const isManager = user?.user?.role_user?.role_name === 'MANAGER'
+  const isAdmin = user?.user?.role_user?.role_name === 'ADMIN'
   return (
     <div
       className="fixed bg-primary w-60 h-full p-3 flex flex-col text-white font-RobotoMedium"

@@ -30,6 +30,7 @@
     "firebase": "^10.12.1",
     "framer-motion": "^11.0.18",
     "google-map-react": "^2.2.1",
+    "ins": "^0.0.0",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
     "prop-types": "^15.8.1",

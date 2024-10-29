@@ -171,7 +171,7 @@ const CardProductItem = ({ product }) => {
           <>
             <hr className="" />
             <div className="w-full flex items-center justify-center relative gap-5 transition-opacity duration-300 ease-in-out">
-              {status === 'Active' && quantity > 0 ? (
+              {status === 'ACTIVE' && quantity > 0 ? (
                 <>
                   <div className="w-full m-5">
                     <button

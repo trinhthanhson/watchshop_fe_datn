@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { getOrderDetailRequest } from '../../redux/actions/actions'
 import axios from 'axios'
-import OrderTraker from '../../components/Order/OrderTraker'
+import OrderTracker from '../../components/Order/OrderTraker'
 
 const ORDER_STATUS_NEXT = {
   0: 'Xác Nhận',
@@ -18,7 +18,6 @@ const AdminOrderDetail = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
   const orderDetail = useSelector((state) => state.orderDetail.orderDetail)
-
   useEffect(() => {
     try {
       dispatch(getOrderDetailRequest(id))
@@ -72,14 +71,22 @@ const AdminOrderDetail = () => {
   }
 
   const activeStep = parseInt(orderDetail?.status, 10) + 1
-
+  console.log()
   return (
     <>
-      <div className="ml-[18%]">
-        <h1 className="uppercase text-center sm:text-left font-RobotoSemibold text-main text-3xl md:text-3xl xl:text-[3rem] mb-5 mt-0 sm:mt-5 md:leading-tight">
-          <OrderTraker activeStep={activeStep} />
-        </h1>
-      </div>
+      {orderDetail?.status === '6' ? (
+        <div className="flex justify-center items-center bg-red-100 p-5 rounded-md shadow-md w-full">
+          <h1 className="uppercase text-center font-RobotoSemibold text-red-600 text-2xl md:text-2xl xl:text-[2.5rem]">
+            Đã hủy
+          </h1>
+        </div>
+      ) : (
+        <div className="ml-[18%]">
+          <h1 className="uppercase text-center sm:text-left font-RobotoSemibold text-main text-3xl md:text-3xl xl:text-[3rem] mb-5 mt-0 sm:mt-5 md:leading-tight">
+            <OrderTracker activeStep={activeStep} />
+          </h1>
+        </div>
+      )}
       <div className="flex">
         <div className="flex flex-[0.6] gap-4 w-[80%] ml-[18%] rounded-md shadow-md bg-white mt-2">
           <div className="w-full ml-5">

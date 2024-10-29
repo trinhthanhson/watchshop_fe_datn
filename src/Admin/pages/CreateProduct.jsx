@@ -7,11 +7,15 @@ import {
   getAllBrandRequest,
   addProductRequestBatch
 } from '../../redux/actions/actions'
-import { uploadImageToFirebase,uploadImageToFirebaseExcel } from '../../firebase' // Import the function
-import ExcelJS from 'exceljs';
+import {
+  uploadImageToFirebase,
+  uploadImageToFirebaseExcel
+} from '../../firebase' // Import the function
+import ExcelJS from 'exceljs'
 
 const CreateProduct = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate() // Khởi tạo navigate
   const message = useSelector((state) => state.addProduct)
   const categories = useSelector((state) => state.categories.categories)
   const brands = useSelector((state) => state.brands.brands)
@@ -44,7 +48,6 @@ const CreateProduct = () => {
       image: ''
     }
   })
-  const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(getAllCategoriesRequest())
@@ -137,140 +140,153 @@ const CreateProduct = () => {
       navigate('/manager/products')
     }
   }, [message, navigate])
-  
-  const handleExcelFile = async (file) => {
-    const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(file); // Chờ tải workbook
 
-    const worksheet = workbook.getWorksheet(1); // Lấy worksheet đầu tiên
-    const productDataArray = []; // Mảng để lưu trữ dữ liệu sản phẩm
+  const handleExcelFile = async (file) => {
+    const workbook = new ExcelJS.Workbook()
+    await workbook.xlsx.load(file) // Chờ tải workbook
+
+    const worksheet = workbook.getWorksheet(1) // Lấy worksheet đầu tiên
+    const productDataArray = [] // Mảng để lưu trữ dữ liệu sản phẩm
 
     // Lấy tất cả hình ảnh trong workbook
-    const images = worksheet.getImages();
-    const imageMap = {}; // Tạo một bản đồ để ánh xạ ID hình ảnh với dữ liệu của nó
-    const orderedImageUrls = []; // Mảng để lưu URL hình ảnh theo thứ tự
+    const images = worksheet.getImages()
+    const imageMap = {} // Tạo một bản đồ để ánh xạ ID hình ảnh với dữ liệu của nó
+    const orderedImageUrls = [] // Mảng để lưu URL hình ảnh theo thứ tự
 
     // Xử lý tất cả hình ảnh từng cái một
     for (const image of images) {
-        const imageData = workbook.model.media[image.imageId];
-        const imageExtension = imageData.extension;
-        const imageBuffer = imageData.buffer;
+      const imageData = workbook.model.media[image.imageId]
+      const imageExtension = imageData.extension
+      const imageBuffer = imageData.buffer
 
-        try {
-            // Tải hình ảnh lên Firebase (hoặc nơi nào khác bạn muốn)
-            const imageUrl = await uploadImageToFirebaseExcel(imageBuffer, imageExtension); // Gọi hàm tải hình ảnh lên
-            imageMap[image.imageId] = imageUrl; // Lưu URL vào bản đồ
-            orderedImageUrls.push(imageUrl); // Thêm URL vào mảng theo thứ tự
-        } catch (error) {
-            console.error("Error uploading image:", error);
-        }
+      try {
+        // Tải hình ảnh lên Firebase (hoặc nơi nào khác bạn muốn)
+        const imageUrl = await uploadImageToFirebaseExcel(
+          imageBuffer,
+          imageExtension
+        ) // Gọi hàm tải hình ảnh lên
+        imageMap[image.imageId] = imageUrl // Lưu URL vào bản đồ
+        orderedImageUrls.push(imageUrl) // Thêm URL vào mảng theo thứ tự
+      } catch (error) {
+        console.error('Error uploading image:', error)
+      }
     }
 
     // Đọc dữ liệu sản phẩm từ worksheet, bắt đầu từ hàng thứ 2
     worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
-        // Bỏ qua hàng tiêu đề (hàng 1)
-        if (rowNumber === 1) return;
+      // Bỏ qua hàng tiêu đề (hàng 1)
+      if (rowNumber === 1) return
 
-        const productData = {
-            brand_name: row.getCell('A').value,
-            category_name: row.getCell('B').value,
-            product_name: row.getCell('C').value,
-            price: row.getCell('D').value,
-            quantity: row.getCell('E').value,
-            color: row.getCell('F').value,
-            band_material: row.getCell('G').value,
-            dial_type: row.getCell('H').value,
-            func: row.getCell('I').value,
-            gender: row.getCell('J').value,
-            model: row.getCell('K').value,
-            series: row.getCell('L').value,
-            water_resistance: row.getCell('M').value,
-            case_diameter: row.getCell('N').value,
-            case_material: row.getCell('O').value,
-            detail: row.getCell('P').value,
-            machine_movement: row.getCell('Q').value,
-            band_width: row.getCell('R').value,
-            case_thickness: row.getCell('S').value,
-            image: null, // Khởi tạo image là null trước
-        };
+      const productData = {
+        brand_name: row.getCell('A').value,
+        category_name: row.getCell('B').value,
+        product_name: row.getCell('C').value,
+        price: row.getCell('D').value,
+        quantity: row.getCell('E').value,
+        color: row.getCell('F').value,
+        band_material: row.getCell('G').value,
+        dial_type: row.getCell('H').value,
+        func: row.getCell('I').value,
+        gender: row.getCell('J').value,
+        model: row.getCell('K').value,
+        series: row.getCell('L').value,
+        water_resistance: row.getCell('M').value,
+        case_diameter: row.getCell('N').value,
+        case_material: row.getCell('O').value,
+        detail: row.getCell('P').value,
+        machine_movement: row.getCell('Q').value,
+        band_width: row.getCell('R').value,
+        case_thickness: row.getCell('S').value,
+        image: null // Khởi tạo image là null trước
+      }
 
-        // Gán hình ảnh cho productData dựa trên hàng hiện tại (rowNumber - 2)
-       
+      // Gán hình ảnh cho productData dựa trên hàng hiện tại (rowNumber - 2)
 
-        if(productData.product_name && productData.category_name && productData.brand_name){
-          if (rowNumber - 2 < orderedImageUrls.length) {
-            productData.image = orderedImageUrls[rowNumber - 2];
+      if (
+        productData.product_name &&
+        productData.category_name &&
+        productData.brand_name
+      ) {
+        if (rowNumber - 2 < orderedImageUrls.length) {
+          productData.image = orderedImageUrls[rowNumber - 2]
         }
-        productDataArray.push(productData);
-        }
-        
-    });
+        productDataArray.push(productData)
+      }
+    })
 
     // Gọi hàm gửi dữ liệu Excel đi sau khi tất cả hình ảnh đã được tải lên
-    await handleSendExcelData(productDataArray);
-};
+    await handleSendExcelData(productDataArray)
+  }
 
-
-// Hàm xử lý thay đổi Excel
-const handleChangeExcel = (e) => {
+  // Hàm xử lý thay đổi Excel
+  const handleChangeExcel = (e) => {
     if (e.target.name === 'file') {
-        setFormData({ ...formData, file: e.target.files[0] });
+      setFormData({ ...formData, file: e.target.files[0] })
     } else if (e.target.name === 'excel') {
-        // Kiểm tra xem có tệp nào được chọn không
-        if (e.target.files.length > 0) {
-            const selectedFile = e.target.files[0];
-            // Kiểm tra xem tệp có phải là một đối tượng File không
-            if (selectedFile instanceof File) {
-                handleExcelFile(selectedFile); // Gọi hàm xử lý tệp Excel
-            } else {
-                console.error('Invalid file type:', selectedFile);
-            }
+      // Kiểm tra xem có tệp nào được chọn không
+      if (e.target.files.length > 0) {
+        const selectedFile = e.target.files[0]
+        // Kiểm tra xem tệp có phải là một đối tượng File không
+        if (selectedFile instanceof File) {
+          handleExcelFile(selectedFile) // Gọi hàm xử lý tệp Excel
         } else {
-            console.error('No file selected');
+          console.error('Invalid file type:', selectedFile)
         }
+      } else {
+        console.error('No file selected')
+      }
     } else {
-        setFormData({
-            ...formData,
-            data: { ...formData.data, [e.target.name]: e.target.value },
-        });
-    }
-};
-const handleSendExcelData = async (data) => {
-  const productDataArray = await Promise.all(
-      data.map(async (item) => {
-          // Chuyển đổi quantity và price sang kiểu số nguyên
-          const quantity = Number(item.quantity) || 0; // Chuyển đổi thành số nguyên, nếu không hợp lệ thì gán là 0
-          const price = Number(item.price) || 0; // Tương tự với price
-          // Trả về dữ liệu sản phẩm với URL ảnh
-          return {
-              product_name: item.product_name || formData.data.product_name,
-              status: formData.data.status,
-              quantity: quantity, // Đảm bảo quantity là kiểu số
-              price: price, // Đảm bảo price là kiểu số
-              detail: item.detail || formData.data.detail,
-              band_material: item.band_material || formData.data.band_material,
-              band_width: item.band_width || formData.data.band_width,
-              case_diameter: item.case_diameter || formData.data.case_diameter,
-              case_material: item.case_material || formData.data.case_material,
-              case_thickness: item.case_thickness || formData.data.case_thickness,
-              color: item.color || formData.data.color,
-              dial_type: item.dial_type || formData.data.dial_type,
-              func: item.func || formData.data.func,
-              gender: item.gender || formData.data.gender,
-              machine_movement: item.machine_movement || formData.data.machine_movement,
-              model: item.model || formData.data.model,
-              series: item.series || formData.data.series,
-              water_resistance: item.water_resistance || formData.data.water_resistance,
-              brand_name: item.brand_name || formData.data.brand_name,
-              category_name: item.category_name || formData.data.category_name,
-              image: item.image // URL Firebase sau khi upload
-          };
-
+      setFormData({
+        ...formData,
+        data: { ...formData.data, [e.target.name]: e.target.value }
       })
-  );
-  // Dispatch mảng dữ liệu sản phẩm để gửi đi
-  dispatch(addProductRequestBatch(productDataArray));
-};
+    }
+  }
+  const handleSendExcelData = async (data) => {
+    const productDataArray = await Promise.all(
+      data.map(async (item) => {
+        // Chuyển đổi quantity và price sang kiểu số nguyên
+        const quantity = Number(item.quantity) || 0 // Chuyển đổi thành số nguyên, nếu không hợp lệ thì gán là 0
+        const price = Number(item.price) || 0 // Tương tự với price
+        // Trả về dữ liệu sản phẩm với URL ảnh
+        return {
+          product_name: item.product_name || formData.data.product_name,
+          status: formData.data.status,
+          quantity: quantity, // Đảm bảo quantity là kiểu số
+          price: price, // Đảm bảo price là kiểu số
+          detail: item.detail || formData.data.detail,
+          band_material: item.band_material || formData.data.band_material,
+          band_width: item.band_width || formData.data.band_width,
+          case_diameter: item.case_diameter || formData.data.case_diameter,
+          case_material: item.case_material || formData.data.case_material,
+          case_thickness: item.case_thickness || formData.data.case_thickness,
+          color: item.color || formData.data.color,
+          dial_type: item.dial_type || formData.data.dial_type,
+          func: item.func || formData.data.func,
+          gender: item.gender || formData.data.gender,
+          machine_movement:
+            item.machine_movement || formData.data.machine_movement,
+          model: item.model || formData.data.model,
+          series: item.series || formData.data.series,
+          water_resistance:
+            item.water_resistance || formData.data.water_resistance,
+          brand_name: item.brand_name || formData.data.brand_name,
+          category_name: item.category_name || formData.data.category_name,
+          image: item.image // URL Firebase sau khi upload
+        }
+      })
+    )
+    // Dispatch mảng dữ liệu sản phẩm để gửi đi
+    try {
+      // Dispatch mảng dữ liệu sản phẩm để gửi đi
+      await dispatch(addProductRequestBatch(productDataArray))
+
+      // Điều hướng quay lại trang quản lý sản phẩm
+      navigate('/manager/products') // Điều hướng sau khi thêm thành công
+    } catch (error) {
+      console.error('Error adding products:', error)
+    }
+  }
   return (
     <>
       <div className="flex flex-col justify-center items-center ml-[18%]">

@@ -18,10 +18,12 @@ const Login = () => {
   const [showForgotPassword, setShowForgotPassword] = useState(false)
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
-  const userRole = user?.user?.role.role_name
+  const userRole = user?.user?.role_user?.role_name
   const [isLoggingIn, setIsLoggingIn] = useState(false)
   const [loading, setLoading] = useState(false)
-
+  const [passwordError, setPasswordError] = useState('')
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
   // Handle the home navigation
   const handleGoHome = () => {
     navigate('/')
@@ -32,8 +34,18 @@ const Login = () => {
     setUsername(event.target.value)
   }
 
+  // Kiểm tra mật khẩu khi thay đổi
   const handlePasswordChange = (event) => {
-    setPassword(event.target.value)
+    const newPassword = event.target.value
+    setPassword(newPassword)
+
+    if (!passwordRegex.test(newPassword)) {
+      setPasswordError(
+        'Mật khẩu phải có ít nhất 8 ký tự, bao gồm ít nhất 1 chữ cái viết hoa, 1 chữ cái viết thường, 1 số và 1 ký tự đặc biệt.'
+      )
+    } else {
+      setPasswordError('')
+    }
   }
 
   // Handle login using username and password
@@ -43,7 +55,10 @@ const Login = () => {
         if (typeof username !== 'string' || typeof password !== 'string') {
           throw new Error('Invalid input data')
         }
-
+        if (!passwordRegex.test(password)) {
+          setMessage('Mật khẩu không hợp lệ.')
+          return
+        }
         setIsLoggingIn(true)
 
         const response = await axios.post(
@@ -114,21 +129,18 @@ const Login = () => {
 
   // Navigate after user profile data is updated
   useEffect(() => {
+    console.log('User role:', userRole) // Debugging line
     if (userRole) {
       localStorage.setItem('role_name', encryptData(userRole))
       if (userRole === 'MANAGER' || userRole === 'STAFF') {
         navigate('/manager')
       } else if (userRole === 'CUSTOMER') {
-        if (location.pathname.startsWith('/manager')) {
-          navigate('/home')
-        }
         navigate('/home')
       } else if (userRole === 'SHIPPER') {
         navigate('/manager/shipper')
       }
     }
   }, [userRole, navigate])
-
   const handleForgotPassword = () => {
     setShowForgotPassword(true)
   }
@@ -257,6 +269,14 @@ const Login = () => {
                     className="h-8 w-[45%] outline-0 bg-[#ebebeb] p-2 rounded mb-2"
                   />
                 </div>
+                {passwordError && (
+                  <p
+                    className="text-red-500"
+                    style={{ color: 'red', marginLeft: 130 }}
+                  >
+                    {passwordError}
+                  </p>
+                )}
                 <a
                   onClick={handleForgotPassword}
                   className="link_forgotPass text-white"

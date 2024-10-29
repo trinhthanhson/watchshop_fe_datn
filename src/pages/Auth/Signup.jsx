@@ -17,6 +17,8 @@ const Signup = () => {
   const [isOtpSent, setIsOtpSent] = useState(false)
   const [otpError, setOtpError] = useState('')
   const [loading, setLoading] = useState(false)
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
 
   const handleGoBack = () => {
     navigate('/login')
@@ -26,51 +28,120 @@ const Signup = () => {
     navigate('/')
   }
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value)
+  // const handleUsernameChange = (event) => {
+  //   setUsername(event.target.value)
+  // }
+
+  // const handlePasswordChange = (event) => {
+  //   setPassword(event.target.value)
+  // }
+
+  // const handleRepasswordChange = (event) => {
+  //   setRepassword(event.target.value)
+  // }
+
+  // const handleFirstnameChange = (e) => {
+  //   setFirstname(e.target.value)
+  // }
+
+  // const handleLastnameChange = (e) => {
+  //   setLastname(e.target.value)
+  // }
+
+  // const handleEmailChange = (e) => {
+  //   setEmail(e.target.value)
+  // }
+
+  // const handleOtpChange = (e) => {
+  //   setOtp(e.target.value)
+  // }
+  const validateField = (name, value) => {
+    const newErrors = { ...errors }
+
+    if (name === 'username' && !value) {
+      newErrors.username = 'Username không được để trống'
+    } else {
+      delete newErrors.username
+    }
+
+    if (name === 'password') {
+      if (!value) {
+        newErrors.password = 'Mật khẩu không được để trống'
+      } else if (!passwordRegex.test(value)) {
+        newErrors.password =
+          'Mật khẩu phải có chữ hoa, chữ thường, số, ký tự đặc biệt và tối thiểu 8 ký tự'
+      } else {
+        delete newErrors.password
+      }
+    }
+
+    if (name === 'repassword') {
+      if (!value) {
+        newErrors.repassword = 'Vui lòng nhập lại mật khẩu'
+      } else if (value !== password) {
+        newErrors.repassword = 'Mật khẩu không trùng khớp'
+      } else {
+        delete newErrors.repassword
+      }
+    }
+
+    if (name === 'firstname' && !value) {
+      newErrors.firstname = 'Họ không được để trống'
+    } else {
+      delete newErrors.firstname
+    }
+
+    if (name === 'lastname' && !value) {
+      newErrors.lastname = 'Tên không được để trống'
+    } else {
+      delete newErrors.lastname
+    }
+
+    if (name === 'email') {
+      if (!value) {
+        newErrors.email = 'Email không được để trống'
+      } else if (!/@/.test(value)) {
+        newErrors.email = 'Email phải chứa ký tự @'
+      } else {
+        delete newErrors.email
+      }
+    }
+
+    setErrors(newErrors)
   }
 
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value)
-  }
+  const handleFieldChange = (field, value) => {
+    switch (field) {
+      case 'username':
+        setUsername(value)
+        break
+      case 'password':
+        setPassword(value)
+        break
+      case 'repassword':
+        setRepassword(value)
+        break
+      case 'firstname':
+        setFirstname(value)
+        break
+      case 'lastname':
+        setLastname(value)
+        break
+      case 'email':
+        setEmail(value)
+        break
+      case 'otp':
+        setOtp(value)
+        break
+      default:
+        break
+    }
 
-  const handleRepasswordChange = (event) => {
-    setRepassword(event.target.value)
-  }
-
-  const handleFirstnameChange = (e) => {
-    setFirstname(e.target.value)
-  }
-
-  const handleLastnameChange = (e) => {
-    setLastname(e.target.value)
-  }
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value)
-  }
-
-  const handleOtpChange = (e) => {
-    setOtp(e.target.value)
+    validateField(field, value)
   }
 
   const handleSentOtp = async () => {
-    const newErrors = {}
-    if (!username) newErrors.username = 'Username không được để trống'
-    if (!password) newErrors.password = 'Mật khẩu không được để trống'
-    if (!repassword) newErrors.repassword = 'Vui lòng nhập lại mật khẩu'
-    else if (password !== repassword)
-      newErrors.repassword = 'Mật khẩu không trùng khớp'
-    if (!firstname) newErrors.firstname = 'Họ không được để trống'
-    if (!lastname) newErrors.lastname = 'Tên không được để trống'
-    if (!email) newErrors.email = 'Email không được để trống'
-    else if (!/@/.test(email)) newErrors.email = 'Email phải chứa ký tự @'
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
-    }
-    setLoading(true) // Bắt đầu trạng thái loading
+    setLoading(true)
 
     try {
       const otpResponse = await axios.post(
@@ -79,6 +150,7 @@ const Signup = () => {
           email
         }
       )
+      console.log(email, otpResponse.data)
       if (otpResponse.data.code === 200) {
         setIsOtpSent(true)
       } else {
@@ -87,7 +159,7 @@ const Signup = () => {
     } catch (error) {
       console.error('Error:', error)
     } finally {
-      setLoading(false) // Kết thúc trạng thái loading
+      setLoading(false)
     }
   }
 
@@ -108,10 +180,8 @@ const Signup = () => {
       const { code } = response.data
       if (code === 201) {
         navigate('/login')
-        console.log('Đăng ký thành công')
       } else {
         setOtpError('OTP không chính xác')
-        console.log('Đăng ký không thành công')
       }
     } catch (error) {
       setOtpError('Có lỗi xảy ra, vui lòng thử lại')
@@ -134,7 +204,7 @@ const Signup = () => {
           alt="Logo"
         />
         <div
-          className="cursor-pointer layout_login absolute flex-col justify-center items-center mt-[10%] ml-[30%] w-[40%] rounded-[15px]"
+          className=" layout_login absolute flex-col justify-center items-center mt-[10%] ml-[30%] w-[40%] rounded-[15px]"
           style={{
             backgroundColor: 'rgb(6 6 6 / 50%)',
             height: isOtpSent ? '300px' : '550px'
@@ -157,7 +227,7 @@ const Signup = () => {
                 <input
                   type="text"
                   value={otp}
-                  onChange={handleOtpChange}
+                  onChange={(e) => handleFieldChange('otp', e.target.value)}
                   className="h-8 w-[45%] outline-0 bg-[#ebebeb] p-2 rounded"
                 />
               </div>
@@ -182,7 +252,9 @@ const Signup = () => {
                 <input
                   type="text"
                   value={username}
-                  onChange={handleUsernameChange}
+                  onChange={(e) =>
+                    handleFieldChange('username', e.target.value)
+                  }
                   className="h-8 w-[45%] outline-0 bg-[#ebebeb] p-2 rounded"
                 />
               </div>
@@ -199,7 +271,9 @@ const Signup = () => {
                 <input
                   type="password"
                   value={password}
-                  onChange={handlePasswordChange}
+                  onChange={(e) =>
+                    handleFieldChange('password', e.target.value)
+                  }
                   className="h-8 w-[45%] outline-0 bg-[#ebebeb] p-2 rounded"
                 />
               </div>
@@ -216,7 +290,9 @@ const Signup = () => {
                 <input
                   type="password"
                   value={repassword}
-                  onChange={handleRepasswordChange}
+                  onChange={(e) =>
+                    handleFieldChange('repassword', e.target.value)
+                  }
                   className="h-8 w-[45%] outline-0 bg-[#ebebeb] p-2 rounded"
                 />
               </div>
@@ -233,7 +309,9 @@ const Signup = () => {
                 <input
                   type="text"
                   value={firstname}
-                  onChange={handleFirstnameChange}
+                  onChange={(e) =>
+                    handleFieldChange('firstname', e.target.value)
+                  }
                   className="h-8 w-[45%] outline-0 bg-[#ebebeb] p-2 rounded"
                 />
               </div>
@@ -250,7 +328,9 @@ const Signup = () => {
                 <input
                   type="text"
                   value={lastname}
-                  onChange={handleLastnameChange}
+                  onChange={(e) =>
+                    handleFieldChange('lastname', e.target.value)
+                  }
                   className="h-8 w-[45%] outline-0 bg-[#ebebeb] p-2 rounded"
                 />
               </div>
@@ -268,7 +348,7 @@ const Signup = () => {
                   pattern="@"
                   type="email"
                   value={email}
-                  onChange={handleEmailChange}
+                  onChange={(e) => handleFieldChange('email', e.target.value)}
                   className="h-8 w-[45%] outline-0 bg-[#ebebeb] p-2 rounded"
                 />
               </div>

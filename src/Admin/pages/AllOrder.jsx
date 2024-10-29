@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import * as XLSX from 'xlsx'
-import fontBase64 from '../../apis/TimesNewRoman'
 const AllOrder = () => {
   const dispatch = useDispatch()
   const orders = useSelector((state) => state.orders.orders)
@@ -63,20 +62,15 @@ const AllOrder = () => {
   const exportPDF = () => {
     const doc = new jsPDF()
 
-    // Thêm font tùy chỉnh vào jsPDF
-    doc.addFileToVFS('times.ttf', fontBase64) // Đảm bảo 'times.ttf' khớp với tên đã sử dụng trong addFont
-    doc.addFont('times.ttf', 'TimesNewRoman', 'normal')
-    doc.setFont('TimesNewRoman')
-
     const tableColumn = [
-      'STT',
-      'Hình Ảnh',
-      'Tên Sản Phẩm',
-      'Địa Chỉ',
-      'Tổng Số Lượng',
-      'Thanh Toán',
-      'Ngày Đặt',
-      'Trạng Thái'
+      'No', // STT (Số Thứ Tự)
+      'Image', // Hình Ảnh
+      'Product Name', // Tên Sản Phẩm
+      'Address', // Địa Chỉ
+      'Total Quantity', // Tổng Số Lượng
+      'Payment', // Thanh Toán
+      'Order Date', // Ngày Đặt
+      'Status' // Trạng Thái
     ]
     const tableRows = []
 
@@ -97,13 +91,24 @@ const AllOrder = () => {
       tableRows.push(orderData)
     })
 
+    // Sử dụng autoTable để tạo bảng
     doc.autoTable({
       head: [tableColumn],
       body: tableRows,
-      startY: 20
+      startY: 20,
+      theme: 'striped',
+      styles: {
+        fontSize: 10,
+        cellPadding: 4
+      },
+      headStyles: {
+        fillColor: [220, 220, 220],
+        textColor: 0,
+        fontStyle: 'bold'
+      }
     })
 
-    doc.text('Danh Sách Đơn Hàng', 14, 15)
+    doc.text('Order List', 14, 15)
     doc.save('order-list.pdf')
   }
   const exportToExcel = () => {
@@ -112,7 +117,7 @@ const AllOrder = () => {
       return {
         STT: index + 1,
         'Sản Phẩm': order.orderDetails
-          .map((item) => item.product && item.product.product_name)
+          .map((item) => item.product_order && item.product_order.product_name)
           .join(', '),
         'Địa Chỉ': order.address,
         'Tổng Số Lượng': order.total_quantity,

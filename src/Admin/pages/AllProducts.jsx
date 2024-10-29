@@ -38,8 +38,8 @@ const AllProducts = () => {
         ID: product.product_id,
         Image: product.image,
         Name: product.product_name,
-        Category: product.category?.category_name,
-        Brand: product.brand?.brand_name,
+        Category: product.category_product?.category_name,
+        Brand: product.brand_product?.brand_name,
         Price: product.updatePrices[0]?.price_new.toLocaleString('en'),
         Quantity: product.quantity,
         Status: getStatusText(product.status)
@@ -160,7 +160,10 @@ const AllProducts = () => {
                 <td>{product?.category_product?.category_name}</td>
                 <td>{product?.brand_product?.brand_name}</td>
                 <td>
-                  {product?.updatePrices[0]?.price_new.toLocaleString('en')}
+                  {product?.updatePrices[0]?.price_new.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                  })}
                 </td>
                 <td
                   onClick={() =>
