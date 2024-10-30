@@ -117,7 +117,7 @@ const CardProductItem = ({ product }) => {
           </h3>
           <hr className="mt-5" />
           <div className="flex py-3 relative">
-            {status === 'Active' ? (
+            {status === 'ACTIVE' ? (
               quantity > 0 ? (
                 <div className="w-1/2 px-5">
                   <p className="text-base font-RobotoMedium 3xl:text-lg text-primary">

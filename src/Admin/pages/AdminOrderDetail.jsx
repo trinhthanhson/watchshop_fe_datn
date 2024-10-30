@@ -7,11 +7,11 @@ import OrderTracker from '../../components/Order/OrderTraker'
 
 const ORDER_STATUS_NEXT = {
   0: 'Xác Nhận',
-  1: 'Đã xác nhận',
-  2: 'Đang vận chuyển',
-  3: 'Chờ thanh toán',
-  4: 'Đã thanh toán',
-  5: 'Đã giao'
+  1: 'Đang vận chuyển',
+  2: 'Chờ thanh toán',
+  3: 'Đã thanh toán',
+  4: 'Đã giao',
+  5: 'Hoàn thành'
 }
 
 const AdminOrderDetail = () => {
