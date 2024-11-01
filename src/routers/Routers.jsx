@@ -45,6 +45,8 @@ import ProductByBrand from '../pages/Menu/ProductByBrand'
 import OrderAcceptShipper from '../Admin/pages/OrderAcceptShipper'
 import OrderShipperDetail from '../Admin/pages/OrderShipperDetail'
 import OrderReceiveShipper from '../Admin/pages/OrderReceiveShipper'
+import DashboardInevntory from '../Admin/pages/Inventory/DashboardInevntory'
+import LayoutInventory from '../Admin/components/inventory/LayoutInventory'
 
 const Routers = () => {
   const navigate = useNavigate()
@@ -156,6 +158,35 @@ const Routers = () => {
         <Route path="/manager/profile" element={<StaffProfile />} />
         <Route path="/manager/coupons" element={<AllCoupons />} />
         <Route path="/manager/create-coupon" element={<CreateCoupon />} />
+      </Route>
+
+      <Route path="/manager/inventory" element={<LayoutInventory />}>
+        <Route index element={<DashboardInevntory />} />
+        {/* <Route path="/inventory/products" element={<AllProducts />} /> */}
+        {/* <Route path="/manager/create-product" element={<CreateProduct />} />
+        <Route path="/manager/update-product/:id" element={<UpdateProduct />} />
+        <Route
+          path="/manager/user-customer/:id"
+          element={<AdminUserCustomerDetail />}
+        />
+        <Route
+          path="/manager/user-staff/:id"
+          element={<AdminUserStaffDetail />}
+        />
+        <Route path="/manager/product/:id" element={<AdminProductDetail />} />
+        <Route
+          path="/manager/coupon-detail/:id"
+          element={<AllCouponDetail />}
+        />
+        <Route path="/manager/orders" element={<AllOrder />} />
+        <Route path="/manager/order/:id" element={<AdminOrderDetail />} />
+        <Route path="/manager/customers" element={<AllCustomers />} />
+        <Route path="/manager/staffs" element={<AllStaff />} />
+        <Route path="/manager/category" element={<AllCategory />} />
+        <Route path="/manager/brand" element={<AllBrand />} />
+        <Route path="/manager/profile" element={<StaffProfile />} />
+        <Route path="/manager/coupons" element={<AllCoupons />} />
+        <Route path="/manager/create-coupon" element={<CreateCoupon />} /> */}
       </Route>
     </Routes>
   )

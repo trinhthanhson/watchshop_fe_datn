@@ -68,6 +68,22 @@ export const DASHBOARD_SIDEBAR_TOP_LINKS_SHIPPER = [
     icon: <HiOutlineShoppingCart />
   }
 ]
+
+export const DASHBOARD_SIDEBAR_TOP_LINKS_INVENTORY = [
+  {
+    key: 'products',
+    label: 'Products',
+    path: '/inventory/product',
+    icon: <HiOutlineCube />
+  },
+  {
+    key: 'ordership',
+    label: 'Order received ',
+    path: '/manager/shipper/receive',
+    icon: <HiOutlineShoppingCart />
+  }
+]
+
 export const DASHBOARD_SIDEBAR_BOTTOM_LINKS = [
   {
     key: 'settings',

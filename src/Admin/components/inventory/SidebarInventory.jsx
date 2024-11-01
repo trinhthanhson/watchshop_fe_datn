@@ -1,22 +1,16 @@
 import { Link, useLocation } from 'react-router-dom/dist'
+import { HiOutlineLogout } from 'react-icons/hi'
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import {
   DASHBOARD_SIDEBAR_BOTTOM_LINKS,
-  DASHBOARD_SIDEBAR_TOP_LINKS
-} from '../../constants/MenuLink'
-import {
-  HiOutlineLogout,
-  HiOutlineUser,
-  HiOutlineUserGroup
-} from 'react-icons/hi'
-import { useEffect, useState } from 'react'
-import { getUserProfileRequest } from '../../redux/actions/actions'
-import { useSelector, useDispatch } from 'react-redux'
-
-const Sidebar = () => {
+  DASHBOARD_SIDEBAR_TOP_LINKS_INVENTORY
+} from '../../../constants/MenuLink'
+import { getUserProfileRequest } from '../../../redux/actions/actions'
+const SidebarInventory = () => {
   const location = useLocation()
   const dispatch = useDispatch()
   // const navigate = useNavigate();
-  const user = useSelector((state) => state.user.user.data)
   useEffect(() => {
     try {
       dispatch(getUserProfileRequest())
@@ -29,8 +23,6 @@ const Sidebar = () => {
     window.location.href = '/login'
   }
   const [hoveredIndex, setHoveredIndex] = useState(null)
-  const isManager = user?.user?.role_user?.role_name === 'MANAGER'
-  const isAdmin = user?.user?.role_user?.role_name === 'ADMIN'
 
   return (
     <div
@@ -46,7 +38,7 @@ const Sidebar = () => {
         <div className="text-[16px]"></div>
       </div>
       <div className="flex-1 mt-6">
-        {DASHBOARD_SIDEBAR_TOP_LINKS.map((link) => (
+        {DASHBOARD_SIDEBAR_TOP_LINKS_INVENTORY.map((link) => (
           <Link key={link.key} to={link.path}>
             <div
               key={link.key}
@@ -66,50 +58,6 @@ const Sidebar = () => {
             </div>
           </Link>
         ))}
-
-        {isManager && (
-          <Link key="staffs" to="/manager/staffs">
-            <div
-              className={`flex items-center gap-3 p-3 cursor-pointer hover:no-underline ${location.pathname === '/manager/staffs' ? '' : 'text-textNoneActive'}`}
-              style={{
-                color: '#000c',
-                backgroundColor:
-                  hoveredIndex === 'staffs' ||
-                  location.pathname === '/manager/staffs'
-                    ? 'rgb(171, 171, 171)'
-                    : 'transparent'
-              }}
-              onMouseEnter={() => setHoveredIndex('staffs')}
-              onMouseLeave={() => setHoveredIndex(null)}
-            >
-              <div>
-                <HiOutlineUserGroup />
-              </div>
-              <div>Staffs</div>
-            </div>
-          </Link>
-        )}
-        {isAdmin && (
-          <Link key="role" to="/admin/role">
-            <div
-              className={`flex items-center gap-3 p-3 cursor-pointer hover:no-underline ${location.pathname === '/admin/role' ? '' : 'text-textNoneActive'}`}
-              style={{
-                color: '#000c',
-                backgroundColor:
-                  hoveredIndex === 'role' || location.pathname === '/admin/role'
-                    ? 'rgb(171, 171, 171)'
-                    : 'transparent'
-              }}
-              onMouseEnter={() => setHoveredIndex('role')}
-              onMouseLeave={() => setHoveredIndex(null)}
-            >
-              <div>
-                <HiOutlineUser />
-              </div>
-              <div>Roles</div>
-            </div>
-          </Link>
-        )}
       </div>
       <hr className="opacity-40" />
       <div className="">
@@ -145,4 +93,4 @@ const Sidebar = () => {
   )
 }
 
-export default Sidebar
+export default SidebarInventory
