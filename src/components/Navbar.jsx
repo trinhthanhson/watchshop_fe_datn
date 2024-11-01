@@ -42,13 +42,21 @@ const Navbar = () => {
   }, [])
   const toggleAboutMenu = () => {
     setShowAboutMenu(!showAboutMenu)
+    setShowMenuBrand(false)
+    setShowMenuCategory(false)
   }
 
   const toggleMenuCategory = () => {
     setShowMenuCategory(!showMenuCategory)
+    setShowMenuBrand(false)
+    setShowAboutMenu(false)
+
   }
   const toggleMenuBrand = () => {
     setShowMenuBrand(!showMenuBrand)
+    setShowAboutMenu(false)
+    setShowMenuCategory(false)
+
   }
   const handleToggle = () => {
     setIsOpen(!isOpen)
@@ -227,12 +235,12 @@ const Navbar = () => {
                         </div>
                         <div className="w-[70%] bg-white p-[60px]">
                           <div className="flex flex-wrap">
-                            {Array.isArray(categories) &&
-                            categories.length > 0 ? (
-                              categories.map((category) => (
+                            {Array.isArray(categories) && categories.length > 0 ? (
+                              categories.map((category, index) => (
                                 <div
                                   key={category.category_id}
-                                  className="w-[30%] mb-6"
+                                  className={`w-[30%] mb-6 ${index % 3 !== 2 ? 'border-r border-gray-300' : ''
+                                    }`} // Add border to all except last in each row
                                 >
                                   <a
                                     className="font-RobotoMedium text-[30px] hover:text-red"
@@ -291,10 +299,11 @@ const Navbar = () => {
                         <div className="w-[70%] bg-white p-[60px]">
                           <div className="flex flex-wrap">
                             {Array.isArray(brands) && brands.length > 0 ? (
-                              brands.map((brand) => (
+                              brands.map((brand, index) => (
                                 <div
                                   key={brand.brand_id}
-                                  className="w-[30%] mb-6"
+                                  className={`w-[30%] mb-6 ${index % 3 !== 2 ? 'border-r border-gray-300' : ''
+                                    }`} // Adds border except on the last in each row
                                 >
                                   <a
                                     className="font-RobotoMedium text-[30px] hover:text-red"
@@ -312,6 +321,7 @@ const Navbar = () => {
                       </div>
                     </div>
                   )}
+
                 </div>
               </li>
               <li className="hidden sm:block w-full text-left md:w-fit">

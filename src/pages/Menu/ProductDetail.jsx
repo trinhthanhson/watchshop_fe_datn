@@ -331,7 +331,7 @@ const ProductDetail = () => {
           <h2 className="text-3xl font-bold text-primary mb-6">
             Thông Tin Chi Tiết
           </h2>
-          {/* Grid layout for product details */}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Object.entries({
               'Band Material': selectedProduct?.band_material,
@@ -346,9 +346,11 @@ const ProductDetail = () => {
               Model: selectedProduct?.model,
               Movement: selectedProduct?.machine_movement,
               Series: selectedProduct?.series,
-              'Water Resistance': selectedProduct?.water_resistance
+              'Water Resistance': selectedProduct?.water_resistance,
             })
-              // Sort alphabetically by key
+              // Lọc ra các mục có giá trị khác null
+              .filter(([, value]) => value !== "")
+              // Sắp xếp theo thứ tự bảng chữ cái
               .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
               .map(([key, value], index) => (
                 <div
@@ -360,6 +362,7 @@ const ProductDetail = () => {
                 </div>
               ))}
           </div>
+
         </div>
       </section>
       <section className="relative bg-white py-[50px] md:py-[80px]">
