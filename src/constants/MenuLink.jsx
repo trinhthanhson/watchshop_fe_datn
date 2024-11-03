@@ -7,7 +7,10 @@ import {
   HiOutlineReceiptTax,
   HiOutlineCog
 } from 'react-icons/hi'
-
+import { MdWatch } from 'react-icons/md'
+import { GrTransaction } from 'react-icons/gr'
+import { FaPeopleLine } from 'react-icons/fa6'
+import { BiText } from 'react-icons/bi'
 export const DASHBOARD_SIDEBAR_TOP_LINKS = [
   {
     key: 'dashboard',
@@ -71,16 +74,58 @@ export const DASHBOARD_SIDEBAR_TOP_LINKS_SHIPPER = [
 
 export const DASHBOARD_SIDEBAR_TOP_LINKS_INVENTORY = [
   {
-    key: 'products',
-    label: 'Products',
-    path: '/inventory/product',
+    key: 'dashboard',
+    label: 'Dashboard',
+    path: '/manager/inventory',
     icon: <HiOutlineCube />
   },
   {
-    key: 'ordership',
-    label: 'Order received ',
+    key: 'products',
+    label: 'Product',
+    path: '/manager/inventory/product',
+    icon: <MdWatch />
+  },
+  {
+    key: 'request',
+    label: 'Transaction Request',
+    path: '/manager/inventory/request',
+    icon: <GrTransaction />
+  },
+  {
+    key: 'transaction',
+    label: 'Transaction',
+    path: '/manager/inventory/transaction',
+    icon: <GrTransaction />
+  },
+  {
+    key: 'staff',
+    label: 'Staff Inventory',
+    path: '/manager/inventory/staff ',
+    icon: <FaPeopleLine />
+  },
+  {
+    key: 'type',
+    label: 'Type Transaction',
     path: '/manager/shipper/receive',
-    icon: <HiOutlineShoppingCart />
+    icon: <BiText />
+  },
+  {
+    key: 'brand',
+    label: 'Brand',
+    path: '/manager/inventory/brand',
+    icon: <HiOutlineServer />
+  },
+  {
+    key: 'category',
+    label: 'Category',
+    path: '/manager/inventory/category',
+    icon: <HiOutlineServer />
+  },
+  {
+    key: 'supplier',
+    label: 'Supplier',
+    path: '/manager/inventory/supplier',
+    icon: <HiOutlineServer />
   }
 ]
 

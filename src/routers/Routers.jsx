@@ -47,6 +47,9 @@ import OrderShipperDetail from '../Admin/pages/OrderShipperDetail'
 import OrderReceiveShipper from '../Admin/pages/OrderReceiveShipper'
 import DashboardInevntory from '../Admin/pages/Inventory/DashboardInevntory'
 import LayoutInventory from '../Admin/components/inventory/LayoutInventory'
+import ProductInventory from '../Admin/pages/Inventory/ProductInventory'
+import InventoryProductDetail from '../Admin/pages/Inventory/InventoryProductDetail'
+import InventoryUpdateProduct from '../Admin/pages/Inventory/InventoryUpdateProduct'
 
 const Routers = () => {
   const navigate = useNavigate()
@@ -162,9 +165,20 @@ const Routers = () => {
 
       <Route path="/manager/inventory" element={<LayoutInventory />}>
         <Route index element={<DashboardInevntory />} />
-        {/* <Route path="/inventory/products" element={<AllProducts />} /> */}
+        <Route
+          path="/manager/inventory/product"
+          element={<ProductInventory />}
+        />
+        <Route
+          path="/manager/inventory/product/:id"
+          element={<InventoryProductDetail />}
+        />
+        <Route
+          path="/manager/inventory/update-product/:id"
+          element={<InventoryUpdateProduct />}
+        />
+
         {/* <Route path="/manager/create-product" element={<CreateProduct />} />
-        <Route path="/manager/update-product/:id" element={<UpdateProduct />} />
         <Route
           path="/manager/user-customer/:id"
           element={<AdminUserCustomerDetail />}
@@ -173,7 +187,6 @@ const Routers = () => {
           path="/manager/user-staff/:id"
           element={<AdminUserStaffDetail />}
         />
-        <Route path="/manager/product/:id" element={<AdminProductDetail />} />
         <Route
           path="/manager/coupon-detail/:id"
           element={<AllCouponDetail />}
@@ -186,7 +199,7 @@ const Routers = () => {
         <Route path="/manager/brand" element={<AllBrand />} />
         <Route path="/manager/profile" element={<StaffProfile />} />
         <Route path="/manager/coupons" element={<AllCoupons />} />
-        <Route path="/manager/create-coupon" element={<CreateCoupon />} /> */}
+        <Route path="/manager/create-coupon" element={<CreateCoupon />} />  */}
       </Route>
     </Routes>
   )
