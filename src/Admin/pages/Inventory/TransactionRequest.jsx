@@ -8,7 +8,7 @@ import * as XLSX from 'xlsx'
 import { getAllProductsRequest } from '../../../redux/actions/actions'
 import { getStatus, getStatusText } from '../../../constants/Status'
 
-const ProductInventory = () => {
+const TransactionRequest = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const products = useSelector((state) => state.products.products)
@@ -115,13 +115,11 @@ const ProductInventory = () => {
           <thead className="text-white font-RobotoSemibold text-[18px] ">
             <tr className="bg-primary">
               <td className="rounded-s-md">ID</td>
-              <td>Ảnh</td>
-              <td>Tên</td>
-              <td>Loại Sản phẩm</td>
-              <td>Hãng Sản Phẩm</td>
-              <td>Giá Sản Phẩm</td>
-              <td>Mô tả</td>
-              <td>Số lượng</td>
+              <td>Tổng số lượng</td>
+              <td>Tổng giá</td>
+              <td>Ngày tạo</td>
+              <td>Người tạo</td>
+              <td>Người xác nhận</td>
               <td>Trạng Thái</td>
               <td className="rounded-e-md">Action</td>
             </tr>
@@ -220,4 +218,4 @@ const ProductInventory = () => {
   )
 }
 
-export default ProductInventory
+export default TransactionRequest

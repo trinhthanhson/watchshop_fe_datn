@@ -50,6 +50,10 @@ import LayoutInventory from '../Admin/components/inventory/LayoutInventory'
 import ProductInventory from '../Admin/pages/Inventory/ProductInventory'
 import InventoryProductDetail from '../Admin/pages/Inventory/InventoryProductDetail'
 import InventoryUpdateProduct from '../Admin/pages/Inventory/InventoryUpdateProduct'
+import TransactionRequest from '../Admin/pages/Inventory/TransactionRequest'
+import CreateProductInventory from '../Admin/pages/Inventory/CreateProductInventory'
+import AllCategoryInventory from '../Admin/pages/Inventory/AllCategoryInventory'
+import AllBrandInventory from '../Admin/pages/Inventory/AllBrandInventory'
 
 const Routers = () => {
   const navigate = useNavigate()
@@ -88,6 +92,8 @@ const Routers = () => {
           navigate('/manager/shipper')
         }
       }
+      console.log(role)
+
     }
     if (role === 'CUSTOMER') {
       if (location.pathname.startsWith('/manager')) {
@@ -177,12 +183,16 @@ const Routers = () => {
           path="/manager/inventory/update-product/:id"
           element={<InventoryUpdateProduct />}
         />
-
-        {/* <Route path="/manager/create-product" element={<CreateProduct />} />
         <Route
-          path="/manager/user-customer/:id"
-          element={<AdminUserCustomerDetail />}
+          path="/manager/inventory/request"
+          element={<TransactionRequest />}
         />
+        <Route path="/manager/inventory/create-product" element={<CreateProductInventory />} />
+        <Route path="/manager/inventory/category" element={<AllCategoryInventory />} />
+        <Route path="/manager/inventory/brand" element={<AllBrandInventory />} />
+        <Route path="/manager/inventory/supplier" element={<AllBrandInventory />} />
+
+        {/* 
         <Route
           path="/manager/user-staff/:id"
           element={<AdminUserStaffDetail />}
@@ -195,8 +205,7 @@ const Routers = () => {
         <Route path="/manager/order/:id" element={<AdminOrderDetail />} />
         <Route path="/manager/customers" element={<AllCustomers />} />
         <Route path="/manager/staffs" element={<AllStaff />} />
-        <Route path="/manager/category" element={<AllCategory />} />
-        <Route path="/manager/brand" element={<AllBrand />} />
+
         <Route path="/manager/profile" element={<StaffProfile />} />
         <Route path="/manager/coupons" element={<AllCoupons />} />
         <Route path="/manager/create-coupon" element={<CreateCoupon />} />  */}

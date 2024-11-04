@@ -18,7 +18,7 @@ const Login = () => {
   const [showForgotPassword, setShowForgotPassword] = useState(false)
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
-  const userRole = user?.user?.role_user?.role_name
+  const [userRole,setUserRole] = useState("")
   const [isLoggingIn, setIsLoggingIn] = useState(false)
   const [loading, setLoading] = useState(false)
   const [passwordError, setPasswordError] = useState('')
@@ -72,25 +72,18 @@ const Login = () => {
         const { token, status } = response.data
 
         if (status && token) {
-          const secretKey = import.meta.env.VITE_SECRET_KEY
-
-          if (!secretKey) {
-            throw new Error('Secret key is not defined')
-          }
-
+          console.log("dđ")
+          await dispatch(getUserProfileRequest(token))
           localStorage.setItem('token', token)
-          // Dispatch action to fetch user profile
-          await dispatch(getUserProfileRequest())
-          console.log('Đăng nhập thành công')
+          setUserRole(user?.user?.role_user?.role_name)
+          console.log(userRole)
         } else {
           setMessage(
             'Đăng nhập không thành công! Vui lòng kiểm tra lại username hoặc password'
           )
-          console.log('Đăng nhập không thành công')
         }
       } catch (error) {
         setMessage('Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại.')
-        console.error('Error:', error)
       } finally {
         setIsLoggingIn(false)
       }
@@ -129,8 +122,8 @@ const Login = () => {
 
   // Navigate after user profile data is updated
   useEffect(() => {
-    console.log('User role:', userRole) // Debugging line
-    if (userRole) {
+    console.log(userRole)
+    if (userRole != null) {
       localStorage.setItem('role_name', encryptData(userRole))
       if (userRole === 'MANAGER' || userRole === 'STAFF') {
         navigate('/manager')

@@ -74,7 +74,7 @@ import {
   GET_ALL_REVIEW_PRODUCT_FAILURE,
   GET_ALL_ROLE_REQUEST,
   GET_ALL_ROLE_SUCCESS,
-  GET_ALL_ROLE_FAILURE
+  GET_ALL_ROLE_FAILURE,
 } from './types'
 
 export const addCouponRequest = (formData) => ({
@@ -156,9 +156,10 @@ export const getAllCartFailure = (error) => ({
   payload: error
 })
 
-export const getUserProfileRequest = () => ({
-  type: GET_USER_PROFILE_REQUEST
-})
+export const getUserProfileRequest = (token) => ({
+  type: GET_USER_PROFILE_REQUEST,
+  payload: token,
+});
 
 export const getUserProfileSuccess = (user) => ({
   type: GET_USER_PROFILE_SUCCESS,
