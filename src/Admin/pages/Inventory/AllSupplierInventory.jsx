@@ -3,24 +3,27 @@ import { useDispatch, useSelector } from 'react-redux'
 import { IoIosAddCircle } from 'react-icons/io'
 import axios from 'axios'
 import { MdModeEditOutline, MdDelete } from 'react-icons/md'
-import { getAllBrandRequest } from '../../../redux/actions/actions'
+import {
+  getAllBrandRequest,
+  getAllSupplierRequest
+} from '../../../redux/actions/actions'
 import { getStatus } from '../../../constants/Status'
 
 const AllSupplierInventory = () => {
   const dispatch = useDispatch()
-  const brands = useSelector((state) => state.brands.brands)
+  const suppliers = useSelector((state) => state.suppliers.suppliers)
   const [showDialog, setShowDialog] = useState(false)
   const [showUpdateDialog, setShowUpdateDialog] = useState(false)
-  const [selectedBrandId, setSelectedBrandId] = useState(null)
-  const [newBrandName, setnewBrandName] = useState('')
-  const [deletedBrandId, setDeletedBrandId] = useState(null)
+  const [selectedSupplierId, setSelectedSupplierId] = useState(null)
+  const [newSupplierName, setnewSupplierName] = useState('')
+  const [deletedSupplier, setDeletedSupplier] = useState(null)
   useEffect(() => {
     try {
-      dispatch(getAllBrandRequest())
+      dispatch(getAllSupplierRequest())
     } catch (error) {
       console.error('Error dispatch', error)
     }
-  }, [dispatch, deletedBrandId])
+  }, [dispatch, deletedSupplier])
 
   const handleShowDialog = () => {
     setShowDialog(true)
@@ -28,7 +31,7 @@ const AllSupplierInventory = () => {
 
   const handleCloseDialog = () => {
     setShowDialog(false)
-    setnewBrandName('')
+    setnewSupplierName('')
   }
   const handleAddBrand = async () => {
     try {
@@ -36,7 +39,7 @@ const AllSupplierInventory = () => {
       const response = await axios.post(
         'http://localhost:9999/api/staff/supplier/add',
         {
-          brand_name: newBrandName
+          brand_name: newSupplierName
         },
         {
           headers: {
@@ -54,31 +57,31 @@ const AllSupplierInventory = () => {
     }
   }
 
-  const getBrandNameById = (brandId) => {
-    const brand = brands?.data.find((cat) => cat.brand_id === brandId)
+  const getSupplierBrandNameById = (supplierId) => {
+    const brand = suppliers?.data.find((cat) => cat.supplier_id === supplierId)
     return brand?.brand_name || ''
   }
 
-  const handleShowUpdateDialog = (brandId) => {
-    setSelectedBrandId(brandId)
-    setnewBrandName(getBrandNameById(brandId))
+  const handleShowUpdateDialog = (supplierId) => {
+    setSelectedSupplierId(supplierId)
+    setnewSupplierName(getSupplierBrandNameById(supplierId))
     setShowUpdateDialog(true)
   }
 
   const handleCloseUpdateDialog = () => {
     setShowUpdateDialog(false)
-    setSelectedBrandId(null)
-    setnewBrandName('')
+    setSelectedSupplierId(null)
+    setnewSupplierName('')
   }
 
-  const handleUpdateBrand = async (supplierId) => {
+  const handleUpdateSupplier = async (supplierId) => {
     try {
       const token = localStorage.getItem('token')
 
       const response = await axios.put(
         `http://localhost:9999/api/staff/supplier/${supplierId}/update`,
         {
-          brand_name: newBrandName
+          brand_name: newSupplierName
         },
         {
           headers: {
@@ -88,7 +91,7 @@ const AllSupplierInventory = () => {
       )
       if (response.data.code === 200) {
         setShowUpdateDialog(false)
-        setnewBrandName('')
+        setnewSupplierName('')
         dispatch(getAllBrandRequest())
       }
     } catch (error) {
@@ -96,7 +99,7 @@ const AllSupplierInventory = () => {
     }
   }
 
-  const handleDeleteBrand = async (brandId) => {
+  const handleDeleteSupplier = async (supplierId) => {
     const confirmDelete = window.confirm(
       'Bạn có chắc chắn muốn đổi trạng thái hãng này không?'
     )
@@ -112,7 +115,7 @@ const AllSupplierInventory = () => {
     if (confirmDelete) {
       try {
         await axios.delete(
-          `http://localhost:9999/api/staff/brand/${brandId}/delete`,
+          `http://localhost:9999/api/staff/supplier/${supplierId}/delete`,
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -120,7 +123,7 @@ const AllSupplierInventory = () => {
           }
         )
 
-        setDeletedBrandId(brandId)
+        setDeletedSupplier(supplierId)
         dispatch(getAllBrandRequest())
         alert('Brand deleted successfully!')
       } catch (error) {
@@ -137,49 +140,53 @@ const AllSupplierInventory = () => {
             <tr className="bg-primary">
               <td className="rounded-s-md">ID</td>
               <td>Hình Ảnh</td>
-              <td>Tên Hãng</td>
-              <td>Ngày Tạo</td>
-              <td>Người Tạo</td>
+              <td>Tên nhà cung cấp</td>
+              <td>Địa chỉ</td>
               <td>Trạng Thái</td>
               <td className="rounded-e-md">Hành Động</td>
             </tr>
           </thead>
           <tbody>
-            {brands?.data &&
-              brands?.data.map((brand, index) => (
-                <tr key={brand.slug}>
+            {suppliers?.data &&
+              suppliers?.data.map((supplier, index) => (
+                <tr key="supplier">
                   <td>{index + 1}</td>
                   <td>
                     <img
                       src={
-                        brand?.image ||
+                        supplier?.image ||
                         'https://firebasestorage.googleapis.com/v0/b/watch-shop-3a14f.appspot.com/o/images%2Flogo.png?alt=media&token=ff560732-bd5c-43d0-9271-7bcd3d9204ea'
                       }
-                      alt={brand?.brand_name}
+                      alt={supplier?.supplier_name}
                       className="w-[68px] h-[50px] object-contain rounded-md bg-primary"
                     />
                   </td>
-                  <td>{brand?.brand_name}</td>
-                  <td>{new Date(brand?.created_at).toLocaleDateString()}</td>
-                  <td>
+                  <td>{supplier?.supplier_name}</td>
+                  <td>{supplier?.supplier_name}</td>
+                  {/* <td>{new Date(supplier?.created_at).toLocaleDateString()}</td> */}
+                  {/* <td>
                     {brand?.staff_create?.first_name +
                       ' ' +
                       brand?.staff_create?.last_name}
-                  </td>
-                  <td>{getStatus(brand?.status)}</td>
+                  </td> */}
+                  <td>{getStatus(supplier?.status)}</td>
                   <td>
                     <span>
                       <MdModeEditOutline
                         className="cursor-pointer text-primary"
                         fontSize={25}
-                        onClick={() => handleShowUpdateDialog(brand?.brand_id)}
+                        onClick={() =>
+                          handleShowUpdateDialog(supplier?.supplier_id)
+                        }
                       />
                     </span>
                     <span>
                       <MdDelete
                         className="cursor-pointer text-primary"
                         fontSize={25}
-                        onClick={() => handleDeleteBrand(brand?.brand_id)}
+                        onClick={() =>
+                          handleDeleteSupplier(supplier?.supplier_id)
+                        }
                       />
                     </span>
                   </td>
@@ -199,11 +206,11 @@ const AllSupplierInventory = () => {
       {showDialog && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-md shadow-md">
-            <h2 className="text-xl font-bold mb-4">Thêm Hãng</h2>
+            <h2 className="text-xl font-bold mb-4">Thêm Nhà Cung Cấp</h2>
             <input
               type="text"
-              value={newBrandName}
-              onChange={(e) => setnewBrandName(e.target.value)}
+              value={newSupplierName}
+              onChange={(e) => setnewSupplierName(e.target.value)}
               className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
               placeholder="Nhập tên hãng"
             />
@@ -228,11 +235,11 @@ const AllSupplierInventory = () => {
       {showUpdateDialog && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-md shadow-md">
-            <h2 className="text-xl font-bold mb-4">Cập Nhật Hãng</h2>
+            <h2 className="text-xl font-bold mb-4">Cập Nhật Nhà Cung Cấp</h2>
             <input
               type="text"
-              value={newBrandName}
-              onChange={(e) => setnewBrandName(e.target.value)}
+              value={newSupplierName}
+              onChange={(e) => setnewSupplierName(e.target.value)}
               className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
               placeholder="Nhập tên hãng"
             />
@@ -244,7 +251,7 @@ const AllSupplierInventory = () => {
                 Hủy
               </button>
               <button
-                onClick={() => handleUpdateBrand(selectedBrandId)}
+                onClick={() => handleUpdateSupplier(selectedSupplierId)}
                 className="bg-primary text-white px-4 py-2 rounded-md"
               >
                 Cập Nhật

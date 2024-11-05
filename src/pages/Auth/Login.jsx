@@ -18,7 +18,7 @@ const Login = () => {
   const [showForgotPassword, setShowForgotPassword] = useState(false)
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
-  const [userRole,setUserRole] = useState("")
+  const userRole = user?.user?.role_user?.role_name
   const [isLoggingIn, setIsLoggingIn] = useState(false)
   const [loading, setLoading] = useState(false)
   const [passwordError, setPasswordError] = useState('')
@@ -72,10 +72,9 @@ const Login = () => {
         const { token, status } = response.data
 
         if (status && token) {
-          console.log("dđ")
-          await dispatch(getUserProfileRequest(token))
           localStorage.setItem('token', token)
-          setUserRole(user?.user?.role_user?.role_name)
+          await dispatch(getUserProfileRequest())
+
           console.log(userRole)
         } else {
           setMessage(

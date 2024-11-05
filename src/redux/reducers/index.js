@@ -23,6 +23,7 @@ import couponDetailReducer from './coupondetailReducer'
 import reviewProductReducer from './reviewProductReducer'
 import roleReducer from './roleReducer'
 import addProductsBatchReducers from './addProductBatchReducers'
+import supplierReducer from './supplierReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -48,7 +49,8 @@ const rootReducer = combineReducers({
   addCoupon: addCouponReducer,
   addCart: addCartReducer,
   reviewProduct: reviewProductReducer,
-  roles: roleReducer
+  roles: roleReducer,
+  suppliers: supplierReducer
 })
 
 export default rootReducer

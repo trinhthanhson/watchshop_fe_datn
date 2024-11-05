@@ -54,6 +54,7 @@ import TransactionRequest from '../Admin/pages/Inventory/TransactionRequest'
 import CreateProductInventory from '../Admin/pages/Inventory/CreateProductInventory'
 import AllCategoryInventory from '../Admin/pages/Inventory/AllCategoryInventory'
 import AllBrandInventory from '../Admin/pages/Inventory/AllBrandInventory'
+import AllSupplierInventory from '../Admin/pages/Inventory/AllSupplierInventory'
 
 const Routers = () => {
   const navigate = useNavigate()
@@ -93,7 +94,6 @@ const Routers = () => {
         }
       }
       console.log(role)
-
     }
     if (role === 'CUSTOMER') {
       if (location.pathname.startsWith('/manager')) {
@@ -187,10 +187,22 @@ const Routers = () => {
           path="/manager/inventory/request"
           element={<TransactionRequest />}
         />
-        <Route path="/manager/inventory/create-product" element={<CreateProductInventory />} />
-        <Route path="/manager/inventory/category" element={<AllCategoryInventory />} />
-        <Route path="/manager/inventory/brand" element={<AllBrandInventory />} />
-        <Route path="/manager/inventory/supplier" element={<AllBrandInventory />} />
+        <Route
+          path="/manager/inventory/create-product"
+          element={<CreateProductInventory />}
+        />
+        <Route
+          path="/manager/inventory/category"
+          element={<AllCategoryInventory />}
+        />
+        <Route
+          path="/manager/inventory/brand"
+          element={<AllBrandInventory />}
+        />
+        <Route
+          path="/manager/inventory/supplier"
+          element={<AllSupplierInventory />}
+        />
 
         {/* 
         <Route
