@@ -4,7 +4,6 @@ import { IoIosAddCircle } from 'react-icons/io'
 import axios from 'axios'
 import { MdModeEditOutline, MdDelete } from 'react-icons/md'
 import {
-  getAllBrandRequest,
   getAllSupplierRequest
 } from '../../../redux/actions/actions'
 import { getStatus } from '../../../constants/Status'
@@ -15,7 +14,12 @@ const AllSupplierInventory = () => {
   const [showDialog, setShowDialog] = useState(false)
   const [showUpdateDialog, setShowUpdateDialog] = useState(false)
   const [selectedSupplierId, setSelectedSupplierId] = useState(null)
-  const [newSupplierName, setnewSupplierName] = useState('')
+  const [newSupplierName, setNewSupplierName] = useState('')
+  const [address, setAddress] = useState('')
+  const [email, setEmail] = useState('')
+  const [fax, setFax] = useState('')
+  const [phone, setPhone] = useState('')
+  const [taxId, setTaxId] = useState('')
   const [deletedSupplier, setDeletedSupplier] = useState(null)
   useEffect(() => {
     try {
@@ -31,15 +35,25 @@ const AllSupplierInventory = () => {
 
   const handleCloseDialog = () => {
     setShowDialog(false)
-    setnewSupplierName('')
+    setNewSupplierName('')
+    setAddress('')
+    setEmail('')
+    setFax('')
+    setPhone('')
+    setTaxId('')
   }
-  const handleAddBrand = async () => {
+  const handleAddSupplier = async () => {
     try {
       const token = localStorage.getItem('token')
       const response = await axios.post(
         'http://localhost:9999/api/staff/supplier/add',
         {
-          brand_name: newSupplierName
+          supplier_name: newSupplierName,
+          address,
+          email,
+          fax,
+          phone,
+          tax_id: taxId
         },
         {
           headers: {
@@ -50,58 +64,77 @@ const AllSupplierInventory = () => {
 
       if (response.data.code === 201) {
         handleCloseDialog()
-        dispatch(getAllBrandRequest())
+        dispatch(getAllSupplierRequest())
       }
     } catch (error) {
-      console.error('Error adding brand', error)
+      console.error('Error adding supplier', error)
     }
   }
 
-  const getSupplierBrandNameById = (supplierId) => {
-    const brand = suppliers?.data.find((cat) => cat.supplier_id === supplierId)
-    return brand?.brand_name || ''
-  }
+  const getSupplierById = (supplierId) => {
+    const supplier = suppliers?.data.find((sup) => sup.supplier_id === supplierId);
+  
+    if (supplier) {
+      setNewSupplierName(supplier.supplier_name || "")
+      setAddress(supplier.address || '');
+      setEmail(supplier.email || '');
+      setFax(supplier.fax || '');
+      setPhone(supplier.phone || '');
+      setTaxId(supplier.tax_id || '');
+    }
+  
+    return supplier || {};  // Trả về supplier nếu cần sử dụng các thông tin khác
+  };
 
   const handleShowUpdateDialog = (supplierId) => {
     setSelectedSupplierId(supplierId)
-    setnewSupplierName(getSupplierBrandNameById(supplierId))
+    getSupplierById(supplierId)
     setShowUpdateDialog(true)
   }
 
   const handleCloseUpdateDialog = () => {
     setShowUpdateDialog(false)
     setSelectedSupplierId(null)
-    setnewSupplierName('')
+    setNewSupplierName('')
+    setAddress('')
+    setEmail('')
+    setFax('')
+    setPhone('')
+    setTaxId('')
   }
-
   const handleUpdateSupplier = async (supplierId) => {
     try {
-      const token = localStorage.getItem('token')
-
+      const token = localStorage.getItem('token');
+  
       const response = await axios.put(
         `http://localhost:9999/api/staff/supplier/${supplierId}/update`,
         {
-          brand_name: newSupplierName
+          supplier_name: newSupplierName,
+          address,
+          email,
+          fax,
+          phone,
+          tax_id: taxId
         },
         {
           headers: {
             Authorization: `Bearer ${token}`
           }
         }
-      )
+      );
+  
       if (response.data.code === 200) {
-        setShowUpdateDialog(false)
-        setnewSupplierName('')
-        dispatch(getAllBrandRequest())
+        handleCloseUpdateDialog();
+        dispatch(getAllSupplierRequest());
       }
     } catch (error) {
-      console.error('Error updating brand', error)
+      console.error('Error updating supplier', error);
     }
-  }
+  };
 
   const handleDeleteSupplier = async (supplierId) => {
     const confirmDelete = window.confirm(
-      'Bạn có chắc chắn muốn đổi trạng thái hãng này không?'
+      'Bạn có chắc chắn muốn đổi trạng thái nhà cung cấp này không?'
     )
 
     // Retrieve the token from localStorage
@@ -124,7 +157,7 @@ const AllSupplierInventory = () => {
         )
 
         setDeletedSupplier(supplierId)
-        dispatch(getAllBrandRequest())
+        dispatch(getAllSupplierRequest())
         alert('Brand deleted successfully!')
       } catch (error) {
         console.error('Error deleting brand:', error)
@@ -142,6 +175,7 @@ const AllSupplierInventory = () => {
               <td>Hình Ảnh</td>
               <td>Tên nhà cung cấp</td>
               <td>Địa chỉ</td>
+              <td>Email</td>
               <td>Trạng Thái</td>
               <td className="rounded-e-md">Hành Động</td>
             </tr>
@@ -162,7 +196,8 @@ const AllSupplierInventory = () => {
                     />
                   </td>
                   <td>{supplier?.supplier_name}</td>
-                  <td>{supplier?.supplier_name}</td>
+                  <td>{supplier?.address}</td>
+                  <td>{supplier?.email}</td>
                   {/* <td>{new Date(supplier?.created_at).toLocaleDateString()}</td> */}
                   {/* <td>
                     {brand?.staff_create?.first_name +
@@ -210,9 +245,44 @@ const AllSupplierInventory = () => {
             <input
               type="text"
               value={newSupplierName}
-              onChange={(e) => setnewSupplierName(e.target.value)}
+              onChange={(e) => setNewSupplierName(e.target.value)}
               className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
-              placeholder="Nhập tên hãng"
+              placeholder="Nhập tên nhà cung cấp"
+            />
+            <input
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
+              placeholder="Nhập địa chỉ"
+            />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
+              placeholder="Nhập email"
+            />
+            <input
+              type="text"
+              value={fax}
+              onChange={(e) => setFax(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
+              placeholder="Nhập số fax"
+            />
+            <input
+              type="text"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
+              placeholder="Nhập số điện thoại"
+            />
+            <input
+              type="text"
+              value={taxId}
+              onChange={(e) => setTaxId(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
+              placeholder="Nhập mã số thuế"
             />
             <div className="flex justify-end">
               <button
@@ -222,7 +292,7 @@ const AllSupplierInventory = () => {
                 Hủy
               </button>
               <button
-                onClick={handleAddBrand}
+                onClick={handleAddSupplier}
                 className="bg-primary text-white px-4 py-2 rounded-md"
               >
                 Thêm
@@ -239,9 +309,44 @@ const AllSupplierInventory = () => {
             <input
               type="text"
               value={newSupplierName}
-              onChange={(e) => setnewSupplierName(e.target.value)}
+              onChange={(e) => setNewSupplierName(e.target.value)}
               className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
-              placeholder="Nhập tên hãng"
+              placeholder="Nhập tên nhà cung cấp"
+            />
+            <input
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
+              placeholder="Nhập địa chỉ"
+            />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
+              placeholder="Nhập email"
+            />
+            <input
+              type="text"
+              value={fax}
+              onChange={(e) => setFax(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
+              placeholder="Nhập số fax"
+            />
+            <input
+              type="text"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
+              placeholder="Nhập số điện thoại"
+            />
+            <input
+              type="text"
+              value={taxId}
+              onChange={(e) => setTaxId(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
+              placeholder="Nhập mã số thuế"
             />
             <div className="flex justify-end">
               <button
