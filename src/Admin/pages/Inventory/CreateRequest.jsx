@@ -46,12 +46,16 @@ const CreateRequest = () => {
 
         {/* Thông tin chung */}
         <div>
-          <label className="block text-gray-700">Kính gửi:</label>
-          <span className="text-gray-800 font-semibold">Phòng Kế Toán</span>
+          <label className="block text-gray-700">
+            Kính gửi:{' '}
+            <span className="text-gray-800 font-semibold">Phòng Kế Toán</span>
+          </label>
         </div>
 
         <div>
-          <label className="block text-gray-700">* Nội dung:</label>
+          <label className="block text-gray-700 font-semibold">
+            * Nội dung:
+          </label>
           <input
             type="text"
             name="content"
@@ -61,7 +65,9 @@ const CreateRequest = () => {
         </div>
 
         <div>
-          <label className="block text-gray-700">* Nhân viên:</label>
+          <label className="block text-gray-700 font-semibold">
+            * Nhân viên:
+          </label>
           <input
             type="text"
             name="employee"
@@ -71,7 +77,9 @@ const CreateRequest = () => {
         </div>
 
         <div>
-          <label className="block text-gray-700">* Thuộc bộ phận:</label>
+          <label className="block text-gray-700 font-semibold">
+            * Thuộc bộ phận:
+          </label>
           <input
             type="text"
             name="department"
@@ -155,7 +163,9 @@ const CreateRequest = () => {
 
         {/* Ghi chú */}
         <div>
-          <label className="block text-gray-700">* Diễn giải:</label>
+          <label className="block text-gray-700 font-semibold">
+            * Diễn giải:
+          </label>
           <textarea
             name="notes"
             className="w-full p-2 border border-gray-300 rounded mt-1"
