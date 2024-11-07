@@ -1,11 +1,20 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getAllProductsRequest } from '../../../redux/actions/actions'
 
 const CreateRequest = () => {
   const [items, setItems] = useState([
     { name: '', quantity: '', unitPrice: '', totalPrice: '' }
   ])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState([])
 
-  // Hàm thêm hàng hóa mới vào bảng
+  const products = useSelector((state) => state.products.products.data)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getAllProductsRequest())
+  }, [dispatch])
+
   const addItem = () => {
     setItems([
       ...items,
@@ -13,13 +22,11 @@ const CreateRequest = () => {
     ])
   }
 
-  // Hàm xử lý xóa hàng hóa
   const removeItem = (index) => {
     const newItems = items.filter((_, i) => i !== index)
     setItems(newItems)
   }
 
-  // Hàm xử lý thay đổi khi người dùng nhập vào ô
   const handleChange = (e, index) => {
     const { name, value } = e.target
     const newItems = [...items]
@@ -33,6 +40,20 @@ const CreateRequest = () => {
     }
 
     setItems(newItems)
+  }
+
+  const handleSearchChange = (e, index) => {
+    const { value } = e.target
+    setSearchQuery(value)
+
+    // Lọc các sản phẩm có tên chứa từ khóa
+    const filteredProducts = products.filter((product) =>
+      product.product_name.toLowerCase().includes(value.toLowerCase())
+    )
+    console.log(filteredProducts)
+    setSearchResults(filteredProducts)
+
+    handleChange(e, index) // Gọi lại hàm xử lý thay đổi cho các trường khác
   }
 
   const handleSubmit = (e) => {
@@ -117,15 +138,36 @@ const CreateRequest = () => {
               {items.map((item, index) => (
                 <tr key={index} className="text-center">
                   <td className="border p-2">{index + 1}</td>
-                  <td className="border p-2">
+                  <td className="border p-2 relative">
                     <input
                       type="text"
                       name="name"
-                      value={item.name}
-                      onChange={(e) => handleChange(e, index)}
+                      value={item.product_name}
+                      onChange={(e) => handleSearchChange(e, index)} // Sử dụng hàm tìm kiếm
                       className="w-full p-1 border border-gray-200 rounded"
                       required
                     />
+                    {/* Gợi ý tên hàng hóa */}
+                    {searchQuery && searchResults.length > 0 && (
+                      <div className="absolute bg-white border border-gray-300 mt-2 w-full z-10">
+                        {searchResults.map((product, idx) => (
+                          <div
+                            key={idx}
+                            className="p-2 cursor-pointer hover:bg-gray-200"
+                            onClick={() => {
+                              // Chọn sản phẩm và điền vào ô nhập liệu
+                              const newItems = [...items]
+                              newItems[index].name = product.name
+                              setItems(newItems)
+                              setSearchQuery('') // Xóa từ khóa tìm kiếm sau khi chọn
+                              setSearchResults([]) // Xóa gợi ý
+                            }}
+                          >
+                            {product.name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </td>
                   <td className="border p-2">
                     <input
