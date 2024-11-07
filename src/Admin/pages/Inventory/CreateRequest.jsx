@@ -13,6 +13,12 @@ const CreateRequest = () => {
     ])
   }
 
+  // Hàm xử lý xóa hàng hóa
+  const removeItem = (index) => {
+    const newItems = items.filter((_, i) => i !== index)
+    setItems(newItems)
+  }
+
   // Hàm xử lý thay đổi khi người dùng nhập vào ô
   const handleChange = (e, index) => {
     const { name, value } = e.target
@@ -90,6 +96,12 @@ const CreateRequest = () => {
 
         {/* Bảng hàng hóa */}
         <div className="overflow-x-auto">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-gray-700 font-semibold"></span>
+            <span className="text-gray-700 font-semibold italic">
+              Đơn vị tính: VND
+            </span>
+          </div>
           <table className="min-w-full border border-gray-300 mt-4">
             <thead>
               <tr className="bg-gray-200 text-gray-700">
@@ -98,6 +110,7 @@ const CreateRequest = () => {
                 <th className="border p-2">Số Lượng</th>
                 <th className="border p-2">Đơn Giá</th>
                 <th className="border p-2">Thành Tiền</th>
+                <th className="border p-2">Xóa</th>
               </tr>
             </thead>
             <tbody>
@@ -135,6 +148,15 @@ const CreateRequest = () => {
                     />
                   </td>
                   <td className="border p-2">{item.totalPrice || ''}</td>
+                  <td className="border p-2">
+                    <button
+                      type="button"
+                      onClick={() => removeItem(index)}
+                      className="w-full py-1 px-2 text-black bg-white rounded hover:bg-gray-200 transition duration-200"
+                    >
+                      Xóa
+                    </button>
+                  </td>
                 </tr>
               ))}
               <tr>
@@ -147,6 +169,7 @@ const CreateRequest = () => {
                     0
                   )}
                 </td>
+                <td className="border p-2"></td>
               </tr>
             </tbody>
           </table>
