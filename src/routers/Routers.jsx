@@ -55,6 +55,7 @@ import CreateProductInventory from '../Admin/pages/Inventory/CreateProductInvent
 import AllCategoryInventory from '../Admin/pages/Inventory/AllCategoryInventory'
 import AllBrandInventory from '../Admin/pages/Inventory/AllBrandInventory'
 import AllSupplierInventory from '../Admin/pages/Inventory/AllSupplierInventory'
+import CreateRequest from '../Admin/pages/Inventory/CreateRequest'
 
 const Routers = () => {
   const navigate = useNavigate()
@@ -203,7 +204,10 @@ const Routers = () => {
           path="/manager/inventory/supplier"
           element={<AllSupplierInventory />}
         />
-
+        <Route
+          path="/manager/inventory/create-request"
+          element={<CreateRequest />}
+        />
         {/* 
         <Route
           path="/manager/user-staff/:id"
