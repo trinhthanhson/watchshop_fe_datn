@@ -11,6 +11,7 @@ const CreateRequest = () => {
 
   const products = useSelector((state) => state.products.products.data)
   const dispatch = useDispatch()
+
   useEffect(() => {
     dispatch(getAllProductsRequest())
   }, [dispatch])
@@ -41,19 +42,38 @@ const CreateRequest = () => {
 
     setItems(newItems)
   }
+  const handlePriceChange = (e, index) => {
+    // Loại bỏ các ký tự không phải là số và dấu chấm
+    let value = e.target.value.replace(/[^\d]/g, '')
+
+    // Đảm bảo giá trị không bị rỗng
+    if (value === '') {
+      value = '0'
+    }
+
+    // Chuyển giá trị thành số
+    const newItems = [...items]
+    newItems[index].unitPrice = parseInt(value, 10)
+
+    // Cập nhật lại danh sách items
+    setItems(newItems)
+  }
 
   const handleSearchChange = (e, index) => {
     const { value } = e.target
     setSearchQuery(value)
 
-    // Lọc các sản phẩm có tên chứa từ khóa
-    const filteredProducts = products.filter((product) =>
-      product.product_name.toLowerCase().includes(value.toLowerCase())
+    // Lọc các sản phẩm có tên chứa từ khóa và chưa có trong bảng
+    const filteredProducts = products.filter(
+      (product) =>
+        product.product_name.toLowerCase().includes(value.toLowerCase()) &&
+        !items.some((item) => item.name === product.product_name) // Kiểm tra sản phẩm đã có trong bảng chưa
     )
-    console.log(filteredProducts)
+
     setSearchResults(filteredProducts)
 
-    handleChange(e, index) // Gọi lại hàm xử lý thay đổi cho các trường khác
+    // Gọi lại hàm xử lý thay đổi cho các trường khác
+    handleChange(e, index)
   }
 
   const handleSubmit = (e) => {
@@ -142,32 +162,11 @@ const CreateRequest = () => {
                     <input
                       type="text"
                       name="name"
-                      value={item.product_name}
+                      value={item.name}
                       onChange={(e) => handleSearchChange(e, index)} // Sử dụng hàm tìm kiếm
                       className="w-full p-1 border border-gray-200 rounded"
                       required
                     />
-                    {/* Gợi ý tên hàng hóa */}
-                    {searchQuery && searchResults.length > 0 && (
-                      <div className="absolute bg-white border border-gray-300 mt-2 w-full z-10">
-                        {searchResults.map((product, idx) => (
-                          <div
-                            key={idx}
-                            className="p-2 cursor-pointer hover:bg-gray-200"
-                            onClick={() => {
-                              // Chọn sản phẩm và điền vào ô nhập liệu
-                              const newItems = [...items]
-                              newItems[index].name = product.name
-                              setItems(newItems)
-                              setSearchQuery('') // Xóa từ khóa tìm kiếm sau khi chọn
-                              setSearchResults([]) // Xóa gợi ý
-                            }}
-                          >
-                            {product.name}
-                          </div>
-                        ))}
-                      </div>
-                    )}
                   </td>
                   <td className="border p-2">
                     <input
@@ -181,15 +180,17 @@ const CreateRequest = () => {
                   </td>
                   <td className="border p-2">
                     <input
-                      type="number"
+                      type="text" // Thay đổi thành 'text' để xử lý dấu phân cách
                       name="unitPrice"
-                      value={item.unitPrice}
-                      onChange={(e) => handleChange(e, index)}
+                      value={item.unitPrice.toLocaleString('vi-VN')} // Định dạng số với dấu chấm
+                      onChange={(e) => handlePriceChange(e, index)} // Gọi hàm xử lý nhập liệu
                       className="w-full p-1 border border-gray-200 rounded"
                       required
                     />
                   </td>
-                  <td className="border p-2">{item.totalPrice || ''}</td>
+                  <td className="border p-2">
+                    {item.totalPrice.toLocaleString('vi-VN') || ''}
+                  </td>
                   <td className="border p-2">
                     <button
                       type="button"
@@ -206,16 +207,40 @@ const CreateRequest = () => {
                   Tổng
                 </td>
                 <td className="border p-2">
-                  {items.reduce(
-                    (acc, item) => acc + (parseFloat(item.totalPrice) || 0),
-                    0
-                  )}
+                  {items
+                    .reduce(
+                      (acc, item) => acc + (parseFloat(item.totalPrice) || 0),
+                      0
+                    )
+                    .toLocaleString('vi-VN')}
                 </td>
                 <td className="border p-2"></td>
               </tr>
             </tbody>
           </table>
         </div>
+
+        {/* Gợi ý tên hàng hóa nằm bên ngoài bảng */}
+        {searchQuery && searchResults.length > 0 && (
+          <div className="absolute bg-white border border-gray-300 mt-2 w-full z-10 max-w-5xl">
+            {searchResults.map((product, idx) => (
+              <div
+                key={idx}
+                className="p-2 cursor-pointer hover:bg-gray-200"
+                onClick={() => {
+                  // Chọn sản phẩm và điền vào ô nhập liệu
+                  const newItems = [...items]
+                  newItems[0].name = product.product_name // Dùng item đầu tiên ở đây
+                  setItems(newItems)
+                  setSearchQuery('') // Xóa từ khóa tìm kiếm sau khi chọn
+                  setSearchResults([]) // Xóa gợi ý
+                }}
+              >
+                {product.product_name}
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Nút thêm hàng hóa */}
         <button
