@@ -15,7 +15,7 @@ const addProductsBatchReducers = (state = initialState, action) => {
   switch (action.type) {
     case ADD_PRODUCT_SUCCESS_BATCH:
       return {
-        ...state,
+        ...state, 
         message: action.payload.message,
         status: action.payload.status,
         code: action.payload.code,

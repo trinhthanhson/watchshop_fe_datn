@@ -77,7 +77,10 @@ import {
   GET_ALL_ROLE_FAILURE,
   GET_ALL_SUPPLIER_REQUEST,
   GET_ALL_SUPPLIER_SUCCESS,
-  GET_ALL_SUPPLIER_FAILURE
+  GET_ALL_SUPPLIER_FAILURE,
+  CREATE_TRANSACTION_REQUEST,
+  CREATE_TRANSACTION_SUCCESS,
+  CREATE_TRANSACTION_FAILURE
 } from './types'
 
 export const addCouponRequest = (formData) => ({
@@ -451,4 +454,20 @@ export const getAllSupplierSuccess = (suppliers) => ({
 export const getAllSupplierFailure = (error) => ({
   type: GET_ALL_SUPPLIER_FAILURE,
   payload: error
+})
+
+export const createTransactionRequest = (payload, navigate) => ({
+  type: CREATE_TRANSACTION_REQUEST,
+  payload,
+  navigate
+})
+
+export const createTransactionSuccess = (data) => ({
+  type: CREATE_TRANSACTION_SUCCESS,
+  data
+})
+
+export const createTransactionFailure = (error) => ({
+  type: CREATE_TRANSACTION_FAILURE,
+  error
 })

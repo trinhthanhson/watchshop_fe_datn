@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllProductsRequest } from '../../../redux/actions/actions'
+import { createTransactionRequest, getAllProductsRequest, getUserProfileRequest } from '../../../redux/actions/actions'
+import { useNavigate } from 'react-router-dom'
 
 const CreateRequest = () => {
   const [items, setItems] = useState([
@@ -16,12 +17,18 @@ const CreateRequest = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [currentRowIndex, setCurrentRowIndex] = useState(null)
+  const [note, setNote] = useState('')
+  const [content, setContent] = useState('')
+  const navigate = useNavigate()
 
-  const products = useSelector((state) => state.products.products.data)
+  const products = useSelector((state) => state.products?.products?.data)
+  const user = useSelector((state => state.user?.user?.data))
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(getAllProductsRequest())
+    dispatch(getUserProfileRequest())
+
   }, [dispatch])
 
   const addItem = () => {
@@ -97,13 +104,29 @@ const CreateRequest = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log({ items })
+
+    const totalQuantity = items.reduce((acc, item) => acc + (parseInt(item.quantity) || 0), 0)
+    const totalPrice = items.reduce((acc, item) => acc + (parseInt(item.totalPrice) || 0), 0)
+
+    const payload = {
+      note,
+      content,
+      total_quantity: totalQuantity,
+      total_price: totalPrice,
+      type_name: "IMPORT",
+      products: items.map((item) => ({
+        productId: item.product_id,
+        quantity: parseInt(item.quantity),
+        unitPrice: parseInt(item.unitPrice)
+      }))
+    }
+    dispatch(createTransactionRequest(payload, navigate))
   }
+
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
+      <div
         className="bg-white p-6 rounded shadow-md w-full max-w-6xl space-y-4"
       >
         <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
@@ -117,13 +140,13 @@ const CreateRequest = () => {
           </label>
         </div>
         <div>
-          <label className="block text-gray-700 font-semibold">
-            * Nội dung:
-          </label>
+          <label className="block text-gray-700 font-semibold">* Nội dung:</label>
           <input
             type="text"
             name="content"
             className="w-full p-2 border border-gray-300 rounded mt-1"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
             required
           />
         </div>
@@ -134,8 +157,10 @@ const CreateRequest = () => {
           <input
             type="text"
             name="employee"
-            className="w-full p-2 border border-gray-300 rounded mt-1"
+            value={user?.first_name + ' ' + user?.last_name}
+            className="w-full p-2 border border-gray-300 rounded mt- 1"
             required
+            disabled
           />
         </div>
         <div>
@@ -145,8 +170,10 @@ const CreateRequest = () => {
           <input
             type="text"
             name="department"
+            value={"Kho"}
             className="w-full p-2 border border-gray-300 rounded mt-1"
             required
+            disabled
           />
         </div>
 
@@ -232,12 +259,18 @@ const CreateRequest = () => {
                   </td>
                 </tr>
               ))}
-              <tr>
-                <td colSpan="5" className="border p-2 font-semibold text-right">
-                  Tổng
+               <tr>
+                <td colSpan="4" className="border p-2 font-semibold text-right">
+                  Tổng Số Lượng Nhập
                 </td>
-                <td className="border p-2">
-                  {items
+                <td className="border p-2 font-semibold text-center">
+                {items.reduce((acc, item) => acc + (parseFloat(item.quantity) || 0), 0)}
+                </td>
+                <td className="border p-2 font-semibold text-right">
+                  Tổng Tiền
+                </td>
+                <td className="border p-2 font-semibold">
+                {items
                     .reduce(
                       (acc, item) => acc + (parseFloat(item.totalPrice) || 0),
                       0
@@ -277,20 +310,22 @@ const CreateRequest = () => {
           <label className="block text-gray-700">* Lý do nhập kho:</label>
           <input
             type="text"
-            name="reason"
+            name="content"
             className="w-full p-2 border border-gray-300 rounded mt-1"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
             required
           />
         </div>
-
         <button
           type="submit"
+          onClick={handleSubmit}
           className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200"
         >
           Gửi Phiếu Nhập Kho
         </button>
         
-      </form>
+      </div>
     </div>
   )
 }
