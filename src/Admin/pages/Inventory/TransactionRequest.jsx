@@ -211,7 +211,7 @@ const TransactionRequest = () => {
         <IoIosAddCircle
           fontSize={50}
           className="cursor-pointer text-primary"
-          onClick={() => navigate('/manager/inventory/create-product')}
+          onClick={() => navigate('/manager/inventory/create-request')}
         />
       </div>
     </>

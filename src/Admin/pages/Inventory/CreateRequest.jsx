@@ -4,10 +4,18 @@ import { getAllProductsRequest } from '../../../redux/actions/actions'
 
 const CreateRequest = () => {
   const [items, setItems] = useState([
-    { name: '', quantity: '', unitPrice: '', totalPrice: '' }
+    {
+      product_id: '',
+      name: '',
+      quantity: '',
+      unitPrice: '',
+      totalPrice: '',
+      stock: 0
+    }
   ])
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
+  const [currentRowIndex, setCurrentRowIndex] = useState(null)
 
   const products = useSelector((state) => state.products.products.data)
   const dispatch = useDispatch()
@@ -19,7 +27,14 @@ const CreateRequest = () => {
   const addItem = () => {
     setItems([
       ...items,
-      { name: '', quantity: '', unitPrice: '', totalPrice: '' }
+      {
+        product_id: '',
+        name: '',
+        quantity: '',
+        unitPrice: '',
+        totalPrice: '',
+        stock: 0
+      }
     ])
   }
 
@@ -31,49 +46,53 @@ const CreateRequest = () => {
   const handleChange = (e, index) => {
     const { name, value } = e.target
     const newItems = [...items]
-    newItems[index][name] = value
 
-    if (name === 'quantity' || name === 'unitPrice') {
-      newItems[index].totalPrice =
-        newItems[index].quantity && newItems[index].unitPrice
-          ? newItems[index].quantity * newItems[index].unitPrice
-          : ''
+    // Nếu trường đang thay đổi là unitPrice, loại bỏ các ký tự không phải số và định dạng lại
+    if (name === 'unitPrice') {
+      let formattedValue = value.replace(/[^\d]/g, '') // Loại bỏ ký tự không phải là số
+      if (formattedValue === '') formattedValue = '0' // Đảm bảo không để trống
+
+      newItems[index].unitPrice = parseInt(formattedValue, 10)
+    } else {
+      newItems[index][name] = value
     }
 
-    setItems(newItems)
-  }
-  const handlePriceChange = (e, index) => {
-    // Loại bỏ các ký tự không phải là số và dấu chấm
-    let value = e.target.value.replace(/[^\d]/g, '')
+    // Chuyển đổi quantity và unitPrice sang dạng số để tính toán
+    const quantity = parseFloat(newItems[index].quantity) || 0
+    const unitPrice = parseFloat(newItems[index].unitPrice) || 0
 
-    // Đảm bảo giá trị không bị rỗng
-    if (value === '') {
-      value = '0'
-    }
+    // Tính toán totalPrice khi quantity hoặc unitPrice thay đổi
+    newItems[index].totalPrice = quantity * unitPrice
 
-    // Chuyển giá trị thành số
-    const newItems = [...items]
-    newItems[index].unitPrice = parseInt(value, 10)
-
-    // Cập nhật lại danh sách items
     setItems(newItems)
   }
 
   const handleSearchChange = (e, index) => {
     const { value } = e.target
     setSearchQuery(value)
+    setCurrentRowIndex(index) // Lưu index của hàng hiện tại
 
-    // Lọc các sản phẩm có tên chứa từ khóa và chưa có trong bảng
     const filteredProducts = products.filter(
       (product) =>
-        product.product_name.toLowerCase().includes(value.toLowerCase()) &&
-        !items.some((item) => item.name === product.product_name) // Kiểm tra sản phẩm đã có trong bảng chưa
+        (product.product_name.toLowerCase().includes(value.toLowerCase()) ||
+          product.product_id.includes(value)) &&
+        !items.some((item) => item.product_id === product.product_id)
     )
 
     setSearchResults(filteredProducts)
-
-    // Gọi lại hàm xử lý thay đổi cho các trường khác
     handleChange(e, index)
+  }
+  const selectProduct = (product, index) => {
+    const newItems = [...items]
+    newItems[index] = {
+      ...newItems[index],
+      product_id: product.product_id,
+      name: product.product_name,
+      stock: product.quantity
+    }
+    setItems(newItems)
+    setSearchQuery('')
+    setSearchResults([])
   }
 
   const handleSubmit = (e) => {
@@ -91,14 +110,12 @@ const CreateRequest = () => {
           Phiếu Đề Nghị Nhập Kho
         </h2>
 
-        {/* Thông tin chung */}
         <div>
           <label className="block text-gray-700">
             Kính gửi:{' '}
             <span className="text-gray-800 font-semibold">Phòng Kế Toán</span>
           </label>
         </div>
-
         <div>
           <label className="block text-gray-700 font-semibold">
             * Nội dung:
@@ -110,7 +127,6 @@ const CreateRequest = () => {
             required
           />
         </div>
-
         <div>
           <label className="block text-gray-700 font-semibold">
             * Nhân viên:
@@ -122,7 +138,6 @@ const CreateRequest = () => {
             required
           />
         </div>
-
         <div>
           <label className="block text-gray-700 font-semibold">
             * Thuộc bộ phận:
@@ -135,20 +150,15 @@ const CreateRequest = () => {
           />
         </div>
 
-        {/* Bảng hàng hóa */}
         <div className="overflow-x-auto">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-gray-700 font-semibold"></span>
-            <span className="text-gray-700 font-semibold italic">
-              Đơn vị tính: VND
-            </span>
-          </div>
           <table className="min-w-full border border-gray-300 mt-4">
             <thead>
               <tr className="bg-gray-200 text-gray-700">
                 <th className="border p-2">STT</th>
+                <th className="border p-2">Mã Sản Phẩm</th>
                 <th className="border p-2">Tên Hàng Hóa</th>
-                <th className="border p-2">Số Lượng</th>
+                <th className="border p-2">Số Lượng Tồn</th>
+                <th className="border p-2">Số Lượng Nhập</th>
                 <th className="border p-2">Đơn Giá</th>
                 <th className="border p-2">Thành Tiền</th>
                 <th className="border p-2">Xóa</th>
@@ -158,14 +168,34 @@ const CreateRequest = () => {
               {items.map((item, index) => (
                 <tr key={index} className="text-center">
                   <td className="border p-2">{index + 1}</td>
+                  <td className="border p-2">
+                    <input
+                      type="text"
+                      name="product_id"
+                      value={item.product_id}
+                      onChange={(e) => handleSearchChange(e, index)}
+                      className="w-full p-1 border border-gray-200 rounded"
+                      required
+                    />
+                  </td>
                   <td className="border p-2 relative">
                     <input
                       type="text"
                       name="name"
                       value={item.name}
-                      onChange={(e) => handleSearchChange(e, index)} // Sử dụng hàm tìm kiếm
+                      onChange={(e) => handleSearchChange(e, index)}
                       className="w-full p-1 border border-gray-200 rounded"
                       required
+                      disabled
+                    />
+                  </td>
+                  <td className="border p-2">
+                    <input
+                      type="number"
+                      name="stock"
+                      value={item.stock}
+                      className="w-full p-1 border border-gray-200 rounded"
+                      disabled
                     />
                   </td>
                   <td className="border p-2">
@@ -180,10 +210,10 @@ const CreateRequest = () => {
                   </td>
                   <td className="border p-2">
                     <input
-                      type="text" // Thay đổi thành 'text' để xử lý dấu phân cách
+                      type="text"
                       name="unitPrice"
-                      value={item.unitPrice.toLocaleString('vi-VN')} // Định dạng số với dấu chấm
-                      onChange={(e) => handlePriceChange(e, index)} // Gọi hàm xử lý nhập liệu
+                      value={item.unitPrice.toLocaleString('vi-VN')}
+                      onChange={(e) => handleChange(e, index)}
                       className="w-full p-1 border border-gray-200 rounded"
                       required
                     />
@@ -203,7 +233,7 @@ const CreateRequest = () => {
                 </tr>
               ))}
               <tr>
-                <td colSpan="4" className="border p-2 font-semibold text-right">
+                <td colSpan="5" className="border p-2 font-semibold text-right">
                   Tổng
                 </td>
                 <td className="border p-2">
@@ -220,29 +250,21 @@ const CreateRequest = () => {
           </table>
         </div>
 
-        {/* Gợi ý tên hàng hóa nằm bên ngoài bảng */}
         {searchQuery && searchResults.length > 0 && (
           <div className="absolute bg-white border border-gray-300 mt-2 w-full z-10 max-w-5xl">
             {searchResults.map((product, idx) => (
               <div
                 key={idx}
                 className="p-2 cursor-pointer hover:bg-gray-200"
-                onClick={() => {
-                  // Chọn sản phẩm và điền vào ô nhập liệu
-                  const newItems = [...items]
-                  newItems[0].name = product.product_name // Dùng item đầu tiên ở đây
-                  setItems(newItems)
-                  setSearchQuery('') // Xóa từ khóa tìm kiếm sau khi chọn
-                  setSearchResults([]) // Xóa gợi ý
-                }}
+                onClick={() => selectProduct(product, currentRowIndex)} // Sử dụng currentRowIndex ở đây
               >
-                {product.product_name}
+                {product.product_id} - {product.product_name} (Tồn:{' '}
+                {product.quantity})
               </div>
             ))}
           </div>
         )}
 
-        {/* Nút thêm hàng hóa */}
         <button
           type="button"
           onClick={addItem}
@@ -251,25 +273,23 @@ const CreateRequest = () => {
           Thêm Hàng Hóa
         </button>
 
-        {/* Ghi chú */}
         <div>
-          <label className="block text-gray-700 font-semibold">
-            * Diễn giải:
-          </label>
-          <textarea
-            name="notes"
+          <label className="block text-gray-700">* Lý do nhập kho:</label>
+          <input
+            type="text"
+            name="reason"
             className="w-full p-2 border border-gray-300 rounded mt-1"
-            rows="3"
-          ></textarea>
+            required
+          />
         </div>
 
-        {/* Nút tạo phiếu */}
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200"
+          className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200"
         >
-          Tạo Phiếu
+          Gửi Phiếu Nhập Kho
         </button>
+        
       </form>
     </div>
   )
