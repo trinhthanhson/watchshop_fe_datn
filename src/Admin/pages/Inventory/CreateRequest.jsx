@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { createTransactionRequest, getAllProductsRequest, getUserProfileRequest } from '../../../redux/actions/actions'
+import {
+  createTransactionRequest,
+  getAllProductsRequest,
+  getUserProfileRequest
+} from '../../../redux/actions/actions'
 import { useNavigate } from 'react-router-dom'
 
 const CreateRequest = () => {
@@ -22,13 +26,12 @@ const CreateRequest = () => {
   const navigate = useNavigate()
 
   const products = useSelector((state) => state.products?.products?.data)
-  const user = useSelector((state => state.user?.user?.data))
+  const user = useSelector((state) => state.user?.user?.data)
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(getAllProductsRequest())
     dispatch(getUserProfileRequest())
-
   }, [dispatch])
 
   const addItem = () => {
@@ -39,6 +42,7 @@ const CreateRequest = () => {
         name: '',
         quantity: '',
         unitPrice: '',
+        content: '',
         totalPrice: '',
         stock: 0
       }
@@ -105,15 +109,21 @@ const CreateRequest = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    const totalQuantity = items.reduce((acc, item) => acc + (parseInt(item.quantity) || 0), 0)
-    const totalPrice = items.reduce((acc, item) => acc + (parseInt(item.totalPrice) || 0), 0)
+    const totalQuantity = items.reduce(
+      (acc, item) => acc + (parseInt(item.quantity) || 0),
+      0
+    )
+    const totalPrice = items.reduce(
+      (acc, item) => acc + (parseInt(item.totalPrice) || 0),
+      0
+    )
 
     const payload = {
       note,
       content,
       total_quantity: totalQuantity,
       total_price: totalPrice,
-      type_name: "IMPORT",
+      type_name: 'IMPORT',
       products: items.map((item) => ({
         productId: item.product_id,
         quantity: parseInt(item.quantity),
@@ -123,12 +133,9 @@ const CreateRequest = () => {
     dispatch(createTransactionRequest(payload, navigate))
   }
 
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div
-        className="bg-white p-6 rounded shadow-md w-full max-w-6xl space-y-4"
-      >
+      <div className="bg-white p-6 rounded shadow-md w-full max-w-6xl space-y-4">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
           Phiếu Đề Nghị Nhập Kho
         </h2>
@@ -140,7 +147,9 @@ const CreateRequest = () => {
           </label>
         </div>
         <div>
-          <label className="block text-gray-700 font-semibold">* Nội dung:</label>
+          <label className="block text-gray-700 font-semibold">
+            * Nội dung:
+          </label>
           <input
             type="text"
             name="content"
@@ -170,7 +179,7 @@ const CreateRequest = () => {
           <input
             type="text"
             name="department"
-            value={"Kho"}
+            value={'Kho'}
             className="w-full p-2 border border-gray-300 rounded mt-1"
             required
             disabled
@@ -259,18 +268,21 @@ const CreateRequest = () => {
                   </td>
                 </tr>
               ))}
-               <tr>
+              <tr>
                 <td colSpan="4" className="border p-2 font-semibold text-right">
                   Tổng Số Lượng Nhập
                 </td>
                 <td className="border p-2 font-semibold text-center">
-                {items.reduce((acc, item) => acc + (parseFloat(item.quantity) || 0), 0)}
+                  {items.reduce(
+                    (acc, item) => acc + (parseFloat(item.quantity) || 0),
+                    0
+                  )}
                 </td>
                 <td className="border p-2 font-semibold text-right">
                   Tổng Tiền
                 </td>
                 <td className="border p-2 font-semibold">
-                {items
+                  {items
                     .reduce(
                       (acc, item) => acc + (parseFloat(item.totalPrice) || 0),
                       0
@@ -324,7 +336,6 @@ const CreateRequest = () => {
         >
           Gửi Phiếu Nhập Kho
         </button>
-        
       </div>
     </div>
   )

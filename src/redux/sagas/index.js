@@ -24,7 +24,8 @@ import reviewProductSaga from './reviewProductSaga'
 import roleSaga from './roleSaga'
 import watchAddProductsBatch from './addProductBatchSaga'
 import supplierSaga from './supplierSaga'
-import transactionSaga from './addTransactionSaga'
+import createRequestSaga from './createRequestSaga'
+import requestSaga from './requestSaga'
 
 export default function* rootSaga() {
   yield all([
@@ -53,6 +54,7 @@ export default function* rootSaga() {
     reviewProductSaga(),
     roleSaga(),
     supplierSaga(),
-    transactionSaga()
+    createRequestSaga(),
+    requestSaga()
   ])
 }

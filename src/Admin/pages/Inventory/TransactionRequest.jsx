@@ -5,26 +5,26 @@ import { IoIosAddCircle } from 'react-icons/io'
 import { MdModeEditOutline, MdDelete, MdFileDownload } from 'react-icons/md'
 import axios from 'axios'
 import * as XLSX from 'xlsx'
-import { getAllProductsRequest } from '../../../redux/actions/actions'
+import { getAllRequestRequest } from '../../../redux/actions/actions'
 import { getStatus, getStatusText } from '../../../constants/Status'
 
 const TransactionRequest = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const products = useSelector((state) => state.products.products)
-  const [deletedProductId, setDeletedProductId] = useState(null)
+  const request = useSelector((state) => state.request?.request)
+  const [deletedRequestId, setDeletedRequestId] = useState(null)
   const [sortOrder, setSortOrder] = useState('all') // Trạng thái bộ lọc
   useEffect(() => {
     try {
-      dispatch(getAllProductsRequest())
+      dispatch(getAllRequestRequest())
     } catch (error) {
       console.error('Error dispatch', error)
     }
-  }, [dispatch, deletedProductId])
+  }, [dispatch, deletedRequestId])
 
-  const filteredAndSortedProducts = products?.data
+  const filteredAndSortedRequest = request?.data
     ?.filter(
-      (product) => (sortOrder === 'all' ? true : product.quantity > 0) // Nếu 'all' được chọn, không lọc
+      () => (sortOrder === 'all' ? true : Request.quantity > 0) // Nếu 'all' được chọn, không lọc
     )
     ?.slice()
     .sort((a, b) => {
@@ -34,20 +34,20 @@ const TransactionRequest = () => {
     })
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(
-      filteredAndSortedProducts.map((product) => ({
-        ID: product.product_id,
-        Image: product.image,
-        Name: product.product_name,
-        Category: product.category_product?.category_name,
-        Brand: product.brand_product?.brand_name,
-        Price: product.updatePrices[0]?.price_new.toLocaleString('en'),
-        Quantity: product.quantity,
-        Status: getStatusText(product.status)
+      filteredAndSortedRequest.map((Request) => ({
+        ID: Request.Request_id,
+        Image: Request.image,
+        Name: Request.Request_name,
+        Category: Request.category_Request?.category_name,
+        Brand: Request.brand_Request?.brand_name,
+        Price: Request.updatePrices[0]?.price_new.toLocaleString('en'),
+        Quantity: Request.quantity,
+        Status: getStatusText(Request.status)
       }))
     )
 
     const wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, ws, 'Products')
+    XLSX.utils.book_append_sheet(wb, ws, 'Requests')
 
     const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
     const file = new Blob([excelBuffer], {
@@ -58,14 +58,14 @@ const TransactionRequest = () => {
     // Tạo liên kết để tải xuống và kích hoạt sự kiện click
     const a = document.createElement('a')
     a.href = fileURL
-    a.download = 'products.xlsx'
+    a.download = 'Requests.xlsx'
     a.click()
 
     // Giải phóng URL sau khi sử dụng
     URL.revokeObjectURL(fileURL)
   }
 
-  const handleDeleteProduct = async (productId) => {
+  const handleDeleteRequest = async (RequestId) => {
     const confirmDelete = window.confirm(
       'Bạn có chắc chắn muốn xóa sản phẩm này không?'
     )
@@ -75,7 +75,7 @@ const TransactionRequest = () => {
     if (confirmDelete) {
       try {
         await axios.delete(
-          `http://localhost:9999/api/staff/product/${productId}/delete`,
+          `http://localhost:9999/api/staff/Request/${RequestId}/delete`,
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -83,9 +83,9 @@ const TransactionRequest = () => {
           }
         )
 
-        setDeletedProductId(productId)
+        setDeletedRequestId(RequestId)
       } catch (error) {
-        console.error('Error deleting product:', error)
+        console.error('Error deleting Request:', error)
       }
     }
   }
@@ -125,63 +125,55 @@ const TransactionRequest = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredAndSortedProducts?.map((product) => (
-              <tr key={product.product_id}>
+            {filteredAndSortedRequest?.map((request) => (
+              <tr key={request.request_id}>
                 <td
                   className="cursor-pointer"
                   onClick={() =>
                     navigate(
-                      `/manager/inventory/product/${product?.product_id}`
+                      `/manager/inventory/request/${request?.request_id}`
                     )
                   }
                 >
-                  {product?.product_id}
+                  {request?.request_id}
                 </td>
                 <td
                   className="cursor-pointer"
                   onClick={() =>
                     navigate(
-                      `/manager/inventory/product/${product?.product_id}`
+                      `/manager/inventory/request/${request?.request_id}`
                     )
                   }
                 >
-                  <img
-                    src={product?.image}
-                    alt={product?.product_name}
-                    className="w-[88px] object-cover rounded-md"
-                  />
+                  {request?.total_quantity}
                 </td>
+
                 <td
-                  className="cursor-pointer"
                   onClick={() =>
                     navigate(
-                      `/manager/inventory/product/${product?.product_id}`
+                      `/manager/inventory/request/${request?.request_id}`
                     )
                   }
                 >
-                  {product?.product_name}
+                  {request?.total_price}
                 </td>
-                <td>{product?.category_product?.category_name}</td>
-                <td>{product?.brand_product?.brand_name}</td>
+                <td>{new Date(request?.created_at).toLocaleDateString()}</td>
                 <td>
-                  {product?.updatePrices[0]?.price_new.toLocaleString('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND'
-                  })}
+                  {request?.staff_created_request?.first_name +
+                    ' ' +
+                    request?.staff_created_request?.last_name}
                 </td>
-                <td
-                  onClick={() =>
-                    navigate(
-                      `/manager/inventory/product/${product?.product_id}`
-                    )
-                  }
-                >
-                  {product?.detail && product.detail.length > 50
-                    ? `${product?.detail.substring(0, 10)}...`
-                    : product.detail}
+                <td>
+                  <td>
+                    {request?.staff_updated_request
+                      ? request.staff_updated_request.first_name +
+                        ' ' +
+                        request.staff_updated_request.last_name
+                      : 'chưa xác nhận'}
+                  </td>
                 </td>
-                <td>{product?.quantity}</td>
-                <td>{getStatus(product?.status)}</td>
+                <td>{getStatus(request?.status)}</td>
+
                 <td>
                   <span>
                     <MdModeEditOutline
@@ -189,7 +181,7 @@ const TransactionRequest = () => {
                       fontSize={25}
                       onClick={() =>
                         navigate(
-                          `/manager/inventory/update-product/${product?.product_id}`
+                          `/manager/inventory/update-request/${request?.request_id}`
                         )
                       }
                     />
@@ -198,7 +190,7 @@ const TransactionRequest = () => {
                     <MdDelete
                       className="cursor-pointer text-primary"
                       fontSize={25}
-                      onClick={() => handleDeleteProduct(product?.product_id)}
+                      onClick={() => handleDeleteRequest(request?.request_id)}
                     />
                   </span>
                 </td>
