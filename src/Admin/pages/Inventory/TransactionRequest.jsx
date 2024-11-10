@@ -6,7 +6,7 @@ import { MdModeEditOutline, MdDelete, MdFileDownload } from 'react-icons/md'
 import axios from 'axios'
 import * as XLSX from 'xlsx'
 import { getAllRequestRequest } from '../../../redux/actions/actions'
-import { getStatus, getStatusText } from '../../../constants/Status'
+import { getStatusRequest, getStatusText } from '../../../constants/Status'
 
 const TransactionRequest = () => {
   const dispatch = useDispatch()
@@ -115,7 +115,7 @@ const TransactionRequest = () => {
           <thead className="text-white font-RobotoSemibold text-[18px] ">
             <tr className="bg-primary">
               <td className="rounded-s-md">ID</td>
-              <td>Tổng số lượng</td>
+              <td>Số lượng</td>
               <td>Tổng giá</td>
               <td>Ngày tạo</td>
               <td>Người tạo</td>
@@ -137,6 +137,7 @@ const TransactionRequest = () => {
                 >
                   {request?.request_id}
                 </td>
+                
                 <td
                   className="cursor-pointer"
                   onClick={() =>
@@ -147,7 +148,6 @@ const TransactionRequest = () => {
                 >
                   {request?.total_quantity}
                 </td>
-
                 <td
                   onClick={() =>
                     navigate(
@@ -155,7 +155,7 @@ const TransactionRequest = () => {
                     )
                   }
                 >
-                  {request?.total_price}
+                  {request?.total_price .toLocaleString('vi-VN')}
                 </td>
                 <td>{new Date(request?.created_at).toLocaleDateString()}</td>
                 <td>
@@ -172,8 +172,7 @@ const TransactionRequest = () => {
                       : 'chưa xác nhận'}
                   </td>
                 </td>
-                <td>{getStatus(request?.status)}</td>
-
+                <td>{getStatusRequest(request?.status)}</td>
                 <td>
                   <span>
                     <MdModeEditOutline

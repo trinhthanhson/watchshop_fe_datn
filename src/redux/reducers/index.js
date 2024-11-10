@@ -26,6 +26,7 @@ import addProductsBatchReducers from './addProductBatchReducers'
 import supplierReducer from './supplierReducer'
 import requestReducer from './requestReducer'
 import createRequestReducer from './createRequestReducer'
+import requestDetailReducer from './requestDetailReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -54,7 +55,8 @@ const rootReducer = combineReducers({
   roles: roleReducer,
   suppliers: supplierReducer,
   transaction: createRequestReducer,
-  request: requestReducer
+  request: requestReducer,
+  requestDetail: requestDetailReducer
 })
 
 export default rootReducer

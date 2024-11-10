@@ -56,6 +56,7 @@ import AllCategoryInventory from '../Admin/pages/Inventory/AllCategoryInventory'
 import AllBrandInventory from '../Admin/pages/Inventory/AllBrandInventory'
 import AllSupplierInventory from '../Admin/pages/Inventory/AllSupplierInventory'
 import CreateRequest from '../Admin/pages/Inventory/CreateRequest'
+import TransactionRequestDetail from '../Admin/pages/Inventory/TransactionRequestDetail'
 
 const Routers = () => {
   const navigate = useNavigate()
@@ -207,6 +208,10 @@ const Routers = () => {
         <Route
           path="/manager/inventory/create-request"
           element={<CreateRequest />}
+        />
+         <Route
+          path="/manager/inventory/request/:id"
+          element={<TransactionRequestDetail />}
         />
         {/* 
         <Route
