@@ -27,6 +27,8 @@ import supplierSaga from './supplierSaga'
 import createRequestSaga from './createRequestSaga'
 import requestSaga from './requestSaga'
 import requestDetailSaga from './requestDetailSaga'
+import transactionSaga from './transactionSaga'
+import transactionDetailSaga from './transactionDetailSaga'
 
 export default function* rootSaga() {
   yield all([
@@ -57,6 +59,8 @@ export default function* rootSaga() {
     supplierSaga(),
     createRequestSaga(),
     requestSaga(),
-    requestDetailSaga()
+    requestDetailSaga(),
+    transactionSaga(),
+    transactionDetailSaga()
   ])
 }

@@ -86,7 +86,16 @@ import {
   GET_ALL_REQUEST_FAILURE,
   GET_REQUEST_DETAIL_REQUEST,
   GET_REQUEST_DETAIL_SUCCESS,
-  GET_REQUEST_DETAIL_FAILURE
+  GET_REQUEST_DETAIL_FAILURE,
+  GET_ALL_TRANSACTION_REQUEST,
+  GET_ALL_TRANSACTION_SUCCESS,
+  GET_ALL_TRANSACTION_FAILURE,
+  GET_TRANSACTION_DETAIL_REQUEST,
+  GET_TRANSACTION_DETAIL_SUCCESS,
+  GET_TRANSACTION_DETAIL_FAILURE,
+  GET_ALL_TYPE_REQUEST,
+  GET_ALL_TYPE_SUCCESS,
+  GET_ALL_TYPE_FAILURE
 } from './types'
 
 export const addCouponRequest = (formData) => ({
@@ -492,7 +501,6 @@ export const getAllRequestFailure = (error) => ({
   payload: error
 })
 
-
 export const getRequestDetailRequest = (id) => ({
   type: GET_REQUEST_DETAIL_REQUEST,
   payload: id
@@ -505,5 +513,48 @@ export const getRequestDetailSuccess = (requestDetail) => ({
 
 export const getRequestDetailFailure = (error) => ({
   type: GET_REQUEST_DETAIL_FAILURE,
+  payload: error
+})
+
+export const getAllTransactionRequest = () => ({
+  type: GET_ALL_TRANSACTION_REQUEST
+})
+
+export const getAllTransactionSuccess = (transaction) => ({
+  type: GET_ALL_TRANSACTION_SUCCESS,
+  payload: transaction
+})
+
+export const getAllTransactionFailure = (error) => ({
+  type: GET_ALL_TRANSACTION_FAILURE,
+  payload: error
+})
+
+export const getTransactionDetailRequest = (id) => ({
+  type: GET_TRANSACTION_DETAIL_REQUEST,
+  payload: id
+})
+
+export const getTransactionDetailSuccess = (transactionDetail) => ({
+  type: GET_TRANSACTION_DETAIL_SUCCESS,
+  payload: transactionDetail
+})
+
+export const getTransactionDetailFailure = (error) => ({
+  type: GET_TRANSACTION_DETAIL_FAILURE,
+  payload: error
+})
+
+export const getAllTypeRequest = () => ({
+  type: GET_ALL_TYPE_REQUEST
+})
+
+export const getAllTypeSuccess = (type) => ({
+  type: GET_ALL_TYPE_SUCCESS,
+  payload: type
+})
+
+export const getAllTypeFailure = (error) => ({
+  type: GET_ALL_TYPE_FAILURE,
   payload: error
 })

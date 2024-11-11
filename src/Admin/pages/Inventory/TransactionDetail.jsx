@@ -2,17 +2,17 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import { getRequestDetailRequest } from '../../../redux/actions/actions'
+import { getTransactionDetailRequest } from '../../../redux/actions/actions'
 
-const TransactionRequestDetail = () => {
+const TransactionDetail = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
-  const requestDetail = useSelector(
-    (state) => state.requestDetail?.requestDetail
+  const transactionDetail = useSelector(
+    (state) => state.transactionDetail?.transactionDetail
   )
   useEffect(() => {
     try {
-      dispatch(getRequestDetailRequest(id))
+      dispatch(getTransactionDetailRequest(id))
     } catch (error) {
       console.error('Error dispatch', error)
     }
@@ -23,7 +23,7 @@ const TransactionRequestDetail = () => {
       const token = localStorage.getItem('token')
       axios
         .put(
-          `http://localhost:9999/api/staff/request/${id}/status`,
+          `http://localhost:9999/api/staff/transaction/${id}/status`,
           { status: 'REJECT' },
           {
             headers: {
@@ -32,7 +32,7 @@ const TransactionRequestDetail = () => {
           }
         )
         .then(() => {
-          dispatch(getRequestDetailRequest(id))
+          dispatch(getTransactionDetailRequest(id))
         })
     } catch (error) {
       console.error('Error change order status', error)
@@ -44,7 +44,7 @@ const TransactionRequestDetail = () => {
       const token = localStorage.getItem('token')
       axios
         .put(
-          `http://localhost:9999/api/staff/request/${id}/status`,
+          `http://localhost:9999/api/staff/transaction/${id}/status`,
           { status: 'APPROVED' },
           {
             headers: {
@@ -53,7 +53,7 @@ const TransactionRequestDetail = () => {
           }
         )
         .then(() => {
-          dispatch(getRequestDetailRequest(id))
+          dispatch(getTransactionDetailRequest(id))
         })
     } catch (error) {
       console.error('Error change order status', error)
@@ -72,9 +72,9 @@ const TransactionRequestDetail = () => {
                 Người lập:
               </span>
               <span className="text-primary font-RobotoSemibold">
-                {requestDetail?.staff_created_request?.first_name +
+                {transactionDetail?.staff_transaction?.first_name +
                   ' ' +
-                  requestDetail?.staff_created_request?.last_name}
+                  transactionDetail?.staff_transaction?.last_name}
               </span>
             </p>
             <p className="p-5">
@@ -82,7 +82,7 @@ const TransactionRequestDetail = () => {
                 Nội dung nhập hàng:
               </span>
               <span className="text-primary font-RobotoSemibold">
-                {requestDetail?.content}
+                {transactionDetail?.content}
               </span>
             </p>
             <p className="p-5">
@@ -90,15 +90,15 @@ const TransactionRequestDetail = () => {
                 Lý do nhập hàng:
               </span>
               <span className="text-primary font-RobotoSemibold">
-                {requestDetail?.note}
+                {transactionDetail?.note}
               </span>
             </p>
             <p className="p-5">
               <span className="text-primary font-RobotoMedium mr-2">
-                Nhà cung cấp dự kiến:
+                Nhà cung cấp:
               </span>
               <span className="text-primary font-RobotoSemibold">
-                {requestDetail?.expected_supplier}
+                {transactionDetail?.supplier_transaction?.supplier_name}
               </span>
             </p>
             <p className="p-5">
@@ -106,7 +106,7 @@ const TransactionRequestDetail = () => {
                 Email:
               </span>
               <span className="text-primary font-RobotoSemibold">
-                {requestDetail?.supplier_email}
+                {transactionDetail?.supplier_transaction?.email}
               </span>
             </p>
             <p className="p-5">
@@ -114,7 +114,7 @@ const TransactionRequestDetail = () => {
                 Số điện thoại:
               </span>
               <span className="text-primary font-RobotoSemibold">
-                {requestDetail?.supplier_phone}
+                {transactionDetail?.supplier_transaction?.phone}
               </span>
             </p>
             <p className="p-5">
@@ -122,7 +122,7 @@ const TransactionRequestDetail = () => {
                 Địa chỉ:
               </span>
               <span className="text-primary font-RobotoSemibold">
-                {requestDetail?.supplier_address}
+                {transactionDetail?.supplier_transaction?.address}
               </span>
             </p>
           </div>
@@ -138,16 +138,16 @@ const TransactionRequestDetail = () => {
                 Tổng số lượng yêu cầu:
               </span>
               <span className="text-primary font-RobotoSemibold">
-                {requestDetail?.total_quantity}
+                {transactionDetail?.total_quantity}
               </span>
             </p>
             <p className="p-5">
               <span className="text-primary font-RobotoMedium mr-2">
                 Tổng tiền:
               </span>
-              {requestDetail?.total_price && (
+              {transactionDetail?.total_price && (
                 <span className="text-primary font-RobotoSemibold">
-                  {requestDetail.total_price.toLocaleString('en')} VNĐ
+                  {transactionDetail.total_price.toLocaleString('en')} VNĐ
                 </span>
               )}
             </p>
@@ -155,9 +155,9 @@ const TransactionRequestDetail = () => {
               <span className="text-primary font-RobotoMedium mr-2">
                 Thanh toán:
               </span>
-              {requestDetail?.total_price && (
+              {transactionDetail?.total_price && (
                 <span className="text-primary font-RobotoSemibold">
-                  {requestDetail.total_price.toLocaleString('en')} VNĐ
+                  {transactionDetail.total_price.toLocaleString('en')} VNĐ
                 </span>
               )}
             </p>
@@ -177,24 +177,24 @@ const TransactionRequestDetail = () => {
             </tr>
           </thead>
           <tbody>
-            {requestDetail?.requestDetails?.map((orderItem, index) => (
+            {transactionDetail?.transactionDetails?.map((orderItem, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
                 <td className="flex items-center">
                   <img
                     className="w-[60px] mt-[2px] rounded-full shadow-md mr-2"
-                    src={orderItem?.product_request?.image}
-                    alt={orderItem?.product_request?.product_name}
+                    src={orderItem?.product_transaction_detail?.image}
+                    alt={orderItem?.product_transaction_detail?.product_name}
                   />
                 </td>
 
                 <td>
-                  <p>{orderItem?.product_request?.product_name}</p>
+                  <p>{orderItem?.product_transaction_detail?.product_name}</p>
                 </td>
                 <td>{orderItem?.quantity}</td>
                 <td>{orderItem?.price.toLocaleString('en')} VNĐ</td>
                 <td>
-                  {new Date(requestDetail.created_at).toLocaleDateString()}
+                  {new Date(transactionDetail.created_at).toLocaleDateString()}
                 </td>
               </tr>
             ))}
@@ -205,7 +205,7 @@ const TransactionRequestDetail = () => {
       <div className="ml-[18%] w-[80%] flex justify-between">
         <div></div>
         <div className="flex gap-3">
-          {requestDetail?.status === 'WAITING' && (
+          {transactionDetail?.status === 'WAITING' && (
             <button
               onClick={() => handleCancelOrder()}
               className="mt-5 bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
@@ -214,7 +214,7 @@ const TransactionRequestDetail = () => {
             </button>
           )}
 
-          {requestDetail?.status === 'WAITING' && (
+          {transactionDetail?.status === 'WAITING' && (
             <button
               className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
               onClick={() => handleConfirmOrder()}
@@ -228,4 +228,4 @@ const TransactionRequestDetail = () => {
   )
 }
 
-export default TransactionRequestDetail
+export default TransactionDetail

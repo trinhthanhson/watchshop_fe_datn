@@ -22,6 +22,11 @@ const CreateRequest = () => {
   const [searchResults, setSearchResults] = useState([])
   const [currentRowIndex, setCurrentRowIndex] = useState(null)
   const [note, setNote] = useState('')
+  const [expecredSupplier, setExpecredSupplier] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [address, setAddress] = useState('')
+
   const [content, setContent] = useState('')
   const navigate = useNavigate()
 
@@ -121,6 +126,10 @@ const CreateRequest = () => {
     const payload = {
       note,
       content,
+      expected_supplier: expecredSupplier,
+      email,
+      phone,
+      address,
       total_quantity: totalQuantity,
       total_price: totalPrice,
       type_name: 'IMPORT',
@@ -135,57 +144,124 @@ const CreateRequest = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded shadow-md w-full max-w-6xl space-y-4">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-5xl">
+        <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
           Phiếu Đề Nghị Nhập Kho
         </h2>
 
-        <div>
-          <label className="block text-gray-700">
-            Kính gửi:{' '}
-            <span className="text-gray-800 font-semibold">Phòng Kế Toán</span>
-          </label>
-        </div>
-        <div>
-          <label className="block text-gray-700 font-semibold">
-            * Nội dung:
-          </label>
-          <input
-            type="text"
-            name="content"
-            className="w-full p-2 border border-gray-300 rounded mt-1"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 font-semibold">
-            * Nhân viên:
-          </label>
-          <input
-            type="text"
-            name="employee"
-            value={user?.first_name + ' ' + user?.last_name}
-            className="w-full p-2 border border-gray-300 rounded mt- 1"
-            required
-            disabled
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 font-semibold">
-            * Thuộc bộ phận:
-          </label>
-          <input
-            type="text"
-            name="department"
-            value={'Kho'}
-            className="w-full p-2 border border-gray-300 rounded mt-1"
-            required
-            disabled
-          />
-        </div>
+        <div className="flex gap-6">
+          {/* Cột trái */}
+          <div className="w-1/2 space-y-6">
+            <div>
+              <label className="block text-gray-700 font-semibold">
+                Kính gửi:
+              </label>
+              <input
+                type="text"
+                name="content"
+                className="w-full p-3 border border-gray-300 rounded mt-2"
+                value={'Phòng kế toán'}
+                disabled
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-semibold">
+                * Nhân viên:
+              </label>
+              <input
+                type="text"
+                name="employee"
+                value={user?.first_name + ' ' + user?.last_name}
+                className="w-full p-3 border border-gray-300 rounded mt-2"
+                required
+                disabled
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-semibold">
+                * Số điện thoại:
+              </label>
+              <input
+                type="text"
+                name="phone"
+                className="w-full p-3 border border-gray-300 rounded mt-2"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+              />
+            </div>
 
+            <div>
+              <label className="block text-gray-700 font-semibold">
+                * Email:
+              </label>
+              <input
+                type="text"
+                name="email"
+                className="w-full p-3 border border-gray-300 rounded mt-2"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+          {/* Cột phải */}
+          <div className="w-1/2 space-y-6">
+            <div>
+              <label className="block text-gray-700 font-semibold">
+                * Thuộc bộ phận:
+              </label>
+              <input
+                type="text"
+                name="department"
+                value="Kho"
+                className="w-full p-3 border border-gray-300 rounded mt-2"
+                required
+                disabled
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-semibold">
+                * Nhà cung cấp dự kiến:
+              </label>
+              <input
+                type="text"
+                name="expected_supplier"
+                className="w-full p-3 border border-gray-300 rounded mt-2"
+                value={expecredSupplier}
+                onChange={(e) => setExpecredSupplier(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-semibold">
+                * Địa chỉ:
+              </label>
+              <input
+                type="text"
+                name="address"
+                className="w-full p-3 border border-gray-300 rounded mt-2"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-semibold">
+                * Nội dung:
+              </label>
+              <input
+                type="text"
+                name="content"
+                className="w-full p-3 border border-gray-300 rounded mt-2"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+        </div>
         <div className="overflow-x-auto">
           <table className="min-w-full border border-gray-300 mt-4">
             <thead>

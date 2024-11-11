@@ -5,23 +5,23 @@ import { IoIosAddCircle } from 'react-icons/io'
 import { MdFileDownload } from 'react-icons/md'
 import { BiDetail } from 'react-icons/bi'
 import * as XLSX from 'xlsx'
-import { getAllRequestRequest } from '../../../redux/actions/actions'
 import { getStatusRequest, getStatusText } from '../../../constants/Status'
+import { getAllTransactionRequest } from '../../../redux/actions/actions'
 
-const TransactionRequest = () => {
+const Transaction = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const request = useSelector((state) => state.request?.request)
+  const transaction = useSelector((state) => state.transaction?.transaction)
   const [sortOrder, setSortOrder] = useState('all') // Trạng thái bộ lọc
   useEffect(() => {
     try {
-      dispatch(getAllRequestRequest())
+      dispatch(getAllTransactionRequest())
     } catch (error) {
       console.error('Error dispatch', error)
     }
   }, [dispatch])
 
-  const filteredAndSortedRequest = request?.data
+  const filteredAndSortedRequest = transaction?.data
     ?.filter(
       () => (sortOrder === 'all' ? true : Request.quantity > 0) // Nếu 'all' được chọn, không lọc
     )
@@ -100,36 +100,39 @@ const TransactionRequest = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredAndSortedRequest?.map((request) => (
-              <tr key={request.request_id}>
-                <td>{request?.request_id}</td>
+            {filteredAndSortedRequest?.map((transaction) => (
+              <tr key={transaction.request_id}>
+                <td>{transaction?.request_id}</td>
 
-                <td>{request?.total_quantity}</td>
-                <td>{request?.total_price.toLocaleString('vi-VN')}</td>
-                <td>{new Date(request?.created_at).toLocaleDateString()}</td>
+                <td>{transaction?.total_quantity}</td>
+                <td>{transaction?.total_price.toLocaleString('vi-VN')}</td>
                 <td>
-                  {request?.staff_created_request?.first_name +
+                  {new Date(transaction?.created_at).toLocaleDateString()}
+                </td>
+
+                <td>
+                  {transaction?.staff_transaction?.first_name +
                     ' ' +
-                    request?.staff_created_request?.last_name}
+                    transaction?.staff_transaction?.last_name}
                 </td>
                 <td>
                   <td>
-                    {request?.staff_updated_request
-                      ? request.staff_updated_request.first_name +
+                    {transaction?.staff_updated
+                      ? transaction.staff_updated.first_name +
                         ' ' +
-                        request.staff_updated_request.last_name
+                        transaction.staff_updated.last_name
                       : 'Chưa xác nhận'}
                   </td>
                 </td>
-                <td>{request?.type_request?.type_name}</td>
-                <td>{getStatusRequest(request?.status)}</td>
+                <td>{transaction?.type_transaction?.type_name}</td>
+                <td>{getStatusRequest(transaction?.status)}</td>
                 <td>
                   <BiDetail
                     className="cursor-pointer"
                     size={30}
                     onClick={() =>
                       navigate(
-                        `/manager/inventory/request/${request?.request_id}`
+                        `/manager/inventory/transaction/${transaction?.transaction_id}`
                       )
                     }
                   />
@@ -150,4 +153,4 @@ const TransactionRequest = () => {
   )
 }
 
-export default TransactionRequest
+export default Transaction

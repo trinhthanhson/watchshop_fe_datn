@@ -6,12 +6,14 @@ import axios from 'axios'
 import OrderTracker from '../../components/Order/OrderTraker'
 
 const ORDER_STATUS_NEXT = {
-  0: 'Xác Nhận',
-  1: 'Đang vận chuyển',
-  2: 'Chờ thanh toán',
-  3: 'Đã thanh toán',
-  4: 'Đã giao',
-  5: 'Hoàn thành'
+  0: 'Chờ Xác Nhận',
+  1: 'Xác nhận',
+  2: 'Chờ kho xác nhận',
+  3: 'Đang vận chuyển',
+  4: 'Chờ thanh toán',
+  5: 'Đã thanh toán',
+  6: 'Đã giao',
+  7: 'Hoàn thành'
 }
 
 const AdminOrderDetail = () => {
@@ -225,10 +227,19 @@ const AdminOrderDetail = () => {
               Hủy Đơn Hàng
             </button>
           )}
-          {parseInt(orderDetail?.status, 10) < 5 && (
+          {parseInt(orderDetail?.status, 10) < 5 &&
+            parseInt(orderDetail?.status, 10) !== 1 && (
+              <button
+                className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+                onClick={() => handleConfirmOrder()}
+              >
+                {ORDER_STATUS_NEXT[orderDetail?.status]}
+              </button>
+            )}
+          {parseInt(orderDetail?.status, 10) == 1 && (
             <button
-              className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
-              onClick={() => handleConfirmOrder()}
+              className="mt-5 bg-gray-400 text-black font-RobotoMedium text-[16px] rounded-md p-2 shadow-md  ease-out duration-300 transform  border-none"
+              disabled
             >
               {ORDER_STATUS_NEXT[orderDetail?.status]}
             </button>
