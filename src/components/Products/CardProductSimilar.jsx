@@ -1,6 +1,22 @@
 import PropTypes from 'prop-types'
+import {
+  addCartRequest,
+  getAllCouponsRequest
+} from '../../redux/actions/actions'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect, useState } from 'react'
+import { decryptData } from '../../cryptoUtils/cryptoUtils'
 
 const CardProductSimilar = ({ product }) => {
+  const navigate = useNavigate()
+  const [priceDiscount, setPriceDiscount] = useState(null)
+
+  const coupons = useSelector((state) => state.coupons.coupons.data)
+  const [discountedPrice, setDiscountedPrice] = useState(null)
+  const roleName = localStorage.getItem('role_name')
+  const decryptedRole = decryptData(roleName)
+  const dispatch = useDispatch()
   const {
     product_id,
     product_name,
@@ -8,12 +24,68 @@ const CardProductSimilar = ({ product }) => {
     image,
     category_product,
     brand_product,
-    status
+    status,
+    quantity
   } = product
-  const formattedPrice =
-  updatePrices.length > 0
-      ? updatePrices[0].price_new.toLocaleString('en')
-      : ''
+  const price = updatePrices[0]?.price_new || 0
+  const formattedPrice = price.toLocaleString('en')
+  useEffect(() => {
+    dispatch(getAllCouponsRequest())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (Array.isArray(coupons) && coupons.length > 0) {
+      const now = new Date()
+
+      // Find valid coupon
+      const validCoupon = coupons.find((coupon) => {
+        const startDate = new Date(coupon.start_date)
+        const endDate = new Date(coupon.end_date)
+        return now >= startDate && now <= endDate
+      })
+
+      if (validCoupon && validCoupon.couponDetails.length > 0) {
+        // Filter active coupon details for the current product
+        const activeCouponDetails = validCoupon.couponDetails.filter(
+          (detail) =>
+            detail.status === 'ACTIVE' && detail.product_id === product_id
+        )
+
+        if (activeCouponDetails.length > 0) {
+          // Assuming each detail has a percentage discount
+          const maxPercent = Math.max(
+            ...activeCouponDetails.map(
+              (detail) => parseFloat(detail.percent) || 0
+            )
+          )
+
+          // Calculate discount amount and apply it
+          const discountAmount = price * maxPercent
+          const newPrice = price - discountAmount
+          setDiscountedPrice(Math.ceil(newPrice).toLocaleString('en'))
+          setPriceDiscount(Math.ceil(newPrice))
+        }
+      }
+    }
+  }, [coupons, price, product_id])
+  const handleAddToCart = () => {
+    dispatch(
+      addCartRequest({
+        product_id: `${product_id}`,
+        quantity: 1
+      })
+    )
+  }
+
+  const handleBuyNow = () => {
+    navigate('/buynow', {
+      state: {
+        product: product,
+        quantity: 1,
+        price: priceDiscount || product.updatePrices[0]?.price_new
+      }
+    })
+  }
 
   return (
     <div className="bg-white rounded-xl shadow-lg mb-10 relative justify-between col-span-1 w-full md:w-[80%] xl:w-[90%] hover:scale-105 transition duration-500 ease-in-out">
@@ -36,49 +108,116 @@ const CardProductSimilar = ({ product }) => {
             />
           </a>
         </div>
-        <div className="pt-5 pb-3">
-          <h3 className="px-5 text-black font-RobotoSemibold text-xl 3xl:text-2xl leading-[1.3]">
-            {product_name}
-          </h3>
-          <hr className="mt-5" />
-          <div className="flex py-3 relative">
-            {status === 'ACTIVE' ? (
+        {decryptedRole === 'CUSTOMER' ? (
+          <>
+            <div className="flex py-3 relative">
+              {status === 'ACTIVE' ? (
+                quantity > 0 ? (
+                  <div className="w-1/2 px-5">
+                    <p className="text-base font-RobotoMedium 3xl:text-lg text-primary">
+                      Sản phẩm còn hàng
+                    </p>
+                    <div>
+                      <span className="relative">
+                        <p className="text-base font-RobotoSemibold 3xl:text-lg text-main">
+                          Mua sắm ngay
+                        </p>
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-1/2 px-5">
+                    <div>
+                      <span className="relative">
+                        <p className="text-center text-base font-RobotoSemibold 3xl:text-lg text-red-500">
+                          Sản phẩm hết hàng
+                        </p>
+                      </span>
+                    </div>
+                  </div>
+                )
+              ) : (
+                <div className="w-full px-5">
+                  <p className="text-center text-base font-RobotoSemibold 3xl:text-lg text-red-500">
+                    Ngừng bán
+                  </p>
+                </div>
+              )}
+
               <div className="w-1/2 px-5">
                 <p className="text-base font-RobotoMedium 3xl:text-lg text-primary">
-                  Có Mặt Tại
+                  Giá
                 </p>
-                <div className="">
-                  <span className="relative">
-                    <p className="text-base font-RobotoSemibold 3xl:text-lg text-main">
-                      Tất cả chi nhánh
-                    </p>
-                  </span>
-                </div>
+                <p className="text-base font-RobotoSemibold 3xl:text-lg text-main">
+                  {discountedPrice
+                    ? `${discountedPrice} VNĐ`
+                    : `${formattedPrice} VNĐ`}
+                </p>
+                {discountedPrice && (
+                  <p className="text-sm text-red-500 line-through">
+                    {formattedPrice} VNĐ
+                  </p>
+                )}
+                <div className="absolute h-full border-l border-grayWhite top-0 left-[50%]"></div>
               </div>
-            ) : (
-              <div className="w-1/2 px-5">
-                <p className="text-base font-RobotoMedium 3xl:text-lg text-primary"></p>
-                <div className="">
-                  <span className="relative">
-                    <p className="text-center text-base font-RobotoSemibold 3xl:text-lg text-main">
-                      Ngừng Kinh Doanh
-                    </p>
-                  </span>
-                </div>
-              </div>
-            )}
-
-            <div className="w-1/2 px-5">
-              <p className="text-base font-RobotoMedium 3xl:text-lg text-primary">
-                Giá
-              </p>
-              <p className="text-base font-RobotoSemibold 3xl:text-lg text-main">
-                {formattedPrice}VNĐ
-              </p>
-              <div className="absolute h-full border-l border-grayWhite top-0 left-[50%]"></div>
             </div>
+
+            <hr />
+
+            <div className="w-full flex items-center justify-center relative gap-5 transition-opacity duration-300 ease-in-out">
+              {status === 'ACTIVE' && quantity > 0 ? (
+                <>
+                  <div className="w-full m-5">
+                    <button
+                      className="font-RobotoMedium w-full bg-white text-primary border-primary hover:bg-primary border-[1px] p-2 rounded-md shadow-md hover:text-white transition duration-300 ease-in-out"
+                      onClick={handleAddToCart}
+                    >
+                      Thêm Vào Giỏ
+                    </button>
+                  </div>
+
+                  <div className="w-full m-5">
+                    <button
+                      onClick={handleBuyNow}
+                      className="font-RobotoMedium w-full bg-white text-main border-main hover:bg-main border-[1px] p-2 rounded-md shadow-md hover:text-white transition duration-300 ease-in-out"
+                    >
+                      Mua Ngay
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="w-full m-5">
+                    <button
+                      className="font-RobotoMedium w-full bg-gray-200 text-gray-500 border-gray-300 p-2 rounded-md shadow-md cursor-not-allowed"
+                      disabled
+                    >
+                      Thêm Vào Giỏ
+                    </button>
+                  </div>
+
+                  <div className="w-full m-5">
+                    <button
+                      className="font-RobotoMedium w-full bg-gray-200 text-gray-500 border-gray-300 p-2 rounded-md shadow-md cursor-not-allowed"
+                      disabled
+                    >
+                      Mua Ngay
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </>
+        ) : (
+          <div className="w-full flex justify-center mt-4">
+            <button
+              disabled
+              className="p-3 text-center bg-gray-300 text-gray-700 border border-gray-300 rounded-lg cursor-not-allowed"
+            >
+              Không có quyền
+            </button>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )

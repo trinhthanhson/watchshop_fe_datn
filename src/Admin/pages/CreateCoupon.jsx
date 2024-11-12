@@ -14,6 +14,7 @@ const CreateCoupon = () => {
       type: '',
       start_date: '',
       end_date: '',
+      title: '',
       percent: 0
     }
   })
@@ -40,6 +41,7 @@ const CreateCoupon = () => {
       content: formData.data.content,
       start_date: formData.data.start_date,
       end_date: formData.data.end_date,
+      title: formData.data.title,
       percent: formData.data.percent
     }
     dispatch(addCouponRequest(couponData))
@@ -51,6 +53,7 @@ const CreateCoupon = () => {
           content: '',
           start_date: '',
           end_date: '',
+          title: '',
           percent: 0
         }
       })

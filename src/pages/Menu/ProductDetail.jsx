@@ -9,6 +9,7 @@ import {
   getReviewProductRequest
 } from '../../redux/actions/actions'
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa'
+import { decryptData } from '../../cryptoUtils/cryptoUtils'
 
 const ProductDetail = () => {
   const { id } = useParams()
@@ -20,6 +21,8 @@ const ProductDetail = () => {
   const productsCustomer = useSelector(
     (state) => state.productsCustomer.productsCustomer.data
   )
+  const roleName = localStorage.getItem('role_name')
+  const decryptedRole = decryptData(roleName)
   const coupons = useSelector((state) => state.coupons.coupons.data)
   const reviews = useSelector((state) => state.reviewProduct?.reviews)
   const selectedProduct = productsCustomer
@@ -219,53 +222,67 @@ const ProductDetail = () => {
                 />
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-4 items-center sm:justify-between w-full">
-                {selectedProduct?.status === '' ? (
+              {decryptedRole === 'CUSTOMER' ? (
+                <div className="grid sm:grid-cols-2 gap-4 items-center sm:justify-between w-full">
+                  {selectedProduct?.status === 'INACTIVE' ? (
+                    <button
+                      disabled
+                      className="w-full p-3 text-center bg-gray-300 text-gray-700 border border-gray-300 rounded-lg cursor-not-allowed"
+                    >
+                      Ngưng Bán
+                    </button>
+                  ) : selectedProduct?.quantity > 0 ? (
+                    <>
+                      <div className="w-full">
+                        <div className="flex justify-center items-center p-3 text-center border border-grey text-primary hover:text-white hover:bg-primary hover:border-none rounded-lg">
+                          <button
+                            onClick={handleAddToCart}
+                            className="font-serif text-[16px] lg:text-[17px] sm:text-lg text-inherit 3xl:text-[20px] w-full"
+                          >
+                            Thêm Vào Giỏ
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="w-full">
+                        <a className="block">
+                          <button className="w-full">
+                            <div
+                              onClick={handleBuyNow}
+                              className="font-serif rounded-lg p-3 text-center border border-grey bg-primary text-white hover:bg-[#271A15] hover:text-white"
+                            >
+                              <p className="text-[16px] lg:text-[17px] sm:text-lg text-inherit 3xl:text-[20px] hover:border-none">
+                                Mua Ngay
+                              </p>
+                            </div>
+                          </button>
+                        </a>
+                      </div>
+                    </>
+                  ) : (
+                    <div
+                      className="w-full p-3 text-center text-red-500 bg-red-100 border border-red-500 rounded-lg"
+                      style={{
+                        marginLeft: '180px',
+                        backgroundColor: '#ecaaaa'
+                      }}
+                    >
+                      <p className="text-[16px] lg:text-[17px] sm:text-lg 3xl:text-[20px]">
+                        Đã hết hàng
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="w-full flex justify-center mt-4">
                   <button
                     disabled
-                    className="w-full p-3 text-center bg-gray-300 text-gray-700 border border-gray-300 rounded-lg cursor-not-allowed"
+                    className="p-3 text-center bg-gray-300 text-gray-700 border border-gray-300 rounded-lg cursor-not-allowed"
                   >
-                    Ngưng Bán
+                    Không có quyền
                   </button>
-                ) : selectedProduct?.quantity > 0 ? (
-                  <>
-                    <div className="w-full">
-                      <div className="flex justify-center items-center p-3 text-center border border-grey text-primary hover:text-white hover:bg-primary hover:border-none rounded-lg">
-                        <button
-                          onClick={handleAddToCart}
-                          className="font-serif text-[16px] lg:text-[17px] sm:text-lg text-inherit 3xl:text-[20px] w-full"
-                        >
-                          Thêm Vào Giỏ
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="w-full">
-                      <a className="block">
-                        <button className="w-full">
-                          <div
-                            onClick={handleBuyNow}
-                            className="font-serif rounded-lg p-3 text-center border border-grey bg-primary text-white hover:bg-[#271A15] hover:text-white"
-                          >
-                            <p className="text-[16px] lg:text-[17px] sm:text-lg text-inherit 3xl:text-[20px] hover:border-none">
-                              Mua Ngay
-                            </p>
-                          </div>
-                        </button>
-                      </a>
-                    </div>
-                  </>
-                ) : (
-                  <div
-                    className="w-full p-3 text-center text-red-500 bg-red-100 border border-red-500 rounded-lg"
-                    style={{ marginLeft: '180px', backgroundColor: '#ecaaaa' }}
-                  >
-                    <p className="text-[16px] lg:text-[17px] sm:text-lg 3xl:text-[20px]">
-                      Đã hết hàng
-                    </p>
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -346,10 +363,10 @@ const ProductDetail = () => {
               Model: selectedProduct?.model,
               Movement: selectedProduct?.machine_movement,
               Series: selectedProduct?.series,
-              'Water Resistance': selectedProduct?.water_resistance,
+              'Water Resistance': selectedProduct?.water_resistance
             })
               // Lọc ra các mục có giá trị khác null
-              .filter(([, value]) => value !== "")
+              .filter(([, value]) => value !== '')
               // Sắp xếp theo thứ tự bảng chữ cái
               .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
               .map(([key, value], index) => (
@@ -362,7 +379,6 @@ const ProductDetail = () => {
                 </div>
               ))}
           </div>
-
         </div>
       </section>
       <section className="relative bg-white py-[50px] md:py-[80px]">
