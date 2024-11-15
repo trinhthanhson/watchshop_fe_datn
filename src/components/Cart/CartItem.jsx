@@ -6,15 +6,59 @@ import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useSelector, useDispatch } from 'react-redux'
-import { getAllCartRequest } from '../../redux/actions/actions'
+import {
+  getAllCartRequest,
+  getAllCouponsRequest
+} from '../../redux/actions/actions'
 
 const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
   const dispatch = useDispatch()
   const { product_cart } = cart
+  const coupons = useSelector((state) => state.coupons.coupons.data)
+
   const cart_get = useSelector((state) => state.cart.cart.data)
-  
-  
+  const [discountedPrice, setDiscountedPrice] = useState(null)
   // Function to handle quantity change
+  const price = product_cart?.updatePrices[0]?.price_new
+  useEffect(() => {
+    dispatch(getAllCouponsRequest())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (Array.isArray(coupons) && coupons.length > 0) {
+      const now = new Date()
+
+      // Find valid coupon
+      const validCoupon = coupons.find((coupon) => {
+        const startDate = new Date(coupon.start_date)
+        const endDate = new Date(coupon.end_date)
+        return now >= startDate && now <= endDate
+      })
+
+      if (validCoupon && validCoupon.couponDetails.length > 0) {
+        // Filter active coupon details for the current product
+        const activeCouponDetails = validCoupon.couponDetails.filter(
+          (detail) =>
+            detail.status === 'ACTIVE' &&
+            detail.product_id === product_cart?.product_id
+        )
+
+        if (activeCouponDetails.length > 0) {
+          // Assuming each detail has a percentage discount
+          const maxPercent = Math.max(
+            ...activeCouponDetails.map(
+              (detail) => parseFloat(detail.percent) || 0
+            )
+          )
+
+          // Calculate discount amount and apply it
+          const discountAmount = price * maxPercent
+          const newPrice = price - discountAmount
+          setDiscountedPrice(Math.ceil(newPrice).toLocaleString('en'))
+        }
+      }
+    }
+  }, [coupons, price, product_cart?.product_id])
   const handleQuantityChange = async (newQuantity) => {
     if (newQuantity <= product_cart?.quantity) {
       try {
@@ -78,8 +122,15 @@ const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
             Category: {product_cart?.category_product?.category_name}
           </p>
           <p className="text-main font-semibold text-lg">
-            {product_cart?.updatePrices[0]?.price_new.toLocaleString('en')} VNĐ
+            {discountedPrice
+              ? `${discountedPrice} VNĐ`
+              : `${price.toLocaleString('en')} VNĐ`}
           </p>
+          {discountedPrice && (
+            <p className="text-sm text-red-500 line-through">
+              {price.toLocaleString('en')} VNĐ
+            </p>
+          )}
         </div>
         <div className="lg:flex items-center lg:space-x-5 pt-2 ml-[30%]">
           {product_cart?.quantity === 0 ? (
