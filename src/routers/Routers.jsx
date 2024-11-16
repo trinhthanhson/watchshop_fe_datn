@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import Home from '../pages/Home'
 import About from '../pages/About/About'
 import Origin from '../pages/About/Origin'
@@ -59,10 +59,12 @@ import CreateRequest from '../Admin/pages/Inventory/CreateRequest'
 import TransactionRequestDetail from '../Admin/pages/Inventory/TransactionRequestDetail'
 import Transaction from '../Admin/pages/Inventory/Transaction'
 import TransactionDetail from '../Admin/pages/Inventory/TransactionDetail'
+import { NavigationPaths } from './navigationPaths'
+import { UserRole } from '../enum/UserRole'
 
 const Routers = () => {
   const navigate = useNavigate()
-  const location = useLocation()
+  const currentPath = window.location.pathname
   const [role, setRole] = useState(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   useEffect(() => {
@@ -86,31 +88,31 @@ const Routers = () => {
       }
     }
   }, [])
-
   useEffect(() => {
     if (isLoggedIn) {
-      if (role === 'MANAGER' || role === 'STAFF') {
-        // Redirect to /manager if the user is a manager or staff and is on /buynow or /
-        if (location.pathname === '/buynow' || location.pathname === '/') {
-          navigate('/manager')
-        }
-      } else if (role === 'SHIPPER') {
-        if (location.pathname === '/buynow' || location.pathname === '/') {
-          navigate('/manager/shipper')
-        }
-      } else if (role === 'WAREHOUSE_STAFF' || role === 'WAREHOUSE_MANAGER') {
-        if (location.pathname === '/buynow' || location.pathname === '/') {
-          navigate('/manager/inventory')
-        }
+      // Kiểm tra nếu là STAFF, không cho vào trang kho (bắt đầu với /inventory)
+      if (
+        role === UserRole.STAFF &&
+        (currentPath.startsWith(NavigationPaths.WAREHOUSE_STAFF) ||
+          currentPath.startsWith(NavigationPaths.WAREHOUSE_MANAGER))
+      ) {
+        // Điều hướng đến trang NOTFOUND nếu không hợp lệ
+        navigate(NavigationPaths.NOTFOUND)
+        return // Dừng lại, không điều hướng thêm
+      }
+
+      // Kiểm tra nếu là WAREHOUSE_STAFF hoặc WAREHOUSE_MANAGER, không cho vào trang STAFF (bắt đầu với /manager)
+      if (
+        (role === UserRole.WAREHOUSE_STAFF ||
+          role === UserRole.WAREHOUSE_MANAGER) &&
+        currentPath.startsWith(NavigationPaths.STAFF)
+      ) {
+        // Điều hướng đến trang NOTFOUND nếu không hợp lệ
+        navigate(NavigationPaths.NOTFOUND)
+        return // Dừng lại, không điều hướng thêm
       }
     }
-    console.log(role)
-    if (role === 'CUSTOMER') {
-      if (location.pathname.startsWith('/manager')) {
-        navigate('/home')
-      }
-    }
-  }, [role, location.pathname, navigate, isLoggedIn])
+  }, [isLoggedIn, role, currentPath, navigate])
   // Your component code here
 
   return (
@@ -179,54 +181,33 @@ const Routers = () => {
         <Route path="/manager/create-coupon" element={<CreateCoupon />} />
       </Route>
 
-      <Route path="/manager/inventory" element={<LayoutInventory />}>
+      <Route path="/inventory" element={<LayoutInventory />}>
         <Route index element={<DashboardInevntory />} />
+        <Route path="/inventory/product" element={<ProductInventory />} />
         <Route
-          path="/manager/inventory/product"
-          element={<ProductInventory />}
-        />
-        <Route
-          path="/manager/inventory/product/:id"
+          path="/inventory/product/:id"
           element={<InventoryProductDetail />}
         />
         <Route
-          path="/manager/inventory/update-product/:id"
+          path="/inventory/update-product/:id"
           element={<InventoryUpdateProduct />}
         />
+        <Route path="/inventory/request" element={<TransactionRequest />} />
         <Route
-          path="/manager/inventory/request"
-          element={<TransactionRequest />}
-        />
-        <Route
-          path="/manager/inventory/create-product"
+          path="/inventory/create-product"
           element={<CreateProductInventory />}
         />
+        <Route path="/inventory/category" element={<AllCategoryInventory />} />
+        <Route path="/inventory/brand" element={<AllBrandInventory />} />
+        <Route path="/inventory/supplier" element={<AllSupplierInventory />} />
+        <Route path="/inventory/create-request" element={<CreateRequest />} />
         <Route
-          path="/manager/inventory/category"
-          element={<AllCategoryInventory />}
-        />
-        <Route
-          path="/manager/inventory/brand"
-          element={<AllBrandInventory />}
-        />
-        <Route
-          path="/manager/inventory/supplier"
-          element={<AllSupplierInventory />}
-        />
-        <Route
-          path="/manager/inventory/create-request"
-          element={<CreateRequest />}
-        />
-        <Route
-          path="/manager/inventory/request/:id"
+          path="/inventory/request/:id"
           element={<TransactionRequestDetail />}
         />
+        <Route path="/inventory/transaction" element={<Transaction />} />
         <Route
-          path="/manager/inventory/transaction"
-          element={<Transaction />}
-        />
-        <Route
-          path="/manager/inventory/transaction/:id"
+          path="/inventory/transaction/:id"
           element={<TransactionDetail />}
         />
         {/* 

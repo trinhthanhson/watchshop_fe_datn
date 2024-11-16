@@ -134,7 +134,7 @@ const Login = () => {
         userRole === 'WAREHOUSE_STAFF' ||
         userRole === 'WAREHOUSE_MANAGER'
       ) {
-        navigate('/manager/inventory')
+        navigate('/inventory')
       }
     }
   }, [userRole, navigate])

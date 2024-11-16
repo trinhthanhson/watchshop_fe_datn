@@ -24,6 +24,7 @@ const OrderDetail = () => {
 
   const handleRateButtonClick = (productId, order_detail_id) => {
     setRatingData((prevData) => ({
+      // eslint-disable-next-line no-unused-vars
       ...(prevData = ''),
       productId,
       order_detail_id
@@ -49,11 +50,10 @@ const OrderDetail = () => {
   const handleSubmitRating = async () => {
     try {
       const token = localStorage.getItem('token')
-      let response
 
       if (ratingData.isReviewed) {
         // Update the existing review
-        response = await axios.put(
+        await axios.put(
           `http://localhost:9999/api/customer/review/${ratingData.order_detail_id}/update`,
           {
             content: ratingData.content,
@@ -67,7 +67,7 @@ const OrderDetail = () => {
         )
       } else {
         // Add a new review
-        response = await axios.post(
+        await axios.post(
           'http://localhost:9999/api/customer/review/add',
           {
             order_detail_id: ratingData.order_detail_id,

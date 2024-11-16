@@ -132,9 +132,7 @@ const ProductInventory = () => {
                 <td
                   className="cursor-pointer"
                   onClick={() =>
-                    navigate(
-                      `/manager/inventory/product/${product?.product_id}`
-                    )
+                    navigate(`/inventory/product/${product?.product_id}`)
                   }
                 >
                   {product?.product_id}
@@ -142,9 +140,7 @@ const ProductInventory = () => {
                 <td
                   className="cursor-pointer"
                   onClick={() =>
-                    navigate(
-                      `/manager/inventory/product/${product?.product_id}`
-                    )
+                    navigate(`/inventory/product/${product?.product_id}`)
                   }
                 >
                   <img
@@ -156,9 +152,7 @@ const ProductInventory = () => {
                 <td
                   className="cursor-pointer"
                   onClick={() =>
-                    navigate(
-                      `/manager/inventory/product/${product?.product_id}`
-                    )
+                    navigate(`/inventory/product/${product?.product_id}`)
                   }
                 >
                   {product?.product_name}
@@ -173,9 +167,7 @@ const ProductInventory = () => {
                 </td>
                 <td
                   onClick={() =>
-                    navigate(
-                      `/manager/inventory/product/${product?.product_id}`
-                    )
+                    navigate(`/inventory/product/${product?.product_id}`)
                   }
                 >
                   {product?.detail && product.detail.length > 50
@@ -191,7 +183,7 @@ const ProductInventory = () => {
                       fontSize={25}
                       onClick={() =>
                         navigate(
-                          `/manager/inventory/update-product/${product?.product_id}`
+                          `/inventory/update-product/${product?.product_id}`
                         )
                       }
                     />
@@ -213,7 +205,7 @@ const ProductInventory = () => {
         <IoIosAddCircle
           fontSize={50}
           className="cursor-pointer text-primary"
-          onClick={() => navigate('/manager/inventory/create-product')}
+          onClick={() => navigate('/inventory/create-product')}
         />
       </div>
     </>

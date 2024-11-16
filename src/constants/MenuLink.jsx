@@ -76,31 +76,31 @@ export const DASHBOARD_SIDEBAR_TOP_LINKS_INVENTORY = [
   {
     key: 'dashboard',
     label: 'Dashboard',
-    path: '/manager/inventory',
+    path: '/inventory',
     icon: <HiOutlineCube />
   },
   {
     key: 'products',
     label: 'Product',
-    path: '/manager/inventory/product',
+    path: '/inventory/product',
     icon: <MdWatch />
   },
   {
     key: 'request',
     label: 'Transaction Request',
-    path: '/manager/inventory/request',
+    path: '/inventory/request',
     icon: <GrTransaction />
   },
   {
     key: 'transaction',
     label: 'Transaction',
-    path: '/manager/inventory/transaction',
+    path: '/inventory/transaction',
     icon: <GrTransaction />
   },
   {
     key: 'staff',
     label: 'Staff Inventory',
-    path: '/manager/inventory/staff ',
+    path: '/inventory/staff ',
     icon: <FaPeopleLine />
   },
   {
@@ -112,19 +112,19 @@ export const DASHBOARD_SIDEBAR_TOP_LINKS_INVENTORY = [
   {
     key: 'brand',
     label: 'Brand',
-    path: '/manager/inventory/brand',
+    path: '/inventory/brand',
     icon: <HiOutlineServer />
   },
   {
     key: 'category',
     label: 'Category',
-    path: '/manager/inventory/category',
+    path: '/inventory/category',
     icon: <HiOutlineServer />
   },
   {
     key: 'supplier',
     label: 'Supplier',
-    path: '/manager/inventory/supplier',
+    path: '/inventory/supplier',
     icon: <HiOutlineServer />
   }
 ]

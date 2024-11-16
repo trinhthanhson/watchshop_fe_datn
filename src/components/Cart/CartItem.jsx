@@ -69,7 +69,7 @@ const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
         }
         const token = localStorage.getItem('token')
 
-        const response = await axios.put(apiUrl, requestBody, {
+        await axios.put(apiUrl, requestBody, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -90,7 +90,7 @@ const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
       }
       const token = localStorage.getItem('token')
 
-      const response = await axios.post(apiUrl, requestBody, {
+      await axios.post(apiUrl, requestBody, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'

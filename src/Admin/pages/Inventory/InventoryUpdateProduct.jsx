@@ -157,7 +157,7 @@ const InventoryUpdateProduct = () => {
   useEffect(() => {
     if (message.code === 200) {
       setLoading(false) // Stop loading
-      navigate('/manager/inventory/product')
+      navigate('/inventory/product')
     }
   }, [message, navigate])
 

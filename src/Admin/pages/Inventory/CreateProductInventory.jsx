@@ -283,7 +283,7 @@ const CreateProductInventory = () => {
       await dispatch(addProductRequestBatch(productDataArray))
 
       // Điều hướng quay lại trang quản lý sản phẩm
-      navigate('/manager/inventory/product') // Điều hướng sau khi thêm thành công
+      navigate('/inventory/product') // Điều hướng sau khi thêm thành công
     } catch (error) {
       console.error('Error adding products:', error)
     }
