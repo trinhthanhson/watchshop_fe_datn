@@ -130,6 +130,11 @@ const Login = () => {
         navigate('/home')
       } else if (userRole === 'SHIPPER') {
         navigate('/manager/shipper')
+      } else if (
+        userRole === 'WAREHOUSE_STAFF' ||
+        userRole === 'WAREHOUSE_MANAGER'
+      ) {
+        navigate('/manager/inventory')
       }
     }
   }, [userRole, navigate])

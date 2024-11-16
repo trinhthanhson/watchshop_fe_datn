@@ -9,7 +9,7 @@ function* getAllRequestSaga() {
 
     const response = yield call(
       axios.get,
-      'http://localhost:9999/api/staff/request/all',
+      'http://localhost:9999/api/staff/inventory/request/all',
       {
         headers: {
           Authorization: `Bearer ${token}`

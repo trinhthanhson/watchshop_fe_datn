@@ -1,12 +1,12 @@
 import {
   GET_ALL_CATEGORIES_SUCCESS,
   GET_ALL_CATEGORIES_FAILURE
-} from '../actions/types';
+} from '../actions/types'
 
 const initialState = {
   categories: [],
   error: null
-};
+}
 
 const categoriesReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -15,16 +15,16 @@ const categoriesReducer = (state = initialState, action) => {
         ...state,
         categories: action.payload,
         error: null
-      };
+      }
     case GET_ALL_CATEGORIES_FAILURE:
       return {
         ...state,
         categories: [],
         error: action.payload
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default categoriesReducer;
+export default categoriesReducer

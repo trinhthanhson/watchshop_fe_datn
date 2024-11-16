@@ -26,7 +26,7 @@ const SidebarInventory = () => {
 
   return (
     <div
-      className="fixed bg-primary w-60 h-full p-3 flex flex-col text-white font-RobotoMedium"
+      className="fixed bg-primary w-70 h-full p-8 flex flex-col text-white font-RobotoMedium"
       style={{ backgroundColor: 'rgb(199 199 199)' }}
     >
       <div className="flex items-center justify-center gap-3">

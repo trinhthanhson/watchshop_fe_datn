@@ -75,7 +75,9 @@ const Routers = () => {
         if (
           decryptedRole === 'MANAGER' ||
           decryptedRole === 'STAFF' ||
-          decryptedRole === 'SHIPPER'
+          decryptedRole === 'SHIPPER' ||
+          decryptedRole === 'WAREHOUSE_STAFF' ||
+          decryptedRole === 'WAREHOUSE_MANAGER'
         ) {
           setIsLoggedIn(true)
         }
@@ -96,9 +98,13 @@ const Routers = () => {
         if (location.pathname === '/buynow' || location.pathname === '/') {
           navigate('/manager/shipper')
         }
+      } else if (role === 'WAREHOUSE_STAFF' || role === 'WAREHOUSE_MANAGER') {
+        if (location.pathname === '/buynow' || location.pathname === '/') {
+          navigate('/manager/inventory')
+        }
       }
-      console.log(role)
     }
+    console.log(role)
     if (role === 'CUSTOMER') {
       if (location.pathname.startsWith('/manager')) {
         navigate('/home')

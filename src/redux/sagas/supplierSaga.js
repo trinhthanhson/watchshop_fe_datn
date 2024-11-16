@@ -12,7 +12,7 @@ function* getAllSupplierSaga() {
 
     const response = yield call(
       axios.get,
-      'http://localhost:9999/api/staff/supplier/all',
+      'http://localhost:9999/api/staff/inventory/supplier/all',
       {
         headers: {
           Authorization: `Bearer ${token}`

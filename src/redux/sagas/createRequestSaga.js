@@ -11,7 +11,7 @@ function* handleCreateTransaction(action) {
 
     const response = yield call(() =>
       axios.post(
-        'http://localhost:9999/api/staff/request/add',
+        'http://localhost:9999/api/staff/inventory/request/add',
         action.payload,
         {
           headers: {

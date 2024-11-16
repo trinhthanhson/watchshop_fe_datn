@@ -47,7 +47,10 @@ const ProductByBrand = () => {
     ) {
       return false
     }
-    if (brandFilter && product?.brand_product?.brand_id !== parseInt(brandFilter)) {
+    if (
+      brandFilter &&
+      product?.brand_product?.brand_id !== parseInt(brandFilter)
+    ) {
       return false
     }
     if (priceRangeFilter) {

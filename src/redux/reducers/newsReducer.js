@@ -1,10 +1,10 @@
-import { SET_NEWS, FETCH_NEWS } from '../actions/types';
+import { SET_NEWS, FETCH_NEWS } from '../actions/types'
 
 const initialState = {
   news: [],
   loading: false,
   error: null
-};
+}
 
 const newsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -14,16 +14,16 @@ const newsReducer = (state = initialState, action) => {
         news: action.payload,
         loading: false,
         error: null
-      };
+      }
     case FETCH_NEWS:
       return {
         ...state,
         loading: true,
         error: null
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default newsReducer;
+export default newsReducer

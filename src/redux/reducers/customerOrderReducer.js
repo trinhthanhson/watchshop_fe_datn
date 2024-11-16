@@ -1,12 +1,12 @@
 import {
   GET_CUSTOMER_ORDERS_SUCCESS,
   GET_CUSTOMER_ORDERS_FAILURE
-} from '../actions/types';
+} from '../actions/types'
 
 const initialState = {
   customerOrders: [],
   error: null
-};
+}
 
 const customerOrdersReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -15,16 +15,16 @@ const customerOrdersReducer = (state = initialState, action) => {
         ...state,
         customerOrders: action.payload,
         error: null
-      };
+      }
     case GET_CUSTOMER_ORDERS_FAILURE:
       return {
         ...state,
         customerOrders: [],
         error: action.payload
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default customerOrdersReducer;
+export default customerOrdersReducer

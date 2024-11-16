@@ -1,17 +1,20 @@
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom'
 import { news } from '../../apis/mock-data'
-import CardItemNews from "../../components/News/CardItemNews";
-import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
-import { format } from 'date-fns';
+import CardItemNews from '../../components/News/CardItemNews'
+import { FaFacebook, FaInstagram, FaYoutube } from 'react-icons/fa'
+import { format } from 'date-fns'
 
 const NewDetail = () => {
-  const { id } = useParams();
-  const selectedNews = news.find((item) => item.id === parseInt(id));
-  const formattedDate = format(new Date(selectedNews?.date), "dd/MM/yyyy, HH:mm");
+  const { id } = useParams()
+  const selectedNews = news.find((item) => item.id === parseInt(id))
+  const formattedDate = format(
+    new Date(selectedNews?.date),
+    'dd/MM/yyyy, HH:mm'
+  )
 
   const relatedNews = news
     .filter((item) => item.id !== parseInt(selectedNews.id))
-    .slice(0, 3);
+    .slice(0, 3)
 
   return (
     <>
@@ -52,7 +55,9 @@ const NewDetail = () => {
 
       <section className="bg-white pt-[50px] lg:pt-32 pb-[50px] md:pb-[100px] px-4 md:px-8 lg:-mt-44 relative">
         <div className="w-full xl:w-2/3 mx-auto">
-          <div className="font-medium sm:text-[16px] md:text-[18px] text-justify">{selectedNews?.description}</div>
+          <div className="font-medium sm:text-[16px] md:text-[18px] text-justify">
+            {selectedNews?.description}
+          </div>
           <div className="flex items-center mt-10">
             <p className="text-black font-medium text-[14px] lg:text-[18px] mr-2 share-p">
               Share
@@ -79,8 +84,15 @@ const NewDetail = () => {
         <div className="w-full xl:w-4/5 mx-auto pt-8 mt-6">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {relatedNews.map((item, index) => (
-              <div key={index} onClick={() => window.document.querySelector('body').scrollIntoView({ behavior: 'smooth' })}>
-                <CardItemNews  {...item} />
+              <div
+                key={index}
+                onClick={() =>
+                  window.document
+                    .querySelector('body')
+                    .scrollIntoView({ behavior: 'smooth' })
+                }
+              >
+                <CardItemNews {...item} />
               </div>
             ))}
           </div>

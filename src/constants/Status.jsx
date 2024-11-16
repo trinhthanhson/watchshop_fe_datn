@@ -105,19 +105,19 @@ export function getStatusRequest(status) {
       case 'REJECT':
         return (
           <span className="capitalize py-1 px-2 rounded-md text-xs text-white bg-main">
-             Từ chối
+            Từ chối
           </span>
         )
-      case "APPROVED":
-      return(
-        <span className="capitalize py-1 px-2 rounded-md text-xs text-white bg-primary">
-       Đã xác nhận
-      </span>
-      )
+      case 'APPROVED':
+        return (
+          <span className="capitalize py-1 px-2 rounded-md text-xs text-white bg-primary">
+            Đã xác nhận
+          </span>
+        )
       default:
         return (
           <span className="capitalize py-1 px-2 rounded-md text-xs text-white bg-primary">
-           Chờ xác nhận
+            Chờ xác nhận
           </span>
         )
     }

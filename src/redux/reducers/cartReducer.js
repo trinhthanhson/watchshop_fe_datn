@@ -1,12 +1,9 @@
-import {
-  GET_ALL_CART_SUCCESS,
-  GET_ALL_CART_FAILURE
-} from '../actions/types';
+import { GET_ALL_CART_SUCCESS, GET_ALL_CART_FAILURE } from '../actions/types'
 
 const initialState = {
   cart: [],
   error: null
-};
+}
 
 const cartReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -15,16 +12,16 @@ const cartReducer = (state = initialState, action) => {
         ...state,
         cart: action.payload,
         error: null
-      };
+      }
     case GET_ALL_CART_FAILURE:
       return {
         ...state,
         cart: [],
         error: action.payload
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default cartReducer;
+export default cartReducer

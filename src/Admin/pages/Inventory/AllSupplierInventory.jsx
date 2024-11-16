@@ -3,9 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { IoIosAddCircle } from 'react-icons/io'
 import axios from 'axios'
 import { MdModeEditOutline, MdDelete } from 'react-icons/md'
-import {
-  getAllSupplierRequest
-} from '../../../redux/actions/actions'
+import { getAllSupplierRequest } from '../../../redux/actions/actions'
 import { getStatus } from '../../../constants/Status'
 
 const AllSupplierInventory = () => {
@@ -46,7 +44,7 @@ const AllSupplierInventory = () => {
     try {
       const token = localStorage.getItem('token')
       const response = await axios.post(
-        'http://localhost:9999/api/staff/supplier/add',
+        'http://localhost:9999/api/staff/inventory/supplier/add',
         {
           supplier_name: newSupplierName,
           address,
@@ -72,19 +70,21 @@ const AllSupplierInventory = () => {
   }
 
   const getSupplierById = (supplierId) => {
-    const supplier = suppliers?.data.find((sup) => sup.supplier_id === supplierId);
-  
+    const supplier = suppliers?.data.find(
+      (sup) => sup.supplier_id === supplierId
+    )
+
     if (supplier) {
-      setNewSupplierName(supplier.supplier_name || "")
-      setAddress(supplier.address || '');
-      setEmail(supplier.email || '');
-      setFax(supplier.fax || '');
-      setPhone(supplier.phone || '');
-      setTaxId(supplier.tax_id || '');
+      setNewSupplierName(supplier.supplier_name || '')
+      setAddress(supplier.address || '')
+      setEmail(supplier.email || '')
+      setFax(supplier.fax || '')
+      setPhone(supplier.phone || '')
+      setTaxId(supplier.tax_id || '')
     }
-  
-    return supplier || {};  // Trả về supplier nếu cần sử dụng các thông tin khác
-  };
+
+    return supplier || {} // Trả về supplier nếu cần sử dụng các thông tin khác
+  }
 
   const handleShowUpdateDialog = (supplierId) => {
     setSelectedSupplierId(supplierId)
@@ -104,10 +104,10 @@ const AllSupplierInventory = () => {
   }
   const handleUpdateSupplier = async (supplierId) => {
     try {
-      const token = localStorage.getItem('token');
-  
+      const token = localStorage.getItem('token')
+
       const response = await axios.put(
-        `http://localhost:9999/api/staff/supplier/${supplierId}/update`,
+        `http://localhost:9999/api/staff/inventory/supplier/${supplierId}/update`,
         {
           supplier_name: newSupplierName,
           address,
@@ -121,16 +121,16 @@ const AllSupplierInventory = () => {
             Authorization: `Bearer ${token}`
           }
         }
-      );
-  
+      )
+
       if (response.data.code === 200) {
-        handleCloseUpdateDialog();
-        dispatch(getAllSupplierRequest());
+        handleCloseUpdateDialog()
+        dispatch(getAllSupplierRequest())
       }
     } catch (error) {
-      console.error('Error updating supplier', error);
+      console.error('Error updating supplier', error)
     }
-  };
+  }
 
   const handleDeleteSupplier = async (supplierId) => {
     const confirmDelete = window.confirm(
@@ -148,7 +148,7 @@ const AllSupplierInventory = () => {
     if (confirmDelete) {
       try {
         await axios.delete(
-          `http://localhost:9999/api/staff/supplier/${supplierId}/delete`,
+          `http://localhost:9999/api/staff/inventory/supplier/${supplierId}/delete`,
           {
             headers: {
               Authorization: `Bearer ${token}`

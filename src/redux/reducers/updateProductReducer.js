@@ -1,11 +1,15 @@
-import { RESET_UPDATE_PRODUCT_STATE, UPDATE_PRODUCT_SUCCESS, UPDATE_PRODUCT_FAILURE } from '../actions/types';
+import {
+  RESET_UPDATE_PRODUCT_STATE,
+  UPDATE_PRODUCT_SUCCESS,
+  UPDATE_PRODUCT_FAILURE
+} from '../actions/types'
 
 const initialState = {
   message: '',
   status: false,
   code: null,
-  error: null,
-};
+  error: null
+}
 
 const updateProductReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -15,18 +19,18 @@ const updateProductReducer = (state = initialState, action) => {
         message: action.payload.message,
         status: action.payload.status,
         code: action.payload.code,
-        error: null,
-      };
+        error: null
+      }
     case UPDATE_PRODUCT_FAILURE:
       return {
         ...state,
-        error: action.payload,
-      };
+        error: action.payload
+      }
     case RESET_UPDATE_PRODUCT_STATE:
-      return initialState;
+      return initialState
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default updateProductReducer;
+export default updateProductReducer

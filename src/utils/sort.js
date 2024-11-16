@@ -1,9 +1,11 @@
 export const sortByDate = (data, key) => {
   if (!Array.isArray(data)) {
-    return [];
+    return []
   }
 
-  const sortedData = data.slice().sort((a, b) => new Date(b[key]) - new Date(a[key]));
+  const sortedData = data
+    .slice()
+    .sort((a, b) => new Date(b[key]) - new Date(a[key]))
 
-  return sortedData;
-};
+  return sortedData
+}

@@ -14,7 +14,7 @@ function* getTransactionDetailSaga(action) {
 
     const response = yield call(
       axios.get,
-      `http://localhost:9999/api/staff/transaction/${id}/get`,
+      `http://localhost:9999/api/staff/inventory/transaction/${id}/get`,
       {
         headers: {
           Authorization: `Bearer ${token}`

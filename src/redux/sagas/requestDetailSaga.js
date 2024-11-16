@@ -1,6 +1,9 @@
 import { takeLatest, call, put } from 'redux-saga/effects'
 import axios from 'axios'
-import { getRequestDetailFailure, getRequestDetailSuccess } from '../actions/actions'
+import {
+  getRequestDetailFailure,
+  getRequestDetailSuccess
+} from '../actions/actions'
 import { GET_REQUEST_DETAIL_REQUEST } from '../actions/types'
 
 function* getRequestDetailSaga(action) {
@@ -11,7 +14,7 @@ function* getRequestDetailSaga(action) {
 
     const response = yield call(
       axios.get,
-      `http://localhost:9999/api/staff/request/${id}/get`,
+      `http://localhost:9999/api/staff/inventory/request/${id}/get`,
       {
         headers: {
           Authorization: `Bearer ${token}`

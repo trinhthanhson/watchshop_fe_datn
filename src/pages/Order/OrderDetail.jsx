@@ -24,7 +24,7 @@ const OrderDetail = () => {
 
   const handleRateButtonClick = (productId, order_detail_id) => {
     setRatingData((prevData) => ({
-      ...prevData = "",
+      ...(prevData = ''),
       productId,
       order_detail_id
     }))
@@ -48,47 +48,47 @@ const OrderDetail = () => {
   }
   const handleSubmitRating = async () => {
     try {
-        const token = localStorage.getItem('token');
-        let response;
+      const token = localStorage.getItem('token')
+      let response
 
-        if (ratingData.isReviewed) {
-            // Update the existing review
-            response = await axios.put(
-                `http://localhost:9999/api/customer/review/${ratingData.order_detail_id}/update`,
-                {
-                    content: ratingData.content,
-                    star: ratingData.rating
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-        } else {
-            // Add a new review
-            response = await axios.post(
-                'http://localhost:9999/api/customer/review/add',
-                {
-                    order_detail_id: ratingData.order_detail_id,
-                    product_id: ratingData.productId,
-                    content: ratingData.content,
-                    star: ratingData.rating
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-        }
-        dispatch(getOrderDetailRequest(id));
-        dispatch(getAllReviewCustomerRequest());
-        setShowModal(false);
+      if (ratingData.isReviewed) {
+        // Update the existing review
+        response = await axios.put(
+          `http://localhost:9999/api/customer/review/${ratingData.order_detail_id}/update`,
+          {
+            content: ratingData.content,
+            star: ratingData.rating
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
+      } else {
+        // Add a new review
+        response = await axios.post(
+          'http://localhost:9999/api/customer/review/add',
+          {
+            order_detail_id: ratingData.order_detail_id,
+            product_id: ratingData.productId,
+            content: ratingData.content,
+            star: ratingData.rating
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
+      }
+      dispatch(getOrderDetailRequest(id))
+      dispatch(getAllReviewCustomerRequest())
+      setShowModal(false)
     } catch (error) {
-        console.error('Error submitting rating:', error);
+      console.error('Error submitting rating:', error)
     }
-};
+  }
 
   useEffect(() => {
     try {
@@ -122,35 +122,35 @@ const OrderDetail = () => {
 
   const fetchCurrentReview = async (order_detail_id) => {
     try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(
-            `http://localhost:9999/api/customer/review/${order_detail_id}/detail`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
-        );
-        const review = response.data.data;
-        if (review) {
-            setRatingData((prevData) => ({
-                ...prevData,
-                content: review.content,
-                rating: review.star,
-                productId: review.product_id,
-                order_detail_id: review.order_detail_id,
-                isReviewed: true // Flag to indicate if already reviewed
-            }));
-        } else {
-            setRatingData((prevData) => ({
-                ...prevData,
-                isReviewed: false // No review found
-            }));
+      const token = localStorage.getItem('token')
+      const response = await axios.get(
+        `http://localhost:9999/api/customer/review/${order_detail_id}/detail`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
+      )
+      const review = response.data.data
+      if (review) {
+        setRatingData((prevData) => ({
+          ...prevData,
+          content: review.content,
+          rating: review.star,
+          productId: review.product_id,
+          order_detail_id: review.order_detail_id,
+          isReviewed: true // Flag to indicate if already reviewed
+        }))
+      } else {
+        setRatingData((prevData) => ({
+          ...prevData,
+          isReviewed: false // No review found
+        }))
+      }
     } catch (error) {
-        console.error('Error fetching review:', error);
+      console.error('Error fetching review:', error)
     }
-};
+  }
 
   const isReviewed = (orderDetailId) => {
     const reviewsArray = reviews.data // Access the reviews array correctly

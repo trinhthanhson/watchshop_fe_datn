@@ -104,7 +104,6 @@ const Signup = () => {
       } else {
         delete newErrors.email
       }
-    
     }
 
     setErrors(newErrors)
@@ -151,18 +150,20 @@ const Signup = () => {
           username
         }
       )
-      if (otpResponse.data.code === 200 && otpResponse.data.message === "success") {
+      if (
+        otpResponse.data.code === 200 &&
+        otpResponse.data.message === 'success'
+      ) {
         setIsOtpSent(true)
-        delete newErrors.checkUsername; // Xóa lỗi username nếu điều kiện đúng
-        delete newErrors.checkEmail; // Xóa lỗi email nếu điều kiện đúng
-      } else if (otpResponse.data.message === "username exist") {
-        delete newErrors.checkEmail; // Xóa lỗi email nếu điều kiện đúng
+        delete newErrors.checkUsername // Xóa lỗi username nếu điều kiện đúng
+        delete newErrors.checkEmail // Xóa lỗi email nếu điều kiện đúng
+      } else if (otpResponse.data.message === 'username exist') {
+        delete newErrors.checkEmail // Xóa lỗi email nếu điều kiện đúng
 
-        newErrors.checkUsername = "Username đã tồn tại!"
-      } else if (otpResponse.data.message === "email exist") {
-        newErrors.checkEmail = "Email đã tồn tại!"
-        delete newErrors.checkUsername; // Xóa lỗi username nếu điều kiện đúng
-
+        newErrors.checkUsername = 'Username đã tồn tại!'
+      } else if (otpResponse.data.message === 'email exist') {
+        newErrors.checkEmail = 'Email đã tồn tại!'
+        delete newErrors.checkUsername // Xóa lỗi username nếu điều kiện đúng
       }
       setErrors(newErrors)
     } catch (error) {

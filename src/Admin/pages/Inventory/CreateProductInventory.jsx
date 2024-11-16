@@ -3,8 +3,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import ExcelJS from 'exceljs'
-import { addProductRequest, addProductRequestBatch, getAllBrandRequest, getAllCategoriesRequest } from '../../../redux/actions/actions'
-import { uploadImageToFirebase, uploadImageToFirebaseExcel } from '../../../firebase'
+import {
+  addProductRequest,
+  addProductRequestBatch,
+  getAllBrandRequest,
+  getAllCategoriesRequest
+} from '../../../redux/actions/actions'
+import {
+  uploadImageToFirebase,
+  uploadImageToFirebaseExcel
+} from '../../../firebase'
 
 const CreateProductInventory = () => {
   const dispatch = useDispatch()

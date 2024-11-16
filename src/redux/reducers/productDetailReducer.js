@@ -1,12 +1,12 @@
 import {
   GET_PRODUCT_DETAIL_SUCCESS,
   GET_PRODUCT_DETAIL_FAILURE
-} from '../actions/types';
+} from '../actions/types'
 
 const initialState = {
   productDetail: null,
   error: null
-};
+}
 
 const productDetailReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -15,16 +15,16 @@ const productDetailReducer = (state = initialState, action) => {
         ...state,
         productDetail: action.payload,
         error: null
-      };
+      }
     case GET_PRODUCT_DETAIL_FAILURE:
       return {
         ...state,
         productDetail: [],
         error: action.payload
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default productDetailReducer;
+export default productDetailReducer

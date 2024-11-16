@@ -56,7 +56,8 @@ const ProductByCategory = () => {
   const filterProducts = (productsCustomer) => {
     if (
       categoryFilter &&
-      productsCustomer?.category_product?.category_id !== parseInt(categoryFilter)
+      productsCustomer?.category_product?.category_id !==
+        parseInt(categoryFilter)
     ) {
       return false
     }

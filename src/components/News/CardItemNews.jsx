@@ -1,9 +1,9 @@
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import { format } from 'date-fns';
+import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
+import { format } from 'date-fns'
 
 const CardItemNews = ({ title, image, date, id }) => {
-  const formattedDate = format(new Date(date), "dd/MM/yyyy, HH:mm");
+  const formattedDate = format(new Date(date), 'dd/MM/yyyy, HH:mm')
 
   return (
     <div className="mb-[30px] sm:mb-0">
@@ -34,14 +34,14 @@ const CardItemNews = ({ title, image, date, id }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 CardItemNews.propTypes = {
   title: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-};
+  id: PropTypes.string.isRequired
+}
 
-export default CardItemNews;
+export default CardItemNews

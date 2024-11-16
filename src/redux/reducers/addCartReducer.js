@@ -1,11 +1,15 @@
-import { ADD_CART_SUCCESS, ADD_CART_FAILURE, RESET_ADD_CART_STATE } from '../actions/types';
+import {
+  ADD_CART_SUCCESS,
+  ADD_CART_FAILURE,
+  RESET_ADD_CART_STATE
+} from '../actions/types'
 
 const initialState = {
   message: '',
   status: false,
   code: null,
-  error: null,
-};
+  error: null
+}
 
 const addCartReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -15,18 +19,18 @@ const addCartReducer = (state = initialState, action) => {
         message: action.payload.message,
         status: action.payload.status,
         code: action.payload.code,
-        error: null,
-      };
+        error: null
+      }
     case ADD_CART_FAILURE:
       return {
         ...state,
-        error: action.error,
-      };
+        error: action.error
+      }
     case RESET_ADD_CART_STATE:
-      return initialState;
+      return initialState
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default addCartReducer;
+export default addCartReducer

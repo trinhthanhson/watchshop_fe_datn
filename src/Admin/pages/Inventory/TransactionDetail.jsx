@@ -23,7 +23,7 @@ const TransactionDetail = () => {
       const token = localStorage.getItem('token')
       axios
         .put(
-          `http://localhost:9999/api/staff/transaction/${id}/status`,
+          `http://localhost:9999/api/staff/inventory/transaction/${id}/status`,
           { status: 'REJECT' },
           {
             headers: {
@@ -44,7 +44,7 @@ const TransactionDetail = () => {
       const token = localStorage.getItem('token')
       axios
         .put(
-          `http://localhost:9999/api/staff/transaction/${id}/status`,
+          `http://localhost:9999/api/staff/inventory/transaction/${id}/status`,
           { status: 'APPROVED' },
           {
             headers: {
@@ -93,38 +93,49 @@ const TransactionDetail = () => {
                 {transactionDetail?.note}
               </span>
             </p>
-            <p className="p-5">
-              <span className="text-primary font-RobotoMedium mr-2">
-                Nhà cung cấp:
-              </span>
-              <span className="text-primary font-RobotoSemibold">
-                {transactionDetail?.supplier_transaction?.supplier_name}
-              </span>
-            </p>
-            <p className="p-5">
-              <span className="text-primary font-RobotoMedium mr-2">
-                Email:
-              </span>
-              <span className="text-primary font-RobotoSemibold">
-                {transactionDetail?.supplier_transaction?.email}
-              </span>
-            </p>
-            <p className="p-5">
-              <span className="text-primary font-RobotoMedium mr-2">
-                Số điện thoại:
-              </span>
-              <span className="text-primary font-RobotoSemibold">
-                {transactionDetail?.supplier_transaction?.phone}
-              </span>
-            </p>
-            <p className="p-5">
-              <span className="text-primary font-RobotoMedium mr-2">
-                Địa chỉ:
-              </span>
-              <span className="text-primary font-RobotoSemibold">
-                {transactionDetail?.supplier_transaction?.address}
-              </span>
-            </p>
+            {transactionDetail?.supplier_transaction?.supplier_name && (
+              <p className="p-5">
+                <span className="text-primary font-RobotoMedium mr-2">
+                  Nhà cung cấp:
+                </span>
+                <span className="text-primary font-RobotoSemibold">
+                  {transactionDetail?.supplier_transaction?.supplier_name}
+                </span>
+              </p>
+            )}
+
+            {transactionDetail?.supplier_transaction?.email && (
+              <p className="p-5">
+                <span className="text-primary font-RobotoMedium mr-2">
+                  Email:
+                </span>
+                <span className="text-primary font-RobotoSemibold">
+                  {transactionDetail?.supplier_transaction?.email}
+                </span>
+              </p>
+            )}
+
+            {transactionDetail?.supplier_transaction?.phone && (
+              <p className="p-5">
+                <span className="text-primary font-RobotoMedium mr-2">
+                  Số điện thoại:
+                </span>
+                <span className="text-primary font-RobotoSemibold">
+                  {transactionDetail?.supplier_transaction?.phone}
+                </span>
+              </p>
+            )}
+
+            {transactionDetail?.supplier_transaction?.address && (
+              <p className="p-5">
+                <span className="text-primary font-RobotoMedium mr-2">
+                  Địa chỉ:
+                </span>
+                <span className="text-primary font-RobotoSemibold">
+                  {transactionDetail?.supplier_transaction?.address}
+                </span>
+              </p>
+            )}
           </div>
         </div>
 

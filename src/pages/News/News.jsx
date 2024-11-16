@@ -1,29 +1,30 @@
-import { useEffect, useState } from "react";
-import CardItemNews from "../../components/News/CardItemNews";
-import { sortByDate } from "../../utils/sort";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchNews } from '../../redux/actions/actions';
+import { useEffect, useState } from 'react'
+import CardItemNews from '../../components/News/CardItemNews'
+import { sortByDate } from '../../utils/sort'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchNews } from '../../redux/actions/actions'
 
 const News = () => {
-  const dispatch = useDispatch();
-  const news = useSelector(state => state.news.news);
-  const sortedNews = sortByDate(news, 'date');
-  const [displayedNews, setDisplayedNews] = useState(3);
+  const dispatch = useDispatch()
+  const news = useSelector((state) => state.news.news)
+  const sortedNews = sortByDate(news, 'date')
+  const [displayedNews, setDisplayedNews] = useState(3)
 
   useEffect(() => {
-    dispatch(fetchNews());
-  }, [dispatch]);
+    dispatch(fetchNews())
+  }, [dispatch])
 
   const handleMoreDisplay = () => {
-    setDisplayedNews(displayedNews + 3);
-  };
-
+    setDisplayedNews(displayedNews + 3)
+  }
 
   return (
     <>
       <section className="relative bg-gradient-to-b from-white to-whiteYellow pt-[50px] lg:pt-48 pb-[50px] md:pb-[100px] px-4 md:px-8 lg:-mt-44">
         <div className="text-center mb-8 pb-6">
-          <h3 className="font-RobotoSemibold text-5xl mt-[110px] uppercase text-primary">Tin Tức</h3>
+          <h3 className="font-RobotoSemibold text-5xl mt-[110px] uppercase text-primary">
+            Tin Tức
+          </h3>
         </div>
         <div className="w-full lg:w-[85%] mx-auto">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">

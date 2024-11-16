@@ -1,12 +1,12 @@
 import {
   GET_ALL_COUPONS_SUCCESS,
   GET_ALL_COUPONS_FAILURE
-} from '../actions/types';
+} from '../actions/types'
 
 const initialState = {
   coupons: [],
   error: null
-};
+}
 
 const couponsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -15,16 +15,16 @@ const couponsReducer = (state = initialState, action) => {
         ...state,
         coupons: action.payload,
         error: null
-      };
+      }
     case GET_ALL_COUPONS_FAILURE:
       return {
         ...state,
         coupons: [],
         error: action.payload
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default couponsReducer;
+export default couponsReducer

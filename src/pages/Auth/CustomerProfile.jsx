@@ -11,8 +11,9 @@ const CustomerProfile = () => {
   const user = useSelector((state) => state.user.user.data)
   const [isEditing, setIsEditing] = useState(false)
   const [isChangingPassword, setIsChangingPassword] = useState(false)
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  const [passwordError, setPasswordError] = useState('');
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+  const [passwordError, setPasswordError] = useState('')
 
   const [formData, setFormData] = useState({
     address: '',
@@ -60,19 +61,21 @@ const CustomerProfile = () => {
   }
 
   const handlePasswordChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setPasswordData((prevData) => ({
       ...prevData,
-      [name]: value,
-    }));
-  
+      [name]: value
+    }))
+
     // Validate new password field only
-    if (name === "newPassword" && !passwordRegex.test(value)) {
-      setPasswordError("Mật khẩu phải có chữ hoa, chữ thường, số, ký tự đặc biệt và tối thiểu 8 ký tự");
+    if (name === 'newPassword' && !passwordRegex.test(value)) {
+      setPasswordError(
+        'Mật khẩu phải có chữ hoa, chữ thường, số, ký tự đặc biệt và tối thiểu 8 ký tự'
+      )
     } else {
-      setPasswordError('');
+      setPasswordError('')
     }
-  };
+  }
 
   const handleSave = async () => {
     try {
@@ -98,7 +101,6 @@ const CustomerProfile = () => {
       return
     }
     try {
-      
       const response = await axios.put(
         `http://localhost:9999/api/user/change-password`,
         passwordData,
@@ -189,47 +191,47 @@ const CustomerProfile = () => {
             )}
           </div>
           {!isChangingPassword ? (
-    <button
-      className="items-center justify-center w-[200px] rounded-md text-primary border-primary border hover:bg-primary hover:text-white py-2.5 px-10 transition-colors ml-[115px]"
-      onClick={() => setIsChangingPassword(true)}
-    >
-      Đổi mật khẩu
-    </button>
-  ) : (
-    <div className="flex flex-col items-center">
-      <input
-        type="password"
-        name="password"
-        placeholder="Mật khẩu cũ"
-        value={passwordData.password}
-        onChange={handlePasswordChange}
-        className="mb-2 p-2 border border-grey rounded-lg w-[80%]"
-      />
-      <input
-        type="password"
-        name="newPassword"
-        placeholder="Mật khẩu mới"
-        value={passwordData.newPassword}
-        onChange={handlePasswordChange}
-        className="mb-2 p-2 border border-grey rounded-lg w-[80%]"
-      />
-      {passwordError && <p className="text-red-500">{passwordError}</p>}
-      <input
-        type="password"
-        name="rePassword"
-        placeholder="Nhập lại mật khẩu mới"
-        value={passwordData.rePassword}
-        onChange={handlePasswordChange}
-        className="mb-2 p-2 border border-grey rounded-lg w-[80%]"
-      />
-      <button
-        className="items-center justify-center w-[200px] rounded-md text-primary border-primary border hover:bg-primary hover:text-white py-2.5 px-10 transition-colors"
-        onClick={handleChangePassword}
-      >
-        Xác nhận
-      </button>
-    </div>
-  )}
+            <button
+              className="items-center justify-center w-[200px] rounded-md text-primary border-primary border hover:bg-primary hover:text-white py-2.5 px-10 transition-colors ml-[115px]"
+              onClick={() => setIsChangingPassword(true)}
+            >
+              Đổi mật khẩu
+            </button>
+          ) : (
+            <div className="flex flex-col items-center">
+              <input
+                type="password"
+                name="password"
+                placeholder="Mật khẩu cũ"
+                value={passwordData.password}
+                onChange={handlePasswordChange}
+                className="mb-2 p-2 border border-grey rounded-lg w-[80%]"
+              />
+              <input
+                type="password"
+                name="newPassword"
+                placeholder="Mật khẩu mới"
+                value={passwordData.newPassword}
+                onChange={handlePasswordChange}
+                className="mb-2 p-2 border border-grey rounded-lg w-[80%]"
+              />
+              {passwordError && <p className="text-red-500">{passwordError}</p>}
+              <input
+                type="password"
+                name="rePassword"
+                placeholder="Nhập lại mật khẩu mới"
+                value={passwordData.rePassword}
+                onChange={handlePasswordChange}
+                className="mb-2 p-2 border border-grey rounded-lg w-[80%]"
+              />
+              <button
+                className="items-center justify-center w-[200px] rounded-md text-primary border-primary border hover:bg-primary hover:text-white py-2.5 px-10 transition-colors"
+                onClick={handleChangePassword}
+              >
+                Xác nhận
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="mb-5 relative md:w-[70%] border-primary border-[1px] shadow-lg rounded-xl p-5">
