@@ -12,7 +12,7 @@ function* getAllTransactionSaga() {
 
     const response = yield call(
       axios.get,
-      'http://localhost:9999/api/staff/inventory/transaction/all',
+      'http://localhost:9999/api/inventory/transaction/all',
       {
         headers: {
           Authorization: `Bearer ${token}`

@@ -20,7 +20,7 @@ const PieChartInventory = () => {
       try {
         const token = localStorage.getItem('token')
         const response = await axios.get(
-          'http://localhost:9999/api/staff/inventory/statistic/product',
+          'http://localhost:9999/api/inventory/statistic/product',
           {
             headers: {
               Authorization: `Bearer ${token}`

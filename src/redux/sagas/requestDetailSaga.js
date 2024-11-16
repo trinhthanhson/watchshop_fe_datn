@@ -14,7 +14,7 @@ function* getRequestDetailSaga(action) {
 
     const response = yield call(
       axios.get,
-      `http://localhost:9999/api/staff/inventory/request/${id}/get`,
+      `http://localhost:9999/api/inventory/request/${id}/get`,
       {
         headers: {
           Authorization: `Bearer ${token}`

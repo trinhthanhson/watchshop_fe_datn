@@ -44,7 +44,7 @@ const AllSupplierInventory = () => {
     try {
       const token = localStorage.getItem('token')
       const response = await axios.post(
-        'http://localhost:9999/api/staff/inventory/supplier/add',
+        'http://localhost:9999/api/inventory/supplier/add',
         {
           supplier_name: newSupplierName,
           address,
@@ -107,7 +107,7 @@ const AllSupplierInventory = () => {
       const token = localStorage.getItem('token')
 
       const response = await axios.put(
-        `http://localhost:9999/api/staff/inventory/supplier/${supplierId}/update`,
+        `http://localhost:9999/api/inventory/supplier/${supplierId}/update`,
         {
           supplier_name: newSupplierName,
           address,
@@ -148,7 +148,7 @@ const AllSupplierInventory = () => {
     if (confirmDelete) {
       try {
         await axios.delete(
-          `http://localhost:9999/api/staff/inventory/supplier/${supplierId}/delete`,
+          `http://localhost:9999/api/inventory/supplier/${supplierId}/delete`,
           {
             headers: {
               Authorization: `Bearer ${token}`

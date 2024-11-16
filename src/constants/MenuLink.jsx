@@ -106,7 +106,7 @@ export const DASHBOARD_SIDEBAR_TOP_LINKS_INVENTORY = [
   {
     key: 'type',
     label: 'Type Transaction',
-    path: '/manager/shipper/receive',
+    path: '/inventory/type',
     icon: <BiText />
   },
   {

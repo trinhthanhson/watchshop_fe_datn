@@ -23,7 +23,7 @@ const ColumnChartStatistics = () => {
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(
-        `http://localhost:9999/api/staff/inventory/statistic/year?year=${selectedYear}`,
+        `http://localhost:9999/api/inventory/statistic/year?year=${selectedYear}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -52,7 +52,7 @@ const ColumnChartStatistics = () => {
   const fetchDateRangeData = async () => {
     try {
       const token = localStorage.getItem('token')
-      const url = `http://localhost:9999/api/staff/inventory/statistic/date?start=${startDate}&end=${endDate}`
+      const url = `http://localhost:9999/api/inventory/statistic/date?start=${startDate}&end=${endDate}`
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`

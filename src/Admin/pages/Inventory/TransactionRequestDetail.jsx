@@ -23,7 +23,7 @@ const TransactionRequestDetail = () => {
       const token = localStorage.getItem('token')
       axios
         .put(
-          `http://localhost:9999/api/staff/inventory/request/${id}/status`,
+          `http://localhost:9999/api/inventory/request/${id}/status`,
           { status: 'REJECT' },
           {
             headers: {
@@ -44,7 +44,7 @@ const TransactionRequestDetail = () => {
       const token = localStorage.getItem('token')
       axios
         .put(
-          `http://localhost:9999/api/staff/inventory/request/${id}/status`,
+          `http://localhost:9999/api/inventory/request/${id}/status`,
           { status: 'APPROVED' },
           {
             headers: {
