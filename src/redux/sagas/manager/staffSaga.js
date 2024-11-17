@@ -1,8 +1,7 @@
 import axios from 'axios'
 import { takeLatest, call, put } from 'redux-saga/effects'
-import { GET_ALL_STAFFS_REQUEST } from '../actions/types'
-
-import { getAllStaffsSuccess, getAllStaffsFailure } from '../actions/actions'
+import { getAllStaffsFailure, getAllStaffsSuccess } from '../../actions/actions'
+import { GET_ALL_STAFFS_REQUEST } from '../../actions/types'
 
 function* getAllStaffsSaga() {
   try {
@@ -24,6 +23,6 @@ function* getAllStaffsSaga() {
   }
 }
 
-export default function* staffSaga() {
+export default function* staffManagerSaga() {
   yield takeLatest(GET_ALL_STAFFS_REQUEST, getAllStaffsSaga)
 }

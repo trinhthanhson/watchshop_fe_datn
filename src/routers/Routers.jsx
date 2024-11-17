@@ -61,6 +61,7 @@ import Transaction from '../Admin/pages/Inventory/Transaction'
 import TransactionDetail from '../Admin/pages/Inventory/TransactionDetail'
 import { NavigationPaths } from './navigationPaths'
 import { UserRole } from '../enum/UserRole'
+import AllTypeInventory from '../Admin/pages/Inventory/AllTypeInventory'
 
 const Routers = () => {
   const navigate = useNavigate()
@@ -206,27 +207,11 @@ const Routers = () => {
           element={<TransactionRequestDetail />}
         />
         <Route path="/inventory/transaction" element={<Transaction />} />
+        <Route path="/inventory/type" element={<AllTypeInventory />} />
         <Route
           path="/inventory/transaction/:id"
           element={<TransactionDetail />}
         />
-        {/* 
-        <Route
-          path="/manager/user-staff/:id"
-          element={<AdminUserStaffDetail />}
-        />
-        <Route
-          path="/manager/coupon-detail/:id"
-          element={<AllCouponDetail />}
-        />
-        <Route path="/manager/orders" element={<AllOrder />} />
-        <Route path="/manager/order/:id" element={<AdminOrderDetail />} />
-        <Route path="/manager/customers" element={<AllCustomers />} />
-        <Route path="/manager/staffs" element={<AllStaff />} />
-
-        <Route path="/manager/profile" element={<StaffProfile />} />
-        <Route path="/manager/coupons" element={<AllCoupons />} />
-        <Route path="/manager/create-coupon" element={<CreateCoupon />} />  */}
       </Route>
     </Routes>
   )

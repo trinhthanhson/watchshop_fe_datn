@@ -7,6 +7,8 @@ const Layout = () => {
   const location = useLocation()
 
   const isAdminPage = location.pathname.startsWith('/manager')
+  const isInventoryPage = location.pathname.startsWith('/inventory')
+
   const isLoginPage = location.pathname === '/login'
   const isSignupPage = location.pathname === '/signup'
   const isForgotPasswordPage = location.pathname === '/forgotPassword'
@@ -17,7 +19,8 @@ const Layout = () => {
     isLoginPage ||
     isSignupPage ||
     isForgotPasswordPage ||
-    isAdminPage
+    isAdminPage ||
+    isInventoryPage
   ) {
     return (
       <div>

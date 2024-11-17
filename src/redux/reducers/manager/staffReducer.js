@@ -1,14 +1,14 @@
 import {
-  GET_ALL_STAFFS_SUCCESS,
-  GET_ALL_STAFFS_FAILURE
-} from '../actions/types'
+  GET_ALL_STAFFS_FAILURE,
+  GET_ALL_STAFFS_SUCCESS
+} from '../../actions/types'
 
 const initialState = {
   staffs: [],
   error: null
 }
 
-const staffsReducer = (state = initialState, action) => {
+const staffManagerReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_ALL_STAFFS_SUCCESS:
       return {
@@ -27,4 +27,4 @@ const staffsReducer = (state = initialState, action) => {
   }
 }
 
-export default staffsReducer
+export default staffManagerReducer

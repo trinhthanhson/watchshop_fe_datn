@@ -17,7 +17,6 @@ import couponsSaga from './couponsSaga'
 import putAddCart from './addCartSaga'
 import postAddCoupon from './addCouponSaga'
 import brandSaga from './brandSaga'
-import staffSaga from './staffSaga'
 import reviewCustomerSaga from './reviewCustomerSaga'
 import couponDetailSaga from './coupondetailSaga'
 import reviewProductSaga from './reviewProductSaga'
@@ -29,7 +28,8 @@ import requestSaga from './requestSaga'
 import requestDetailSaga from './requestDetailSaga'
 import transactionSaga from './transactionSaga'
 import transactionDetailSaga from './transactionDetailSaga'
-
+import typeSaga from './typeSaga'
+import staffManagerSaga from './manager/staffSaga'
 export default function* rootSaga() {
   yield all([
     newSaga(),
@@ -43,7 +43,7 @@ export default function* rootSaga() {
     watchAddProductsBatch(),
     categoriesSaga(),
     brandSaga(),
-    staffSaga(),
+    staffManagerSaga(),
     reviewCustomerSaga(),
     putUpdateProduct(),
     userProfileSaga(),
@@ -61,6 +61,7 @@ export default function* rootSaga() {
     requestSaga(),
     requestDetailSaga(),
     transactionSaga(),
-    transactionDetailSaga()
+    transactionDetailSaga(),
+    typeSaga()
   ])
 }

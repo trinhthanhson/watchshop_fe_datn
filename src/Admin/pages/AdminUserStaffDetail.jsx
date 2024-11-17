@@ -29,13 +29,14 @@ const AdminUserStaffDetail = () => {
           }
         )
         const user = response.data.data
+        console.log(user?.user?.status)
         setFormData({
           firstname: user.first_name,
           lastname: user.last_name,
           gender: user.gender,
           phone: user.phone,
           email: user.email,
-          status: user.user.status
+          status: user?.user?.status
         })
       } catch (error) {
         setError(error.message)

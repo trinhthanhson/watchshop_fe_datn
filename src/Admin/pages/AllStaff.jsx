@@ -12,7 +12,7 @@ import axios from 'axios'
 
 const AllStaff = () => {
   const dispatch = useDispatch()
-  const staffs = useSelector((state) => state.staffs.staffs)
+  const staffs = useSelector((state) => state.managerStaff.staffs)
   const navigate = useNavigate()
   const [isModalVisible, setIsModalVisible] = useState(false)
   const roles = useSelector((state) => state.roles?.roles?.data) || []
@@ -23,7 +23,7 @@ const AllStaff = () => {
   const [email, setEmail] = useState('')
   const [role_name, setRole] = useState('')
   const filteredRoles = roles.filter((role) => role.role_name !== 'ADMIN')
-
+  console.log(staffs)
   const handleUsernameChange = (event) => setUsername(event.target.value)
   const handlePasswordChange = (event) => setPassword(event.target.value)
   const handleFirstnameChange = (event) => setFirstname(event.target.value)

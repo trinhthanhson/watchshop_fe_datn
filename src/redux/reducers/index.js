@@ -17,7 +17,6 @@ import couponsReducer from './couponsReducer'
 import addCartReducer from './addCartReducer'
 import addCouponReducer from './addCouponReducer'
 import brandReducer from './brandReducer'
-import staffsReducer from './staffsReducer'
 import reviewCustomerReducer from './reviewCustomerReducer'
 import couponDetailReducer from './coupondetailReducer'
 import reviewProductReducer from './reviewProductReducer'
@@ -30,6 +29,7 @@ import requestDetailReducer from './requestDetailReducer'
 import transactionReducer from './transactionReducer'
 import transactionDetailReducer from './transactionDetailReducer'
 import typeReducer from './typeReducer'
+import staffManagerReducer from './manager/staffReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -43,7 +43,6 @@ const rootReducer = combineReducers({
   addProductBatch: addProductsBatchReducers,
   categories: categoriesReducer,
   brands: brandReducer,
-  staffs: staffsReducer,
   updateProduct: updateProductReducer,
   user: userProfileReducer,
   customerOrders: customerOrdersReducer,
@@ -62,7 +61,8 @@ const rootReducer = combineReducers({
   requestDetail: requestDetailReducer,
   transaction: transactionReducer,
   transactionDetail: transactionDetailReducer,
-  type: typeReducer
+  type: typeReducer,
+  managerStaff: staffManagerReducer
 })
 
 export default rootReducer
