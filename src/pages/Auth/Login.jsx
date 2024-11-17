@@ -193,12 +193,16 @@ const Login = () => {
           alt="Logo"
         />
         <div
-          className="layout_login absolute flex justify-center items-center mt-[8%] ml-[8%] w-[75%] rounded-[15px]"
-          style={{ backgroundColor: 'rgb(6 6 6 / 50%)' }}
+          className="layout_login absolute flex justify-center items-center mt-[10%] ml-[27%] w-[45%] rounded-[15px]"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.9)', // Nền trắng với độ trong suốt 90%
+            backdropFilter: 'blur(5px)', // Hiệu ứng mờ nền phía sau
+            border: '1px solid rgba(200, 200, 200, 0.8)', // Viền màu trắng xám
+            boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.3)', // Bóng đổ để hộp nổi bật
+            height: '50vh', // Giảm chiều cao để nhỏ gọn hơn
+            padding: '20px' // Khoảng cách bên trong
+          }}
         >
-          <div className="flex-col col-span-1 w-1/3 h-full object-contain border-r-2 border-neutral-400">
-            <CoffeeCanvas />
-          </div>
           <div className="flex-col col-span-1 w-2/3">
             {showForgotPassword ? (
               <div className="forgot-password-form flex flex-col items-center justify-center">
@@ -237,7 +241,7 @@ const Login = () => {
               </div>
             ) : (
               <>
-                <h1 className="font-RobotoSemibold text-center mb-8 text-main text-[25px] uppercase text-white">
+                <h1 className="font-RobotoSemibold text-center mb-8 text-main text-[25px] uppercase text-red ml-[50px]">
                   Đăng Nhập
                 </h1>
                 {message && (
@@ -248,22 +252,36 @@ const Login = () => {
                     {message}
                   </p>
                 )}
-                <div className="input">
-                  <label className="text-white">Username</label>
+                <div className="input mb-4 w-[700px] ml-[-120px]">
+                  <label className="text-red text-xl block text-center mb-2 ml-[15%]">
+                    Username
+                  </label>
                   <input
                     type="text"
                     value={username}
                     onChange={handleUsernameChange}
-                    className="h-8 w-[45%] outline-0 bg-[#ebebeb] p-2 rounded"
+                    className="h-12 bg-[#ebebeb] p-3 rounded border-2 border-[#666]"
+                    style={{
+                      height: '40px',
+                      padding: '12px', // Cân chỉnh padding đều
+                      borderRadius: '5px' // Đảm bảo border-radius giống nhau
+                    }}
                   />
                 </div>
-                <div className="input">
-                  <label className="text-white">Mật Khẩu</label>
+                <div className="input mb-4 w-[700px] ml-[-120px]">
+                  <label className="text-red text-xl block text-center mb-2 ml-[15%]">
+                    Password
+                  </label>
                   <input
                     type="password"
                     value={password}
                     onChange={handlePasswordChange}
-                    className="h-8 w-[45%] outline-0 bg-[#ebebeb] p-2 rounded mb-2"
+                    className="h-12 outline-0 bg-[#ebebeb] p-3 rounded border-2 border-[#666]"
+                    style={{
+                      height: '40px',
+                      padding: '12px',
+                      borderRadius: '5px'
+                    }}
                   />
                 </div>
                 {passwordError && (
@@ -276,11 +294,13 @@ const Login = () => {
                 )}
                 <a
                   onClick={handleForgotPassword}
-                  className="link_forgotPass text-white"
+                  className="link_forgotPass text-red mt-2"
                 >
                   Quên Mật Khẩu
                 </a>
-                <div className="btn_submit">
+                <div className="btn_submit mt-3 ml-8">
+                  {' '}
+                  {/* Thêm margin-top để căn khoảng cách cho nút */}
                   <button
                     className="uppercase"
                     type="button"
@@ -290,7 +310,9 @@ const Login = () => {
                     {isLoggingIn ? 'Đang đăng nhập...' : 'Đăng nhập'}
                   </button>
                 </div>
-                <div className="btn_submit">
+                <div className="btn_submit mt-3 ml-8">
+                  {' '}
+                  {/* Thêm margin-top để căn khoảng cách cho nút */}
                   <button
                     className="uppercase"
                     type="button"
@@ -299,9 +321,9 @@ const Login = () => {
                     Đăng nhập bằng Google
                   </button>
                 </div>
-                <div className="ml-[26%] text-white">
+                <div className="ml-[26%] text-red mt-6">
                   <span>Bạn chưa có tài khoản? </span>
-                  <a className="link_signup" href="/signup">
+                  <a className="link_signup  text-red " href="/signup">
                     Đăng Ký Ngay
                   </a>
                 </div>
