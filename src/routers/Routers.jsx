@@ -62,6 +62,7 @@ import TransactionDetail from '../Admin/pages/Inventory/TransactionDetail'
 import { NavigationPaths } from './navigationPaths'
 import { UserRole } from '../enum/UserRole'
 import AllTypeInventory from '../Admin/pages/Inventory/AllTypeInventory'
+import OrderStatus from '../Admin/pages/OrderStatus'
 
 const Routers = () => {
   const navigate = useNavigate()
@@ -165,6 +166,10 @@ const Routers = () => {
         <Route
           path="/manager/user-staff/:id"
           element={<AdminUserStaffDetail />}
+        />
+         <Route
+          path="/manager/order-status"
+          element={<OrderStatus />}
         />
         <Route path="/manager/product/:id" element={<AdminProductDetail />} />
         <Route
