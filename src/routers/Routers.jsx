@@ -167,10 +167,7 @@ const Routers = () => {
           path="/manager/user-staff/:id"
           element={<AdminUserStaffDetail />}
         />
-         <Route
-          path="/manager/order-status"
-          element={<OrderStatus />}
-        />
+        <Route path="/manager/order-status" element={<OrderStatus />} />
         <Route path="/manager/product/:id" element={<AdminProductDetail />} />
         <Route
           path="/manager/coupon-detail/:id"

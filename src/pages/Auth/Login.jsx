@@ -5,10 +5,8 @@ import Helmet from '../../components/Helmet/Helmet'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { getUserProfileRequest } from '../../redux/actions/actions'
-import CoffeeCanvas from '../../components/Canvas/Coffee'
 import { encryptData } from '../../cryptoUtils/cryptoUtils'
 import debounce from 'lodash/debounce'
-import { Button } from '@mui/material'
 import { toast } from 'react-toastify'
 
 const Login = () => {

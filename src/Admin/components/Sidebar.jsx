@@ -69,15 +69,16 @@ const Sidebar = () => {
 
         {isManager && (
           <>
-           <Link key="status" to="/manager/order-status">
+            <Link key="status" to="/manager/order-status">
               <div
                 className={`flex items-center gap-3 p-3 cursor-pointer hover:no-underline ${location.pathname === '/manager/order-status' ? '' : 'text-textNoneActive'}`}
                 style={{
                   color: '#000c',
-                  backgroundColor: hoveredIndex === 'status' ||
+                  backgroundColor:
+                    hoveredIndex === 'status' ||
                     location.pathname === '/manager/order-status'
-                    ? 'rgb(171, 171, 171)'
-                    : 'transparent'
+                      ? 'rgb(171, 171, 171)'
+                      : 'transparent'
                 }}
                 onMouseEnter={() => setHoveredIndex('status')}
                 onMouseLeave={() => setHoveredIndex(null)}
@@ -88,26 +89,27 @@ const Sidebar = () => {
                 <div>Order Status</div>
               </div>
             </Link>
-          <Link key="staffs" to="/manager/staffs">
-            <div
-              className={`flex items-center gap-3 p-3 cursor-pointer hover:no-underline ${location.pathname === '/manager/staffs' ? '' : 'text-textNoneActive'}`}
-              style={{
-                color: '#000c',
-                backgroundColor: hoveredIndex === 'staffs' ||
-                  location.pathname === '/manager/staffs'
-                  ? 'rgb(171, 171, 171)'
-                  : 'transparent'
-              }}
-              onMouseEnter={() => setHoveredIndex('staffs')}
-              onMouseLeave={() => setHoveredIndex(null)}
-            >
-              <div>
-                <HiOutlineUserGroup />
+            <Link key="staffs" to="/manager/staffs">
+              <div
+                className={`flex items-center gap-3 p-3 cursor-pointer hover:no-underline ${location.pathname === '/manager/staffs' ? '' : 'text-textNoneActive'}`}
+                style={{
+                  color: '#000c',
+                  backgroundColor:
+                    hoveredIndex === 'staffs' ||
+                    location.pathname === '/manager/staffs'
+                      ? 'rgb(171, 171, 171)'
+                      : 'transparent'
+                }}
+                onMouseEnter={() => setHoveredIndex('staffs')}
+                onMouseLeave={() => setHoveredIndex(null)}
+              >
+                <div>
+                  <HiOutlineUserGroup />
+                </div>
+                <div>Staffs</div>
               </div>
-              <div>Staffs</div>
-            </div>
-          </Link>
-         </> 
+            </Link>
+          </>
         )}
         {isAdmin && (
           <Link key="role" to="/admin/role">
