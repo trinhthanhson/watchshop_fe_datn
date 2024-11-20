@@ -8,6 +8,8 @@ import { getUserProfileRequest } from '../../redux/actions/actions'
 import CoffeeCanvas from '../../components/Canvas/Coffee'
 import { encryptData } from '../../cryptoUtils/cryptoUtils'
 import debounce from 'lodash/debounce'
+import { Button } from '@mui/material'
+import { toast } from 'react-toastify'
 
 const Login = () => {
   const dispatch = useDispatch()
@@ -73,6 +75,7 @@ const Login = () => {
 
         if (status && token) {
           localStorage.setItem('token', token)
+          toast.success('Đăng nhập thành công!')
           await dispatch(getUserProfileRequest())
 
           console.log(userRole)

@@ -1,6 +1,7 @@
 import Layout from './components/Layout'
 import { useEffect, useRef } from 'react'
 import { motion, useAnimation, useInView } from 'framer-motion'
+import ToastProvider from './redux/actions/ToastProvider'
 
 function App() {
   const ref = useRef(null)
@@ -24,6 +25,7 @@ function App() {
         animate={mainControls}
         transition={{ duration: 0.5, delay: 0.4 }}
       >
+        <ToastProvider />
         <Layout />
       </motion.div>
     </div>
