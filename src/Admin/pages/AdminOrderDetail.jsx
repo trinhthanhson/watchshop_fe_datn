@@ -72,23 +72,14 @@ const AdminOrderDetail = () => {
     }
   }
 
-  const activeStep = parseInt(orderDetail?.status, 10) + 1
-  console.log()
   return (
     <>
-      {orderDetail?.status === '6' ? (
-        <div className="flex justify-center items-center bg-red-100 p-5 rounded-md shadow-md w-full">
-          <h1 className="uppercase text-center font-RobotoSemibold text-red-600 text-2xl md:text-2xl xl:text-[2.5rem]">
-            Đã hủy
-          </h1>
-        </div>
-      ) : (
-        <div className="ml-[18%]">
-          <h1 className="uppercase text-center sm:text-left font-RobotoSemibold text-main text-3xl md:text-3xl xl:text-[3rem] mb-5 mt-0 sm:mt-5 md:leading-tight">
-            <OrderTracker activeStep={activeStep} />
-          </h1>
-        </div>
-      )}
+      <div className="flex justify-center items-center bg-gray-200 border border-gray-300 rounded-lg p-4">
+        <h1 className="uppercase font-RobotoSemibold text-main text-3xl md:text-3xl xl:text-[3rem] text-center">
+          {orderDetail.order_status.status_name}
+        </h1>
+      </div>
+
       <div className="flex">
         <div className="flex flex-[0.6] gap-4 w-[80%] ml-[18%] rounded-md shadow-md bg-white mt-2">
           <div className="w-full ml-5">

@@ -8,31 +8,30 @@ const OrderStatus = () => {
   const [editingStatus, setEditingStatus] = useState(null) // Track status being edited
   const [editedName, setEditedName] = useState('') // New name for the status
   const listRef = useRef(null)
+  const fetchStatuses = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.get(
+        'http://localhost:9999/api/manager/order-status/all',
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      )
 
+      const sortedStatuses = response.data.data
+        .map((status, index) => ({
+          ...status,
+          status_id: status.status_id || `temp-${index}`
+        }))
+        .sort((a, b) => a.status_index - b.status_index)
+
+      setStatuses(sortedStatuses)
+    } catch (error) {
+      console.error('Error fetching order statuses:', error)
+    }
+  }
   // Fetch danh sách trạng thái từ server
   useEffect(() => {
-    const fetchStatuses = async () => {
-      try {
-        const token = localStorage.getItem('token')
-        const response = await axios.get(
-          'http://localhost:9999/api/manager/order-status/all',
-          {
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        )
-
-        const sortedStatuses = response.data.data
-          .map((status, index) => ({
-            ...status,
-            status_id: status.status_id || `temp-${index}`
-          }))
-          .sort((a, b) => a.status_index - b.status_index)
-
-        setStatuses(sortedStatuses)
-      } catch (error) {
-        console.error('Error fetching order statuses:', error)
-      }
-    }
     fetchStatuses()
   }, [])
 
@@ -118,13 +117,8 @@ const OrderStatus = () => {
         }
       )
 
-      setStatuses((prevStatuses) => [
-        ...prevStatuses,
-        {
-          ...newStatus
-        }
-      ])
       setNewStatusName('')
+      fetchStatuses()
       alert('Thêm trạng thái thành công!')
     } catch (error) {
       console.error('Error adding status:', error)

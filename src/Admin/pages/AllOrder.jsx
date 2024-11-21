@@ -1,7 +1,7 @@
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import { getAllOrdersRequest } from '../../redux/actions/actions'
-import { getOrderStatus, getOrderStatusText } from '../../constants/Status'
+import { getOrderStatusText } from '../../constants/Status'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -241,7 +241,11 @@ const AllOrder = () => {
                 <td>{order.total_quantity}</td>
                 <td>{order.total_price.toLocaleString('en')} VNĐ</td>
                 <td>{new Date(order.created_at).toLocaleDateString()}</td>
-                <td>{getOrderStatus(order.status)}</td>
+                <td className="text-center align-middle">
+                  <span className="inline-block bg-gray-500 text-white px-2 py-1 border border-black rounded-md text-sm">
+                    {order.order_status.status_name}
+                  </span>
+                </td>
               </tr>
             ))}
           </tbody>
