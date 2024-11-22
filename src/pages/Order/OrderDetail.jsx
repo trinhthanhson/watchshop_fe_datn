@@ -9,12 +9,15 @@ import axios from 'axios'
 //import OrderTraker from '../../components/Order/OrderTraker'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
+import { toast } from 'react-toastify'
+
 const OrderDetail = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
   const orderDetail = useSelector((state) => state.orderDetail.orderDetail)
   const reviews = useSelector((state) => state.reviews.reviews)
   const [showModal, setShowModal] = useState(false)
+
   const [ratingData, setRatingData] = useState({
     productId: '',
     order_detail_id: '',
@@ -89,7 +92,6 @@ const OrderDetail = () => {
       console.error('Error submitting rating:', error)
     }
   }
-
   useEffect(() => {
     try {
       dispatch(getOrderDetailRequest(id))
@@ -98,27 +100,6 @@ const OrderDetail = () => {
       console.error('Error dispatch', error)
     }
   }, [dispatch, id])
-
-  const handleCancelOrder = async () => {
-    try {
-      const token = localStorage.getItem('token')
-      axios
-        .put(
-          `http://localhost:9999/api/customer/order/${id}/status`,
-          { status: 6 },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        )
-        .then(() => {
-          dispatch(getOrderDetailRequest(id))
-        })
-    } catch (error) {
-      console.error('Error change order status', error)
-    }
-  }
 
   const fetchCurrentReview = async (order_detail_id) => {
     try {
@@ -160,13 +141,34 @@ const OrderDetail = () => {
     )
   }
 
+  const handleCancelOrder = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      await axios.put(
+        `http://localhost:9999/api/customer/order/${id}/status`,
+        { is_cancel: true },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      toast.success('Hủy thành công')
+      dispatch(getOrderDetailRequest(id))
+    } catch (error) {
+      console.error('Error changing order status', error)
+    }
+  }
+
   return (
     <>
       <section className="relative flex flex-col-reverse md:flex-row items-center bg-[url('https://www.highlandscoffee.com.vn/vnt_upload/cake/SPECIALTYCOFFEE/Untitled-1-01.png')]">
         <div className="relative md:w-full pt-[80px]">
-          <div className="py-[40px] px-7 lg:px-14 md:py-14 w-full">
-            <h1 className="uppercase text-center sm:text-left font-RobotoSemibold text-main text-3xl md:text-3xl xl:text-[3rem] mb-5 mt-0 sm:mt-5 md:leading-tight">
-              {/* <OrderTraker activeStep={activeStep} /> */}
+          <div className="py-[20px] px-7 lg:px-14 md:py-14 w-full h-[50px]">
+            <h1 className="uppercase font-RobotoSemibold text-main text-3xl md:text-3xl xl:text-[3rem] text-center">
+              {orderDetail?.is_cancel
+                ? 'Đã huỷ'
+                : orderDetail?.order_status?.status_name}
             </h1>
           </div>
         </div>
@@ -397,14 +399,15 @@ const OrderDetail = () => {
       <div className="ml-[5%] w-[80%] flex justify-between my-6">
         <div></div>
         <div className="flex gap-3">
-          {orderDetail?.status === '0' && (
-            <button
-              onClick={() => handleCancelOrder()}
-              className="mt-5 bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
-            >
-              Hủy Đơn Hàng
-            </button>
-          )}
+          {!orderDetail?.is_cancel &&
+            orderDetail?.order_status?.status_index === 1 && (
+              <button
+                onClick={() => handleCancelOrder()}
+                className="mt-5 bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+              >
+                Hủy Đơn Hàng
+              </button>
+            )}
         </div>
       </div>
     </>

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { decryptData } from '../../cryptoUtils/cryptoUtils'
+import { toast } from 'react-toastify'
 
 const CardProductItem = ({ product }) => {
   const navigate = useNavigate()
@@ -75,6 +76,7 @@ const CardProductItem = ({ product }) => {
         quantity: 1
       })
     )
+    toast.success('Thêm vào giỏ hàng thành công')
   }
 
   const handleBuyNow = () => {

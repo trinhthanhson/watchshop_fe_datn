@@ -1,17 +1,10 @@
 import PropTypes from 'prop-types'
-import { getOrderStatus } from '../../constants/Status'
 import { formatDateTime } from '../../utils/formatDateTime'
 import { useNavigate } from 'react-router-dom'
 
 const OrderItem = ({ order }) => {
-  const {
-    order_id,
-    total_price,
-    total_quantity,
-    status,
-    created_at,
-    orderDetails
-  } = order
+  const { order_id, total_price, total_quantity, created_at, orderDetails } =
+    order
   const navigate = useNavigate()
 
   return (
@@ -56,8 +49,10 @@ const OrderItem = ({ order }) => {
               </p>
             </div>
 
-            <div className="flex text-sm lg:text-base">
-              <p className="">{getOrderStatus(status)}</p>
+            <div className="flex text-sm lg:text-base border border-gray-500 bg-gray-200 rounded p-2">
+              <p>
+                {order?.is_cancel ? 'Đã huỷ' : order?.order_status?.status_name}
+              </p>
             </div>
           </div>
         </div>
