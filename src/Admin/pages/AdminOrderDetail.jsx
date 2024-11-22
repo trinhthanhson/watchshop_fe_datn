@@ -1,82 +1,140 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { getOrderDetailRequest } from '../../redux/actions/actions'
+import {
+  getAllRequestRequest,
+  getOrderDetailRequest
+} from '../../redux/actions/actions'
 import axios from 'axios'
-import OrderTracker from '../../components/Order/OrderTraker'
-
-const ORDER_STATUS_NEXT = {
-  0: 'Chờ Xác Nhận',
-  1: 'Xác nhận',
-  2: 'Chờ kho xác nhận',
-  3: 'Đang vận chuyển',
-  4: 'Chờ thanh toán',
-  5: 'Đã thanh toán',
-  6: 'Đã giao',
-  7: 'Hoàn thành'
-}
 
 const AdminOrderDetail = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
   const orderDetail = useSelector((state) => state.orderDetail.orderDetail)
+  const tranRequest = useSelector((state) => state.request.request.data)
+  const isOrderInRequest = tranRequest?.some(
+    (request) => request?.order_id === orderDetail?.order_id
+  )
+  console.log(isOrderInRequest)
+  const [nextStatusName, setNextStatusName] = useState('')
+  const [statusIndex, setStatusIndex] = useState(0)
+  const [statuses, setStatuses] = useState([])
+  // Lấy chi tiết đơn hàng
   useEffect(() => {
     try {
       dispatch(getOrderDetailRequest(id))
+      dispatch(getAllRequestRequest())
     } catch (error) {
       console.error('Error dispatch', error)
     }
   }, [dispatch, id])
 
+  // Xử lý hủy đơn hàng
   const handleCancelOrder = async () => {
     try {
       const token = localStorage.getItem('token')
-      axios
-        .put(
-          `http://localhost:9999/api/staff/order/${id}/status`,
-          { status: '6' },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+      await axios.put(
+        `http://localhost:9999/api/staff/order/${id}/status`,
+        { is_cancel: true },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
           }
-        )
-        .then(() => {
-          dispatch(getOrderDetailRequest(id))
-        })
+        }
+      )
+      dispatch(getOrderDetailRequest(id))
     } catch (error) {
-      console.error('Error change order status', error)
+      console.error('Error changing order status', error)
     }
   }
 
+  // Xử lý xác nhận đơn hàng
   const handleConfirmOrder = async () => {
     try {
       const token = localStorage.getItem('token')
-      const currentStatus = parseInt(orderDetail?.status, 10)
-      const newStatus = (currentStatus + 1).toString()
-      axios
-        .put(
-          `http://localhost:9999/api/staff/order/${id}/status`,
-          { status: newStatus },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+      await axios.put(
+        `http://localhost:9999/api/staff/order/${id}/status`,
+        { status_index: statusIndex, is_cancel: false },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
           }
-        )
-        .then(() => {
-          dispatch(getOrderDetailRequest(id))
-        })
+        }
+      )
+      dispatch(getOrderDetailRequest(id))
     } catch (error) {
-      console.error('Error change order status', error)
+      console.error('Error changing order status', error)
     }
   }
+  const handleCreateExportInventory = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      console.log('Token:', token) // Kiểm tra xem token có hợp lệ không
+      if (!token) {
+        console.error('Token is missing or invalid')
+        return
+      }
+
+      const response = await axios.post(
+        `http://localhost:9999/api/staff/order/${id}/create/request`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      console.log('API Response:', response)
+      dispatch(getOrderDetailRequest(id)) // Gọi lại để lấy dữ liệu sau khi tạo phiếu
+    } catch (error) {
+      console.error('Error changing order status', error)
+    }
+  }
+  // Lấy tên trạng thái tiếp theo
+  useEffect(() => {
+    const fetchNextStatusName = async () => {
+      if (!orderDetail || !orderDetail.order_status) {
+        setNextStatusName('Không có trạng thái hiện tại')
+        return
+      }
+
+      try {
+        const token = localStorage.getItem('token')
+        const response = await axios.get(
+          'http://localhost:9999/api/manager/order-status/all',
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        )
+        const statusesData = response?.data?.data || []
+        setStatuses(statusesData)
+
+        const currentStatusIndex = orderDetail.order_status.status_index
+        setStatusIndex(currentStatusIndex + 1)
+
+        const nextStatus = statusesData.find(
+          (status) => status.status_index === currentStatusIndex + 1
+        )
+
+        setNextStatusName(
+          nextStatus ? nextStatus.status_name : 'Không có trạng thái tiếp theo'
+        )
+      } catch (error) {
+        setNextStatusName('Không thể lấy trạng thái tiếp theo')
+      }
+    }
+
+    fetchNextStatusName()
+  }, [orderDetail])
 
   return (
     <>
       <div className="flex justify-center items-center bg-gray-200 border border-gray-300 rounded-lg p-4">
         <h1 className="uppercase font-RobotoSemibold text-main text-3xl md:text-3xl xl:text-[3rem] text-center">
-          {orderDetail.order_status.status_name}
+          {orderDetail?.is_cancel
+            ? 'Đã huỷ'
+            : orderDetail?.order_status?.status_name}
         </h1>
       </div>
 
@@ -210,29 +268,32 @@ const AdminOrderDetail = () => {
       <div className="ml-[18%] w-[80%] flex justify-between">
         <div></div>
         <div className="flex gap-3">
-          {orderDetail?.status === '0' && (
-            <button
-              onClick={() => handleCancelOrder()}
-              className="mt-5 bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
-            >
-              Hủy Đơn Hàng
-            </button>
-          )}
-          {parseInt(orderDetail?.status, 10) < 5 &&
-            parseInt(orderDetail?.status, 10) !== 1 && (
+          {!orderDetail?.is_cancel &&
+            orderDetail?.order_status?.status_index === 1 && (
+              <button
+                onClick={() => handleCancelOrder()}
+                className="mt-5 bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+              >
+                Hủy Đơn Hàng
+              </button>
+            )}
+
+          {!orderDetail?.is_cancel &&
+            statusIndex <
+              Math.max(...statuses.map((status) => status.status_index)) && (
               <button
                 className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
                 onClick={() => handleConfirmOrder()}
               >
-                {ORDER_STATUS_NEXT[orderDetail?.status]}
+                {orderDetail && <p>{nextStatusName}</p>}
               </button>
             )}
-          {parseInt(orderDetail?.status, 10) == 1 && (
+          {!isOrderInRequest && (
             <button
-              className="mt-5 bg-gray-400 text-black font-RobotoMedium text-[16px] rounded-md p-2 shadow-md  ease-out duration-300 transform  border-none"
-              disabled
+              className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+              onClick={() => handleCreateExportInventory()}
             >
-              {ORDER_STATUS_NEXT[orderDetail?.status]}
+              Tạo phiếu xuất kho
             </button>
           )}
         </div>

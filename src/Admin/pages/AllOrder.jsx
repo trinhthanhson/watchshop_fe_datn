@@ -17,7 +17,6 @@ const AllOrder = () => {
   const [totalPrice, setTotalPrice] = useState(0)
   const [filteredOrders, setFilteredOrders] = useState([])
   const navigate = useNavigate()
-
   useEffect(() => {
     try {
       dispatch(getAllOrdersRequest())
@@ -183,7 +182,7 @@ const AllOrder = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 w-[80%] ml-[18%] rounded-md shadow-md bg-white mt-5">
+      <div className="flex flex-col gap-4 w-[85%] ml-[13%] rounded-md shadow-md bg-white mt-5">
         <table className="w-full text-gray-700">
           <thead className="text-white font-RobotoSemibold text-[18px] ">
             <tr className="bg-primary">
@@ -211,29 +210,44 @@ const AllOrder = () => {
                   {[
                     ...new Map(
                       order.orderDetails.map((item) => [
-                        item.product_order.image,
+                        item.product_order?.image,
                         item
                       ])
                     ).values()
-                  ].map((uniqueItem, index) => (
-                    <img
-                      key={index}
-                      className="w-[50px] mt-[2px] rounded-full shadow-md mr-2"
-                      src={
-                        uniqueItem.product_order &&
-                        uniqueItem.product_order.image
-                      }
-                      alt={
-                        uniqueItem.product_order &&
-                        uniqueItem.product_order.product_name
-                      }
-                    />
-                  ))}
+                  ]
+                    .slice(0, 2) // Lấy tối đa 2 hình ảnh
+                    .map((uniqueItem, index) => (
+                      <img
+                        key={index}
+                        className="w-[50px] h-[50px] rounded-full object-cover shadow-md mr-2"
+                        src={
+                          uniqueItem.product_order?.image ||
+                          '/default-image.jpg'
+                        }
+                        alt={
+                          uniqueItem.product_order?.product_name ||
+                          'No product name'
+                        }
+                        title={
+                          uniqueItem.product_order?.product_name ||
+                          'No product name'
+                        } // Hiển thị tooltip khi hover
+                      />
+                    ))}
+                  {order.orderDetails.length > 2 && (
+                    <span className="text-sm font-medium text-gray-600 ml-2">
+                      +{order.orderDetails.length - 2} ...
+                    </span>
+                  )}
                 </td>
                 <td>
                   {order.orderDetails.map((item, index) => (
-                    <div key={index}>
-                      {item.product_order && item.product_order.product_name}
+                    <div
+                      key={index}
+                      className="truncate overflow-hidden text-ellipsis whitespace-nowrap max-w-[150px]"
+                      title={item.product_order?.product_name} // Hiển thị toàn bộ tên khi hover
+                    >
+                      {item.product_order?.product_name}
                     </div>
                   ))}
                 </td>
@@ -243,7 +257,7 @@ const AllOrder = () => {
                 <td>{new Date(order.created_at).toLocaleDateString()}</td>
                 <td className="text-center align-middle">
                   <span className="inline-block bg-gray-500 text-white px-2 py-1 border border-black rounded-md text-sm">
-                    {order.order_status.status_name}
+                    {order?.order_status?.status_name}
                   </span>
                 </td>
               </tr>
@@ -254,7 +268,7 @@ const AllOrder = () => {
 
       <div className="w-[80%] ml-[18%] mt-2">
         <div className="flex justify-between font-RobotoMedium">
-          <div className="text-primary rounded-md p-2">
+          <div className="text-primary rounded-md p-2 ml-[40%]">
             Số đơn hàng: {filteredOrders ? filteredOrders.length : 0}
           </div>
           <div className="text-primary rounded-md p-2">
