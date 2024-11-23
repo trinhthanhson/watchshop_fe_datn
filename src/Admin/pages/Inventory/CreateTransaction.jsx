@@ -118,15 +118,15 @@ const CreateRequest = () => {
     const requestData = request?.find(
       (req) => req.request_id === parseInt(selectedRequestId, 10)
     )
-
+    console.log(requestData)
     if (requestData) {
       // Chuyển đổi requestDetails thành dữ liệu hiển thị trong bảng
       const updatedItems = requestData.requestDetails.map((detail) => ({
         product_id: detail.product_id,
-        name: detail.product_name,
-        quantity: detail.quantity,
-        unitPrice: detail.unit_price,
-        totalPrice: detail.total_price,
+        name: detail?.product_request?.product_name || '',
+        quantity: detail.quantity || 0,
+        unitPrice: detail.price || 0,
+        totalPrice: detail.quantity * detail.price || 0,
         note: detail.note || ''
       }))
       setItems(updatedItems)
@@ -258,7 +258,7 @@ const CreateRequest = () => {
                 <th className="border p-2">STT</th>
                 <th className="border p-2">Mã Sản Phẩm</th>
                 <th className="border p-2">Tên Hàng Hóa</th>
-                <th className="border p-2">Số Lượng</th>
+                <th className="border p-2">Số Lượng Nhập</th>
                 <th className="border p-2">Đơn Giá</th>
                 <th className="border p-2">Thành Tiền</th>
                 <th className="border p-2">Ghi Chú</th>
@@ -267,66 +267,130 @@ const CreateRequest = () => {
             </thead>
             <tbody>
               {items.map((item, index) => (
-                <tr key={index}>
+                <tr key={index} className="text-center">
                   <td className="border p-2">{index + 1}</td>
                   <td className="border p-2">
                     <input
                       type="text"
+                      name="product_id"
                       value={item.product_id}
-                      readOnly
-                      className="w-full p-2"
+                      onChange={(e) => handleSearchChange(e, index)}
+                      className="w-full p-1 border border-gray-200 rounded"
+                      required
                     />
                   </td>
-                  <td className="border p-2">{item.name}</td>
+                  <td className="border p-2 relative">
+                    <input
+                      type="text"
+                      name="name"
+                      value={item.name}
+                      onChange={(e) => handleSearchChange(e, index)}
+                      className="w-full p-1 border border-gray-200 rounded"
+                      required
+                      disabled
+                    />
+                  </td>
+
                   <td className="border p-2">
                     <input
                       type="number"
                       name="quantity"
                       value={item.quantity}
                       onChange={(e) => handleChange(e, index)}
-                      className="w-full p-2"
-                      min="1"
+                      className="w-full p-1 border border-gray-200 rounded"
+                      required
                     />
                   </td>
                   <td className="border p-2">
                     <input
-                      type="number"
+                      type="text"
                       name="unitPrice"
-                      value={item.unitPrice}
+                      value={item.unitPrice.toLocaleString('vi-VN')}
                       onChange={(e) => handleChange(e, index)}
-                      className="w-full p-2"
-                      min="1"
+                      className="w-full p-1 border border-gray-200 rounded"
+                      required
                     />
                   </td>
-                  <td className="border p-2">{item.totalPrice}</td>
+
+                  <td className="border p-2">
+                    {item.totalPrice.toLocaleString('vi-VN') || ''}
+                  </td>
                   <td className="border p-2">
                     <input
                       type="text"
                       name="note"
                       value={item.note}
                       onChange={(e) => handleChange(e, index)}
-                      className="w-full p-2"
+                      className="w-full p-1 border border-gray-200 rounded"
+                      required
                     />
                   </td>
                   <td className="border p-2">
                     <button
+                      type="button"
                       onClick={() => removeItem(index)}
-                      className="text-red-500"
+                      className="w-full py-1 px-2 text-black bg-white rounded hover:bg-gray-200 transition duration-200"
                     >
                       Xóa
                     </button>
                   </td>
                 </tr>
               ))}
+              <tr>
+                <td colSpan="4" className="border p-2 font-semibold text-right">
+                  Tổng Số Lượng Nhập
+                </td>
+                <td className="border p-2 font-semibold text-center">
+                  {items.reduce(
+                    (acc, item) => acc + (parseFloat(item.quantity) || 0),
+                    0
+                  )}
+                </td>
+                <td className="border p-2 font-semibold text-right">
+                  Tổng Tiền
+                </td>
+                <td className="border p-2 font-semibold">
+                  {items
+                    .reduce(
+                      (acc, item) => acc + (parseFloat(item.totalPrice) || 0),
+                      0
+                    )
+                    .toLocaleString('vi-VN')}
+                </td>
+                <td className="border p-2"></td>
+              </tr>
             </tbody>
           </table>
         </div>
 
+        {searchQuery && searchResults.length > 0 && (
+          <div className="absolute bg-white border border-gray-300 mt-2 w-full z-10 max-w-5xl">
+            {searchResults.map((product, idx) => (
+              <div
+                key={idx}
+                className="p-2 cursor-pointer hover:bg-gray-200"
+                onClick={() => selectProduct(product, currentRowIndex)} // Sử dụng currentRowIndex ở đây
+              >
+                {product.product_id} - {product.product_name} (Tồn:{' '}
+                {product.quantity})
+              </div>
+            ))}
+          </div>
+        )}
+
         <button
-          onClick={handleSubmit}
-          className="mt-4 bg-blue-600 text-white py-2 px-4 rounded"
+          type="button"
+          onClick={addItem}
+          className="mt-4 w-full bg-white text-black py-2 rounded border border-gray hover:bg-gray-200 hover:text-black transition duration-200"
         >
-          Tạo Phiếu Nhập Kho
+          Thêm Hàng Hóa
+        </button>
+        <button
+          type="submit"
+          onClick={handleSubmit}
+          className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200"
+        >
+          Gửi Phiếu Nhập Kho
         </button>
       </div>
     </div>
