@@ -279,7 +279,7 @@ const AdminOrderDetail = () => {
             )}
 
           {!orderDetail?.is_cancel &&
-            statusIndex <
+            statusIndex <=
               Math.max(...statuses.map((status) => status.status_index)) && (
               <button
                 className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"

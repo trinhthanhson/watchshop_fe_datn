@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   createTransactionRequest,
   getAllProductsRequest,
+  getAllRequestRequest,
   getUserProfileRequest
 } from '../../../redux/actions/actions'
 import { useNavigate } from 'react-router-dom'
@@ -23,14 +24,17 @@ const CreateRequest = () => {
   const [searchResults, setSearchResults] = useState([])
   const [currentRowIndex, setCurrentRowIndex] = useState(null)
   const [content, setContent] = useState('')
+  const [selectedRequest, setSelectedRequest] = useState('') // Trạng thái cho phiếu đề nghị được chọn
   const navigate = useNavigate()
 
   const products = useSelector((state) => state.products?.products?.data)
   const user = useSelector((state) => state.user?.user?.data)
+  const request = useSelector((state) => state.request?.request?.data)
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(getAllProductsRequest())
+    dispatch(getAllRequestRequest()) // Lấy danh sách các phiếu đề nghị
     dispatch(getUserProfileRequest())
   }, [dispatch])
 
@@ -105,6 +109,28 @@ const CreateRequest = () => {
     setItems(newItems)
     setSearchQuery('')
     setSearchResults([])
+  }
+
+  const handleRequestChange = (e) => {
+    const selectedRequestId = e.target.value
+    setSelectedRequest(selectedRequestId)
+
+    // Tìm phiếu đề nghị đã chọn trong danh sách request và cập nhật bảng
+    const requestData = request.find((req) => req.id === selectedRequestId)
+
+    if (requestData) {
+      const newItems = requestData.products.map((product) => ({
+        product_id: product.productId,
+        name: product.name,
+        quantity: product.quantity,
+        unitPrice: product.unitPrice,
+        totalPrice: product.quantity * product.unitPrice,
+        note: product.note,
+        stock: product.stock || 0
+      }))
+      setItems(newItems)
+      setContent(requestData.content || '')
+    }
   }
 
   const handleSubmit = (e) => {
@@ -204,6 +230,27 @@ const CreateRequest = () => {
             </div>
           </div>
         </div>
+
+        {/* Combobox chọn phiếu đề nghị */}
+        <div className="mt-4">
+          <label className="block text-gray-700 font-semibold">
+            Chọn Phiếu Đề Nghị:
+          </label>
+          <select
+            className="w-full p-3 border border-gray-300 rounded mt-2"
+            value={selectedRequest}
+            onChange={handleRequestChange}
+            required
+          >
+            <option value="">-- Chọn phiếu đề nghị --</option>
+            {request.map((req) => (
+              <option key={req.id} value={req.id}>
+                {req.content}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="overflow-x-auto">
           <table className="min-w-full border border-gray-300 mt-4">
             <thead>
@@ -211,47 +258,39 @@ const CreateRequest = () => {
                 <th className="border p-2">STT</th>
                 <th className="border p-2">Mã Sản Phẩm</th>
                 <th className="border p-2">Tên Hàng Hóa</th>
-                <th className="border p-2">Số Lượng Tồn</th>
-                <th className="border p-2">Số Lượng Nhập</th>
+                <th className="border p-2">Số Lượng</th>
                 <th className="border p-2">Đơn Giá</th>
                 <th className="border p-2">Thành Tiền</th>
-                <th className="border p-2">Ghi chú</th>
-                <th className="border p-2">Xóa</th>
+                <th className="border p-2">Ghi Chú</th>
+                <th className="border p-2">Hành Động</th>
               </tr>
             </thead>
             <tbody>
               {items.map((item, index) => (
-                <tr key={index} className="text-center">
+                <tr key={index}>
                   <td className="border p-2">{index + 1}</td>
                   <td className="border p-2">
                     <input
                       type="text"
-                      name="product_id"
                       value={item.product_id}
                       onChange={(e) => handleSearchChange(e, index)}
-                      className="w-full p-1 border border-gray-200 rounded"
-                      required
-                    />
-                  </td>
-                  <td className="border p-2 relative">
-                    <input
-                      type="text"
-                      name="name"
-                      value={item.name}
-                      onChange={(e) => handleSearchChange(e, index)}
-                      className="w-full p-1 border border-gray-200 rounded"
-                      required
-                      disabled
+                      placeholder="Nhập mã sản phẩm"
+                      className="w-full p-2"
                     />
                   </td>
                   <td className="border p-2">
-                    <input
-                      type="number"
-                      name="stock"
-                      value={item.stock}
-                      className="w-full p-1 border border-gray-200 rounded"
-                      disabled
-                    />
+                    {item.name}
+                    <div className="absolute mt-2 bg-white border border-gray-300 rounded">
+                      {searchResults.map((product) => (
+                        <div
+                          key={product.product_id}
+                          className="p-2 cursor-pointer hover:bg-gray-100"
+                          onClick={() => selectProduct(product, index)}
+                        >
+                          {product.product_name}
+                        </div>
+                      ))}
+                    </div>
                   </td>
                   <td className="border p-2">
                     <input
@@ -259,99 +298,49 @@ const CreateRequest = () => {
                       name="quantity"
                       value={item.quantity}
                       onChange={(e) => handleChange(e, index)}
-                      className="w-full p-1 border border-gray-200 rounded"
-                      required
+                      className="w-full p-2"
+                      min="1"
                     />
                   </td>
                   <td className="border p-2">
                     <input
-                      type="text"
+                      type="number"
                       name="unitPrice"
-                      value={item.unitPrice.toLocaleString('vi-VN')}
+                      value={item.unitPrice}
                       onChange={(e) => handleChange(e, index)}
-                      className="w-full p-1 border border-gray-200 rounded"
-                      required
+                      className="w-full p-2"
+                      min="1"
                     />
                   </td>
-                  <td className="border p-2">
-                    {item.totalPrice.toLocaleString('vi-VN') || ''}
-                  </td>
+                  <td className="border p-2">{item.totalPrice}</td>
                   <td className="border p-2">
                     <input
                       type="text"
                       name="note"
                       value={item.note}
                       onChange={(e) => handleChange(e, index)}
-                      className="w-full p-1 border border-gray-200 rounded"
-                      required
+                      className="w-full p-2"
                     />
                   </td>
                   <td className="border p-2">
                     <button
-                      type="button"
                       onClick={() => removeItem(index)}
-                      className="w-full py-1 px-2 text-black bg-white rounded hover:bg-gray-200 transition duration-200"
+                      className="text-red-500"
                     >
                       Xóa
                     </button>
                   </td>
                 </tr>
               ))}
-              <tr>
-                <td colSpan="4" className="border p-2 font-semibold text-right">
-                  Tổng Số Lượng Nhập
-                </td>
-                <td className="border p-2 font-semibold text-center">
-                  {items.reduce(
-                    (acc, item) => acc + (parseFloat(item.quantity) || 0),
-                    0
-                  )}
-                </td>
-                <td className="border p-2 font-semibold text-right">
-                  Tổng Tiền
-                </td>
-                <td className="border p-2 font-semibold">
-                  {items
-                    .reduce(
-                      (acc, item) => acc + (parseFloat(item.totalPrice) || 0),
-                      0
-                    )
-                    .toLocaleString('vi-VN')}
-                </td>
-                <td className="border p-2"></td>
-              </tr>
             </tbody>
           </table>
         </div>
 
-        {searchQuery && searchResults.length > 0 && (
-          <div className="absolute bg-white border border-gray-300 mt-2 w-full z-10 max-w-5xl">
-            {searchResults.map((product, idx) => (
-              <div
-                key={idx}
-                className="p-2 cursor-pointer hover:bg-gray-200"
-                onClick={() => selectProduct(product, currentRowIndex)} // Sử dụng currentRowIndex ở đây
-              >
-                {product.product_id} - {product.product_name} (Tồn:{' '}
-                {product.quantity})
-              </div>
-            ))}
-          </div>
-        )}
-
         <button
-          type="button"
-          onClick={addItem}
-          className="mt-4 w-full bg-white text-black py-2 rounded border border-gray hover:bg-gray-200 hover:text-black transition duration-200"
-        >
-          Thêm Hàng Hóa
-        </button>
-        <button
-          type="submit"
           onClick={handleSubmit}
-          className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200"
+          className="mt-4 bg-blue-600 text-white py-2 px-4 rounded"
         >
-          Gửi Phiếu Nhập Kho
+          Tạo Phiếu Nhập Kho
         </button>
       </div>
     </div>

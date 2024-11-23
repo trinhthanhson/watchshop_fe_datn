@@ -63,6 +63,7 @@ import { NavigationPaths } from './navigationPaths'
 import { UserRole } from '../enum/UserRole'
 import AllTypeInventory from '../Admin/pages/Inventory/AllTypeInventory'
 import OrderStatus from '../Admin/pages/OrderStatus'
+import CreateTransaction from '../Admin/pages/Inventory/CreateTransaction'
 
 const Routers = () => {
   const navigate = useNavigate()
@@ -199,6 +200,10 @@ const Routers = () => {
         <Route
           path="/inventory/create-product"
           element={<CreateProductInventory />}
+        />
+        <Route
+          path="/inventory/create-transaction"
+          element={<CreateTransaction />}
         />
         <Route path="/inventory/category" element={<AllCategoryInventory />} />
         <Route path="/inventory/brand" element={<AllBrandInventory />} />
