@@ -110,26 +110,26 @@ const CreateRequest = () => {
     setSearchQuery('')
     setSearchResults([])
   }
-
   const handleRequestChange = (e) => {
     const selectedRequestId = e.target.value
     setSelectedRequest(selectedRequestId)
 
-    // Tìm phiếu đề nghị đã chọn trong danh sách request và cập nhật bảng
-    const requestData = request.find((req) => req.id === selectedRequestId)
+    // Tìm phiếu đề nghị đã chọn
+    const requestData = request?.find(
+      (req) => req.request_id === parseInt(selectedRequestId, 10)
+    )
 
     if (requestData) {
-      const newItems = requestData.products.map((product) => ({
-        product_id: product.productId,
-        name: product.name,
-        quantity: product.quantity,
-        unitPrice: product.unitPrice,
-        totalPrice: product.quantity * product.unitPrice,
-        note: product.note,
-        stock: product.stock || 0
+      // Chuyển đổi requestDetails thành dữ liệu hiển thị trong bảng
+      const updatedItems = requestData.requestDetails.map((detail) => ({
+        product_id: detail.product_id,
+        name: detail.product_name,
+        quantity: detail.quantity,
+        unitPrice: detail.unit_price,
+        totalPrice: detail.total_price,
+        note: detail.note || ''
       }))
-      setItems(newItems)
-      setContent(requestData.content || '')
+      setItems(updatedItems)
     }
   }
 
@@ -243,8 +243,8 @@ const CreateRequest = () => {
             required
           >
             <option value="">-- Chọn phiếu đề nghị --</option>
-            {request.map((req) => (
-              <option key={req.id} value={req.id}>
+            {request?.map((req) => (
+              <option key={req?.request_id} value={req?.request_id}>
                 {req.content}
               </option>
             ))}
@@ -273,25 +273,11 @@ const CreateRequest = () => {
                     <input
                       type="text"
                       value={item.product_id}
-                      onChange={(e) => handleSearchChange(e, index)}
-                      placeholder="Nhập mã sản phẩm"
+                      readOnly
                       className="w-full p-2"
                     />
                   </td>
-                  <td className="border p-2">
-                    {item.name}
-                    <div className="absolute mt-2 bg-white border border-gray-300 rounded">
-                      {searchResults.map((product) => (
-                        <div
-                          key={product.product_id}
-                          className="p-2 cursor-pointer hover:bg-gray-100"
-                          onClick={() => selectProduct(product, index)}
-                        >
-                          {product.product_name}
-                        </div>
-                      ))}
-                    </div>
-                  </td>
+                  <td className="border p-2">{item.name}</td>
                   <td className="border p-2">
                     <input
                       type="number"
