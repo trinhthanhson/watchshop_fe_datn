@@ -87,10 +87,10 @@ const TransactionDetail = () => {
             </p>
             <p className="p-5">
               <span className="text-primary font-RobotoMedium mr-2">
-                Lý do nhập hàng:
+                Số phiếu
               </span>
               <span className="text-primary font-RobotoSemibold">
-                {transactionDetail?.note}
+                {transactionDetail?.transaction_code}
               </span>
             </p>
             {transactionDetail?.supplier_transaction?.supplier_name && (

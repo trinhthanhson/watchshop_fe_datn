@@ -30,6 +30,7 @@ import transactionReducer from './transactionReducer'
 import transactionDetailReducer from './transactionDetailReducer'
 import typeReducer from './typeReducer'
 import staffManagerReducer from './manager/staffReducer'
+import createTransactionReducer from './inventory/manager/createTransactionReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -62,7 +63,8 @@ const rootReducer = combineReducers({
   transaction: transactionReducer,
   transactionDetail: transactionDetailReducer,
   type: typeReducer,
-  managerStaff: staffManagerReducer
+  managerStaff: staffManagerReducer,
+  createTransaction: createTransactionReducer
 })
 
 export default rootReducer

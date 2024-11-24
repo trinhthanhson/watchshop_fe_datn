@@ -89,6 +89,7 @@ const TransactionRequest = () => {
           <thead className="text-white font-RobotoSemibold text-[18px] ">
             <tr className="bg-primary">
               <td className="rounded-s-md">ID</td>
+              <td>Số phiếu</td>
               <td>Số lượng</td>
               <td>Tổng giá</td>
               <td>Ngày tạo</td>
@@ -100,10 +101,10 @@ const TransactionRequest = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredAndSortedRequest?.map((request) => (
+            {filteredAndSortedRequest?.map((request, index) => (
               <tr key={request.request_id}>
-                <td>{request?.request_id}</td>
-
+                <td>{index + 1}</td>
+                <td>{request?.transaction_code}</td>
                 <td>{request?.total_quantity}</td>
                 <td>{request?.total_price.toLocaleString('vi-VN')}</td>
                 <td>{new Date(request?.created_at).toLocaleDateString()}</td>

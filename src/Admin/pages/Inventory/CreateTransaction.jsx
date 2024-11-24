@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  createTransactionRequest,
   getAllProductsRequest,
   getAllRequestRequest,
+  getAllSupplierRequest,
   getUserProfileRequest
 } from '../../../redux/actions/actions'
 import { useNavigate } from 'react-router-dom'
+import { createTransactionRequest } from '../../../redux/actions/inventory/manager/action'
 
 const CreateRequest = () => {
   const [items, setItems] = useState([
@@ -25,17 +26,21 @@ const CreateRequest = () => {
   const [currentRowIndex, setCurrentRowIndex] = useState(null)
   const [content, setContent] = useState('')
   const [selectedRequest, setSelectedRequest] = useState('') // Trạng thái cho phiếu đề nghị được chọn
+  const [supplierId, setSupplierId] = useState('') // Trạng thái cho phiếu đề nghị được chọn
+  const [billId, setBillId] = useState('') // Trạng thái cho phiếu đề nghị được chọn
   const navigate = useNavigate()
 
   const products = useSelector((state) => state.products?.products?.data)
   const user = useSelector((state) => state.user?.user?.data)
   const request = useSelector((state) => state.request?.request?.data)
+  const supplier = useSelector((state) => state.suppliers?.suppliers?.data)
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(getAllProductsRequest())
     dispatch(getAllRequestRequest()) // Lấy danh sách các phiếu đề nghị
     dispatch(getUserProfileRequest())
+    dispatch(getAllSupplierRequest())
   }, [dispatch])
 
   const addItem = () => {
@@ -52,6 +57,10 @@ const CreateRequest = () => {
         stock: 0
       }
     ])
+  }
+
+  const resetTable = () => {
+    setItems([])
   }
 
   const removeItem = (index) => {
@@ -118,19 +127,25 @@ const CreateRequest = () => {
     const requestData = request?.find(
       (req) => req.request_id === parseInt(selectedRequestId, 10)
     )
-    console.log(requestData)
     if (requestData) {
       // Chuyển đổi requestDetails thành dữ liệu hiển thị trong bảng
       const updatedItems = requestData.requestDetails.map((detail) => ({
         product_id: detail.product_id,
         name: detail?.product_request?.product_name || '',
         quantity: detail.quantity || 0,
+        quantity_request: detail.quantity_request,
         unitPrice: detail.price || 0,
         totalPrice: detail.quantity * detail.price || 0,
-        note: detail.note || ''
+        note: detail.note || '',
+        stock: detail?.product_request?.quantity
       }))
       setItems(updatedItems)
     }
+  }
+
+  const handleSupplierChange = (e) => {
+    const selectedSupplierId = e.target.value // Lấy giá trị được chọn
+    setSupplierId(selectedSupplierId) // Cập nhật trạng thái
   }
 
   const handleSubmit = (e) => {
@@ -149,12 +164,17 @@ const CreateRequest = () => {
       content,
       total_quantity: totalQuantity,
       total_price: totalPrice,
+      request_id: selectedRequest,
       type_name: 'IMPORT',
+      bill_code: billId,
+      supplier_id: supplierId,
       products: items.map((item) => ({
         productId: item.product_id,
         quantity: parseInt(item.quantity),
+        quantity_request: parseInt(item.quantity_request) || 0,
         unitPrice: parseInt(item.unitPrice),
-        note: item.note
+        note: item.note,
+        stock: item.stock
       }))
     }
     dispatch(createTransactionRequest(payload, navigate))
@@ -167,7 +187,7 @@ const CreateRequest = () => {
         style={{ marginLeft: '230px' }}
       >
         <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
-          Phiếu Đề Nghị Nhập Kho
+          Phiếu Nhập Kho
         </h2>
 
         <div className="flex gap-6">
@@ -228,6 +248,19 @@ const CreateRequest = () => {
                 required
               />
             </div>
+            <div>
+              <label className="block text-gray-700 font-semibold">
+                Mã hoá đơn nhập hàng:
+              </label>
+              <input
+                type="text"
+                name="bill_id"
+                className="w-full p-3 border border-gray-300 rounded mt-2"
+                value={billId}
+                onChange={(e) => setBillId(e.target.value)}
+                required
+              />
+            </div>
           </div>
         </div>
 
@@ -250,14 +283,41 @@ const CreateRequest = () => {
             ))}
           </select>
         </div>
+        {/* Combobox chọn phiếu đề nghị */}
+        <div className="mt-4">
+          <label className="block text-gray-700 font-semibold">
+            Chọn Nhà Cung Cấp:
+          </label>
+          <select
+            className="w-full p-3 border border-gray-300 rounded mt-2"
+            value={supplierId}
+            onChange={handleSupplierChange}
+            required
+          >
+            <option value="">-- Chọn nhà cung cấp --</option>
+            {supplier?.map((req) => (
+              <option key={req?.supplier_id} value={req?.supplier_id}>
+                {req?.supplier_name}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <div className="overflow-x-auto">
+          <button
+            type="button"
+            onClick={resetTable}
+            className="py-2 px-4 mb-4 text-white bg-primary rounded hover:bg-red-600 transition duration-200 ml-[92%] mt-[20px]"
+          >
+            Reset
+          </button>
           <table className="min-w-full border border-gray-300 mt-4">
             <thead>
               <tr className="bg-gray-200 text-gray-700">
                 <th className="border p-2">STT</th>
                 <th className="border p-2">Mã Sản Phẩm</th>
                 <th className="border p-2">Tên Hàng Hóa</th>
+                <th className="border p-2">Số Lượng Tồn</th>
                 <th className="border p-2">Số Lượng Nhập</th>
                 <th className="border p-2">Đơn Giá</th>
                 <th className="border p-2">Thành Tiền</th>
@@ -290,7 +350,16 @@ const CreateRequest = () => {
                       disabled
                     />
                   </td>
-
+                  <td className="border p-2">
+                    <input
+                      type="number"
+                      name="stock"
+                      value={item.stock}
+                      className="w-full p-1 border border-gray-200 rounded"
+                      required
+                      disabled
+                    />
+                  </td>
                   <td className="border p-2">
                     <input
                       type="number"
@@ -390,7 +459,7 @@ const CreateRequest = () => {
           onClick={handleSubmit}
           className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200"
         >
-          Gửi Phiếu Nhập Kho
+          Tạo Phiếu Nhập Kho
         </button>
       </div>
     </div>

@@ -89,21 +89,20 @@ const Transaction = () => {
           <thead className="text-white font-RobotoSemibold text-[18px] ">
             <tr className="bg-primary">
               <td className="rounded-s-md">ID</td>
+              <td>Số phiếu</td>
               <td>Số lượng</td>
               <td>Tổng giá</td>
               <td>Ngày tạo</td>
               <td>Người tạo</td>
-              <td>Người xác nhận</td>
               <td>Loại phiếu</td>
-              <td>Trạng Thái</td>
               <td>Chi tiết</td>
             </tr>
           </thead>
           <tbody>
-            {filteredAndSortedRequest?.map((transaction) => (
+            {filteredAndSortedRequest?.map((transaction, index) => (
               <tr key={transaction.request_id}>
-                <td>{transaction?.request_id}</td>
-
+                <td>{index + 1}</td>
+                <td>{transaction?.transaction_code}</td>
                 <td>{transaction?.total_quantity}</td>
                 <td>{transaction?.total_price.toLocaleString('vi-VN')}</td>
                 <td>
@@ -115,17 +114,7 @@ const Transaction = () => {
                     ' ' +
                     transaction?.staff_transaction?.last_name}
                 </td>
-                <td>
-                  <td>
-                    {transaction?.staff_updated
-                      ? transaction.staff_updated.first_name +
-                        ' ' +
-                        transaction.staff_updated.last_name
-                      : 'Chưa xác nhận'}
-                  </td>
-                </td>
                 <td>{transaction?.type_transaction?.type_name}</td>
-                <td>{getStatusRequest(transaction?.status)}</td>
                 <td>
                   <BiDetail
                     className="cursor-pointer"

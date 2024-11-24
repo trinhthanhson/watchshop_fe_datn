@@ -142,6 +142,7 @@ const TransactionRequestDetail = () => {
       product_request: { product_name: '', image: '' },
       quantity: 0,
       price: 0,
+      quantity_request: 0,
       note: ''
     }
     setEditingData([...editingData, newRow])
@@ -207,6 +208,14 @@ const TransactionRequestDetail = () => {
                 {requestDetail?.content}
               </span>
             </p>
+            <p className="p-5">
+              <span className="text-primary font-RobotoMedium mr-2">
+                Số phiếu:
+              </span>
+              <span className="text-primary font-RobotoSemibold">
+                {requestDetail?.transaction_code}
+              </span>
+            </p>
           </div>
         </div>
 
@@ -257,7 +266,7 @@ const TransactionRequestDetail = () => {
               <td>Số lượng duyệt</td>
               <td>Đơn Giá</td>
               <td>Lý do</td>
-              <td>Ngày Đặt</td>
+              <td>Ngày</td>
             </tr>
           </thead>
           <tbody>
@@ -277,7 +286,7 @@ const TransactionRequestDetail = () => {
                   <p>{orderItem?.product_request?.product_name}</p>
                 </td>
                 <td>{orderItem?.quantity_request}</td>
-                <td>{orderItem?.quantity}</td>
+                <td>{orderItem?.quantity} </td>
                 <td>{orderItem?.price.toLocaleString('en')} VNĐ</td>
                 <td>{orderItem.note}</td>
                 <td>
@@ -288,7 +297,7 @@ const TransactionRequestDetail = () => {
           </tbody>
         </table>
         <button
-          className="bg-primary px-4 py-2 rounded-md text-whith w-[7%] ml-[92%] mb-[20px]"
+          className="bg-primary px-4 py-2 rounded-md text-white w-[7%] ml-[92%] mb-[20px]"
           onClick={openEditModal}
         >
           Sửa
