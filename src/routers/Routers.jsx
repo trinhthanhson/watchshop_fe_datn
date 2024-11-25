@@ -64,7 +64,7 @@ import { UserRole } from '../enum/UserRole'
 import AllTypeInventory from '../Admin/pages/Inventory/AllTypeInventory'
 import OrderStatus from '../Admin/pages/OrderStatus'
 import CreateTransaction from '../Admin/pages/Inventory/CreateTransaction'
-import Statistic from '../Admin/pages/statistic/Statistic'
+import StatisticImportReport from '../Admin/pages/statistic/StatisticImportReport'
 
 const Routers = () => {
   const navigate = useNavigate()
@@ -184,12 +184,15 @@ const Routers = () => {
         <Route path="/manager/profile" element={<StaffProfile />} />
         <Route path="/manager/coupons" element={<AllCoupons />} />
         <Route path="/manager/create-coupon" element={<CreateCoupon />} />
-        <Route path="/manager/statistic" element={<Statistic />} />
       </Route>
 
       <Route path="/inventory" element={<LayoutInventory />}>
         <Route index element={<DashboardInevntory />} />
         <Route path="/inventory/product" element={<ProductInventory />} />
+        <Route
+          path="/inventory/report/import"
+          element={<StatisticImportReport />}
+        />
         <Route
           path="/inventory/product/:id"
           element={<InventoryProductDetail />}

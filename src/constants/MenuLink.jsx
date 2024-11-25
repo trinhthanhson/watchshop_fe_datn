@@ -5,7 +5,9 @@ import {
   HiOutlineUserGroup,
   HiOutlineServer,
   HiOutlineReceiptTax,
-  HiOutlineCog
+  HiOutlineCog,
+  HiOutlineDocumentText,
+  HiOutlineDocumentReport
 } from 'react-icons/hi'
 import { MdWatch } from 'react-icons/md'
 import { GrTransaction } from 'react-icons/gr'
@@ -71,7 +73,6 @@ export const DASHBOARD_SIDEBAR_TOP_LINKS_SHIPPER = [
     icon: <HiOutlineShoppingCart />
   }
 ]
-
 export const DASHBOARD_SIDEBAR_TOP_LINKS_INVENTORY = [
   {
     key: 'dashboard',
@@ -126,6 +127,31 @@ export const DASHBOARD_SIDEBAR_TOP_LINKS_INVENTORY = [
     label: 'Supplier',
     path: '/inventory/supplier',
     icon: <HiOutlineServer />
+  },
+  {
+    key: 'report',
+    label: 'Report',
+    icon: <HiOutlineDocumentText />,
+    subLinks: [
+      {
+        key: 'report-import',
+        label: 'Report Import',
+        path: '/inventory/report/import',
+        icon: <HiOutlineDocumentReport />
+      },
+      {
+        key: 'report-export',
+        label: 'Report Export',
+        path: '/inventory/report/export',
+        icon: <HiOutlineDocumentReport />
+      },
+      {
+        key: 'report-all',
+        label: 'Report All',
+        path: '/inventory/report/all',
+        icon: <HiOutlineDocumentReport />
+      }
+    ]
   }
 ]
 

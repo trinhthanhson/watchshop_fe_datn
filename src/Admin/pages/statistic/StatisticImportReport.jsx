@@ -1,4 +1,19 @@
-const Statistic = () => {
+import { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { getStatisticRequest } from '../../../redux/actions/statistic/action'
+
+const StatisticImportReport = () => {
+  const dispatch = useDispatch()
+
+  // Lấy data từ Redux store
+  const data = useSelector((state) => state.statistic.statistic)
+  console.log(data)
+
+  useEffect(() => {
+    // Dispatch action để lấy dữ liệu
+    dispatch(getStatisticRequest('IMPORT', '2024-01-01', '2024-11-30'))
+  }, [dispatch])
+
   return (
     <div className="p-6 ml-[250px] bg-white">
       <div className="text-center mb-6 ">
@@ -53,70 +68,42 @@ const Statistic = () => {
             </tr>
           </thead>
           <tbody>
-            {/* Ví dụ một số hàng dữ liệu */}
-            {[1, 2, 3, 4, 5].map((item, index) => (
+            {data?.map((item, index) => (
               <tr key={index}>
                 <td className="border border-gray-400 p-2">{index + 1}</td>
-                <td className="border border-gray-400 p-2">MVT-{index + 1}</td>
                 <td className="border border-gray-400 p-2">
-                  Vật tư {index + 1}
+                  {item.productCode}
+                </td>
+                <td className="border border-gray-400 p-2">
+                  {item.productName}
                 </td>
                 <td className="border border-gray-400 p-2">Cái</td>
                 <td className="border border-gray-400 p-2">
                   <div className="flex justify-between">
-                    <span>100</span>
-                    <span>1,000,000</span>
+                    <span>{item.openingQty}</span>
+                    <span>{item.openingValue}</span>
                   </div>
                 </td>
                 <td className="border border-gray-400 p-2">
                   <div className="flex justify-between">
-                    <span>50</span>
-                    <span>500,000</span>
+                    <span>{item.importQty}</span>
+                    <span>{item.importValue}</span>
                   </div>
                 </td>
                 <td className="border border-gray-400 p-2">
                   <div className="flex justify-between">
-                    <span>30</span>
-                    <span>300,000</span>
+                    <span>{item.exportQty}</span>
+                    <span>{item.exportValue}</span>
                   </div>
                 </td>
                 <td className="border border-gray-400 p-2">
                   <div className="flex justify-between">
-                    <span>120</span>
-                    <span>1,200,000</span>
+                    <span>{item.closingQty}</span>
+                    <span>{item.closingValue}</span>
                   </div>
                 </td>
               </tr>
             ))}
-            <tr className="font-semibold">
-              <td className="border border-gray-400 p-2" colSpan="4">
-                TỔNG CỘNG
-              </td>
-              <td className="border border-gray-400 p-2">
-                <div className="flex justify-between">
-                  <span>500</span>
-                  <span>5,000,000</span>
-                </div>
-              </td>
-              <td className="border border-gray-400 p-2">
-                <div className="flex justify-between">
-                  <span>200</span>
-                  <span>2,000,000</span>
-                </div>
-              </td>
-              <td className="border border-gray-400 p-2">
-                <div className="flex justify-between">
-                  <span>100</span>
-                  <span>1,000,000</span>
-                </div>
-              </td>
-              <td className="border border-gray-400 p-2">
-                <div className="flex justify-between">
-                  <span>600</span>
-                  <span>6,000,000</span>
-                </div>
-              </td>
-            </tr>
           </tbody>
         </table>
       </div>
@@ -135,4 +122,4 @@ const Statistic = () => {
   )
 }
 
-export default Statistic
+export default StatisticImportReport

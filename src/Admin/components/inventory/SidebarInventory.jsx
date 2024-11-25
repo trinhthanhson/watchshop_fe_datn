@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom/dist'
+import { Link, useLocation } from 'react-router-dom'
 import { HiOutlineLogout } from 'react-icons/hi'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -7,10 +7,13 @@ import {
   DASHBOARD_SIDEBAR_TOP_LINKS_INVENTORY
 } from '../../../constants/MenuLink'
 import { getUserProfileRequest } from '../../../redux/actions/actions'
+
 const SidebarInventory = () => {
   const location = useLocation()
   const dispatch = useDispatch()
-  // const navigate = useNavigate();
+  const [hoveredIndex, setHoveredIndex] = useState(null)
+  const [expandedKey, setExpandedKey] = useState(null) // Để mở rộng menu con
+
   useEffect(() => {
     try {
       dispatch(getUserProfileRequest())
@@ -18,11 +21,11 @@ const SidebarInventory = () => {
       console.error('Error dispatch', error)
     }
   }, [dispatch])
+
   const handleLogout = () => {
     localStorage.removeItem('token')
     window.location.href = '/login'
   }
-  const [hoveredIndex, setHoveredIndex] = useState(null)
 
   return (
     <div
@@ -52,10 +55,44 @@ const SidebarInventory = () => {
               }}
               onMouseEnter={() => setHoveredIndex(link.key)}
               onMouseLeave={() => setHoveredIndex(null)}
+              onClick={() =>
+                link.subLinks
+                  ? setExpandedKey((prev) =>
+                      prev === link.key ? null : link.key
+                    )
+                  : null
+              }
             >
               <div>{link.icon}</div>
               <div>{link.label}</div>
             </div>
+            {/* Hiển thị menu con nếu có */}
+            {link.subLinks && expandedKey === link.key && (
+              <div className="ml-6">
+                {link.subLinks.map((subLink) => (
+                  <Link key={subLink.key} to={subLink.path}>
+                    <div
+                      className={`flex items-center gap-3 p-2 cursor-pointer hover:no-underline ${
+                        location.pathname === subLink.path
+                          ? 'text-black font-bold'
+                          : 'text-textNoneActive'
+                      }`}
+                      style={{
+                        color:
+                          location.pathname === subLink.path ? '#000' : '#555',
+                        backgroundColor:
+                          location.pathname === subLink.path
+                            ? 'rgb(220, 220, 220)'
+                            : 'transparent'
+                      }}
+                    >
+                      <div>{subLink.icon}</div>
+                      <div>{subLink.label}</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </Link>
         ))}
       </div>
