@@ -32,6 +32,7 @@ import typeReducer from './typeReducer'
 import staffManagerReducer from './manager/staffReducer'
 import createTransactionReducer from './inventory/manager/createTransactionReducer'
 import statisticReducer from './statistic/statisticReducer'
+import getDataNotFullReducer from './inventory/manager/getDataNotFullReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -66,7 +67,8 @@ const rootReducer = combineReducers({
   type: typeReducer,
   managerStaff: staffManagerReducer,
   createTransaction: createTransactionReducer,
-  statistic: statisticReducer // state sẽ có dạng state.statistic
+  statistic: statisticReducer,
+  notfull: getDataNotFullReducer
 })
 
 export default rootReducer

@@ -69,7 +69,6 @@ const AdminOrderDetail = () => {
   const handleCreateExportInventory = async () => {
     try {
       const token = localStorage.getItem('token')
-      console.log('Token:', token) // Kiểm tra xem token có hợp lệ không
       if (!token) {
         console.error('Token is missing or invalid')
         return

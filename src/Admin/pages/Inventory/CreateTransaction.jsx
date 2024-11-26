@@ -7,7 +7,10 @@ import {
   getUserProfileRequest
 } from '../../../redux/actions/actions'
 import { useNavigate } from 'react-router-dom'
-import { createTransactionRequest } from '../../../redux/actions/inventory/manager/action'
+import {
+  createTransactionRequest,
+  getDataNotFullRequest
+} from '../../../redux/actions/inventory/manager/action'
 
 const CreateRequest = () => {
   const [items, setItems] = useState([
@@ -34,6 +37,7 @@ const CreateRequest = () => {
   const user = useSelector((state) => state.user?.user?.data)
   const request = useSelector((state) => state.request?.request?.data)
   const supplier = useSelector((state) => state.suppliers?.suppliers?.data)
+
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -119,29 +123,57 @@ const CreateRequest = () => {
     setSearchQuery('')
     setSearchResults([])
   }
+  // const handleRequestChange = (e) => {
+  //   const selectedRequestId = e.target.value
+  //   setSelectedRequest(selectedRequestId)
+  //   dispatch(getDataNotFullRequest(selectedRequestId))
+
+  //   // Tìm phiếu đề nghị đã chọn
+  //   const requestData = request?.find(
+  //     (req) => req.request_id === parseInt(selectedRequestId, 10)
+  //   )
+  //   console.log(requestData)
+  //   if (requestData) {
+  //     // Chuyển đổi requestDetails thành dữ liệu hiển thị trong bảng
+  //     const updatedItems = requestData.requestDetails.map((detail) => ({
+  //       product_id: detail.product_id,
+  //       name: detail?.product_request?.product_name || '',
+  //       quantity: detail.quantity || 0,
+  //       quantity_request: detail.quantity_request,
+  //       unitPrice: detail.price || 0,
+  //       totalPrice: detail.quantity * detail.price || 0,
+  //       note: detail.note || '',
+  //       stock: detail?.product_request?.quantity
+  //     }))
+  //     setItems(updatedItems)
+  //   }
+  // }
+  const dataNotFull = useSelector((state) => state?.notfull?.data?.data)
   const handleRequestChange = (e) => {
     const selectedRequestId = e.target.value
     setSelectedRequest(selectedRequestId)
+    // Gửi request ID để lấy dữ liệu từ API
+    dispatch(getDataNotFullRequest(selectedRequestId))
+  }
 
-    // Tìm phiếu đề nghị đã chọn
-    const requestData = request?.find(
-      (req) => req.request_id === parseInt(selectedRequestId, 10)
-    )
-    if (requestData) {
-      // Chuyển đổi requestDetails thành dữ liệu hiển thị trong bảng
-      const updatedItems = requestData.requestDetails.map((detail) => ({
-        product_id: detail.product_id,
-        name: detail?.product_request?.product_name || '',
-        quantity: detail.quantity || 0,
-        quantity_request: detail.quantity_request,
-        unitPrice: detail.price || 0,
-        totalPrice: detail.quantity * detail.price || 0,
-        note: detail.note || '',
-        stock: detail?.product_request?.quantity
+  useEffect(() => {
+    if (dataNotFull) {
+      // Chuyển đổi dữ liệu từ API thành bảng
+      const updatedItems = dataNotFull?.product_request.map((detail) => ({
+        product_id: detail?.productId,
+        name: detail?.productName || '',
+        quantity: detail?.remainingQuantity || 0,
+        quantity_request: detail?.quantityRequest,
+        unitPrice: detail?.price || 0,
+        totalPrice: detail.quantityRequest * detail?.price || 0,
+        note: detail?.note || '',
+        stock: detail?.productQuantitya
       }))
       setItems(updatedItems)
+    } else {
+      console.warn('dataNotFull is not an array:', dataNotFull)
     }
-  }
+  }, [dataNotFull])
 
   const handleSupplierChange = (e) => {
     const selectedSupplierId = e.target.value // Lấy giá trị được chọn
