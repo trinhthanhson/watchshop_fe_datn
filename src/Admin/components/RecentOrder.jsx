@@ -59,7 +59,7 @@ const RecentOrder = () => {
                     onClick={() => navigate(`/manager/order/${order.order_id}`)}
                   >
                     <td>{index + 1}</td>
-                    <td className="flex items-center">
+                    <td className="flex items-center overflow-hidden">
                       {[
                         ...new Map(
                           order.orderDetails.map((item) => [
@@ -67,24 +67,29 @@ const RecentOrder = () => {
                             item
                           ])
                         ).values()
-                      ].map((uniqueItem, index) => (
-                        <img
-                          key={index}
-                          className="w-[60px] mt-[2px] rounded-full shadow-md mr-2"
-                          src={
-                            uniqueItem.product_order &&
-                            uniqueItem.product_order.image
-                          }
-                          alt={
-                            uniqueItem.product_order &&
-                            uniqueItem.product_order.product_name
-                          }
-                        />
-                      ))}
+                      ]
+                        .slice(0, 3) // Giới hạn chỉ hiển thị 3 hình ảnh
+                        .map((uniqueItem, index) => (
+                          <img
+                            key={index}
+                            className="w-[60px] mt-[2px] rounded-full shadow-md mr-2"
+                            src={
+                              uniqueItem.product_order &&
+                              uniqueItem.product_order.image
+                            }
+                            alt={
+                              uniqueItem.product_order &&
+                              uniqueItem.product_order.product_name
+                            }
+                          />
+                        ))}
+                      {order.orderDetails.length > 3 && (
+                        <span className="text-sm text-gray-500">...</span> // Hiển thị "..." nếu có nhiều hơn 3 hình ảnh
+                      )}
                     </td>
-                    <td>
+                    <td className="max-w-xs overflow-hidden text-ellipsis">
                       {order.orderDetails.map((item, index) => (
-                        <div key={index}>
+                        <div key={index} className="truncate">
                           {item.product_order &&
                             item.product_order.product_name}
                         </div>
@@ -92,7 +97,9 @@ const RecentOrder = () => {
                     </td>
                     <td>{order.total_price.toLocaleString('en')} VND</td>
                     <td>{new Date(order.created_at).toLocaleDateString()}</td>
-                    <td>{getOrderStatus(order.status)}</td>
+                    <td className="w-24 h-1 p-1 text-center bg-blue-200 text-black rounded-full text-sm">
+                      {order?.order_status?.status_name}
+                    </td>
                   </tr>
                 ))}
           </tbody>

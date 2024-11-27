@@ -15,15 +15,37 @@ const AdminOrderDetail = () => {
   const isOrderInRequest = tranRequest?.some(
     (request) => request?.order_id === orderDetail?.order_id
   )
-  console.log(isOrderInRequest)
   const [nextStatusName, setNextStatusName] = useState('')
   const [statusIndex, setStatusIndex] = useState(0)
   const [statuses, setStatuses] = useState([])
+
+  const [check, setCheck] = useState(null)
+
+  const checkTransactionStatus = async (orderId) => {
+    try {
+      const token = localStorage.getItem('token') // Lấy token từ localStorage
+      const response = await axios.get(
+        `http://localhost:9999/api/staff/order/check`,
+        {
+          params: { orderId }, // Truyền tham số orderId
+          headers: {
+            Authorization: `Bearer ${token}` // Thêm header Authorization
+          }
+        }
+      )
+
+      setCheck(response?.data?.message)
+    } catch (error) {
+      console.error('Error checking transaction status:', error)
+      throw error
+    }
+  }
   // Lấy chi tiết đơn hàng
   useEffect(() => {
     try {
       dispatch(getOrderDetailRequest(id))
       dispatch(getAllRequestRequest())
+      checkTransactionStatus(id) // Gọi hàm kiểm tra trạng thái giao dịch
     } catch (error) {
       console.error('Error dispatch', error)
     }
@@ -84,12 +106,13 @@ const AdminOrderDetail = () => {
         }
       )
 
-      console.log('API Response:', response)
       dispatch(getOrderDetailRequest(id)) // Gọi lại để lấy dữ liệu sau khi tạo phiếu
+      dispatch(getAllRequestRequest())
     } catch (error) {
       console.error('Error changing order status', error)
     }
   }
+  console.log("dd",check)
   // Lấy tên trạng thái tiếp theo
   useEffect(() => {
     const fetchNextStatusName = async () => {
@@ -169,6 +192,7 @@ const AdminOrderDetail = () => {
             </p>
           </div>
         </div>
+
         <div className="flex-[0.4] w-[80%] ml-[20px] mr-[30px] rounded-md shadow-md bg-white mt-2">
           <div className="ml-5">
             <h5 className="text-left text-lg font-RobotoSemibold text-primary py-3">
@@ -214,6 +238,11 @@ const AdminOrderDetail = () => {
         </div>
       </div>
 
+      <div className="flex justify-center items-center bg-gray-200 border border-gray-300 rounded-lg p-4">
+        <h1 className="uppercase font-RobotoSemibold text-main text-3xl md:text-3xl xl:text-[3rem] text-center">
+          {check === 'True' ? 'Kho đã xác nhận' : 'Kho chưa xác nhận'}
+        </h1>
+      </div>
       <div className="flex flex-col gap-4 w-[80%] ml-[18%] rounded-md shadow-md bg-white mt-5">
         <table className="w-full text-gray-700">
           <thead className="text-white font-RobotoSemibold text-[18px] ">
@@ -268,6 +297,7 @@ const AdminOrderDetail = () => {
         <div></div>
         <div className="flex gap-3">
           {!orderDetail?.is_cancel &&
+            (check === 'False' || check === null) &&
             orderDetail?.order_status?.status_index === 1 && (
               <button
                 onClick={() => handleCancelOrder()}
@@ -278,6 +308,7 @@ const AdminOrderDetail = () => {
             )}
 
           {!orderDetail?.is_cancel &&
+            check === 'True' &&
             statusIndex <=
               Math.max(...statuses.map((status) => status.status_index)) && (
               <button

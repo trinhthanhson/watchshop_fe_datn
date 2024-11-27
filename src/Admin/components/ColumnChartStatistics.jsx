@@ -17,28 +17,42 @@ const ColumnChartStatistics = () => {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [viewMode, setViewMode] = useState('chart') // 'chart' or 'table'
-
+  const [typeName, selectType] = useState('EXPORT')
   // Fetch yearly data
   const fetchData = async () => {
     try {
       const token = localStorage.getItem('token')
+
       const response = await fetch(
-        `http://localhost:9999/api/inventory/statistic/year?year=${selectedYear}`,
+        `http://localhost:9999/api/statistic/year?year=${selectedYear}&type=${typeName}`, // Truyền year và typeName vào URL
         {
+          method: 'GET', // Đảm bảo phương thức GET
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
           }
         }
       )
+
       const result = await response.json()
+      console.log('dataaaaaaaaaaaaa', result.data)
       if (response.ok) {
+        // Log toàn bộ dữ liệu để kiểm tra
+        console.log('Full response data:', result.data)
+
         const fullYearData = Array.from({ length: 12 }, (_, index) => {
-          const monthData = result.data.find((item) => item.moth === index + 1)
+          // Log từng item trong data để kiểm tra
+          const monthData = result?.data.find(
+            (item) => item.month === index + 1
+          )
+          console.log('Month data:', monthData) // Xem monthData có dữ liệu không
           return {
-            moth: index + 1,
+            month: index + 1,
             total_price: monthData ? monthData.total_price : 0
           }
         })
+
+        console.log('Full year data:', fullYearData)
         setData(fullYearData)
       } else {
         console.error('Failed to fetch data:', result.message)
@@ -50,40 +64,37 @@ const ColumnChartStatistics = () => {
 
   // Fetch data based on date range
   const fetchDateRangeData = async () => {
-    try {
-      const token = localStorage.getItem('token')
-      const url = `http://localhost:9999/api/inventory/statistic/date?start=${startDate}&end=${endDate}`
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      const result = await response.json()
-
-      if (response.ok) {
-        // Aggregate daily data
-        const dailyData = result.data.reduce((acc, item) => {
-          const date = new Date(item.date_pay).toISOString().split('T')[0]
-          if (!acc[date]) {
-            acc[date] = {
-              date,
-              total_price: 0
-            }
-          }
-          acc[date].total_price += item.total_sold
-          return acc
-        }, {})
-
-        // Convert to array
-        const formattedData = Object.values(dailyData)
-
-        setData(formattedData)
-      } else {
-        console.error('Failed to fetch data:', result.message)
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    }
+    // try {
+    //   const token = localStorage.getItem('token')
+    //   const url = `http://localhost:9999/api/statistic/date?start=${startDate}&end=${endDate}`
+    //   const response = await fetch(url, {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`
+    //     }
+    //   })
+    //   const result = await response.json()
+    //   if (response.ok) {
+    //     // Aggregate daily data
+    //     const dailyData = result.data.reduce((acc, item) => {
+    //       const date = new Date(item.date_pay).toISOString().split('T')[0]
+    //       if (!acc[date]) {
+    //         acc[date] = {
+    //           date,
+    //           total_price: 0
+    //         }
+    //       }
+    //       acc[date].total_price += item.total_sold
+    //       return acc
+    //     }, {})
+    //     // Convert to array
+    //     const formattedData = Object.values(dailyData)
+    //     setData(formattedData)
+    //   } else {
+    //     console.error('Failed to fetch data:', result.message)
+    //   }
+    // } catch (error) {
+    //   console.error('Error fetching data:', error)
+    // }
   }
 
   // Use effect to fetch data based on inputs
@@ -100,6 +111,10 @@ const ColumnChartStatistics = () => {
     setSelectedYear(parseInt(event.target.value))
     setStartDate('')
     setEndDate('')
+  }
+
+  const handleTypeChange = (event) => {
+    selectType(parseInt(event.target.value))
   }
 
   // Handle date range submission
@@ -119,7 +134,7 @@ const ColumnChartStatistics = () => {
       data.map((item) => ({
         Date: item.date
           ? new Date(item.date).toLocaleDateString('vi-VN')
-          : getMonthName(item.moth),
+          : getMonthName(item.month),
         Revenue: item.total_price.toLocaleString('vi-VN', {
           style: 'currency',
           currency: 'VND'
@@ -194,6 +209,20 @@ const ColumnChartStatistics = () => {
             <option value={2024}>2024</option>
           </select>
         </div>
+        <div className="ml-4">
+          <label htmlFor="typeSelect" className="mr-2 font-RobotoMedium">
+            Chọn loại:
+          </label>
+          <select
+            id="typeSelect"
+            value={typeName}
+            onChange={handleTypeChange}
+            className="rounded-md font-RobotoMedium focus:border-none"
+          >
+            <option value="IMPORT">IMPORT</option>
+            <option value="EXPORT">EXPORT</option>
+          </select>
+        </div>
       </div>
 
       {/* Toggle between chart and table view */}
@@ -229,7 +258,7 @@ const ColumnChartStatistics = () => {
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis
-                dataKey={startDate && endDate ? 'date' : 'moth'}
+                dataKey={startDate && endDate ? 'date' : 'month'}
                 tickFormatter={(tick) =>
                   startDate && endDate
                     ? new Date(tick).toLocaleDateString('vi-VN')
@@ -256,11 +285,11 @@ const ColumnChartStatistics = () => {
                 <tbody>
                   {data.map((item) =>
                     item.total_price > 0 ? (
-                      <tr key={item.date || item.moth}>
+                      <tr key={item.date || item.month}>
                         <td className="border border-gray-300 p-2 text-center">
                           {item.date
                             ? new Date(item.date).toLocaleDateString('vi-VN')
-                            : getMonthName(item.moth)}
+                            : getMonthName(item.month)}
                         </td>
                         <td className="border border-gray-300 p-2 text-center">
                           {item.total_price.toLocaleString('vi-VN', {

@@ -59,22 +59,35 @@ const TransactionRequestDetail = () => {
   }
   const handleCancelOrder = async () => {
     try {
-      const token = localStorage.getItem('token')
-      axios
-        .put(
-          `http://localhost:9999/api/inventory/request/${id}/status`,
-          { status: 'REJECT' },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+      const token = localStorage.getItem('token') // Lấy JWT từ localStorage
+
+      if (!token) {
+        console.error('No token found')
+        return // Nếu không có token, thoát sớm
+      }
+
+      const response = await axios.put(
+        `http://localhost:9999/api/inventory/request/${id}/status`,
+        {
+          status: 'REJECT',
+          is_cancel: true // Sửa `True` thành `true` (JavaScript phân biệt hoa thường)
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}` // Đính kèm JWT vào header
           }
-        )
-        .then(() => {
-          dispatch(getRequestDetailRequest(id))
-        })
+        }
+      )
+
+      console.log('Order canceled successfully:', response.data)
+
+      // Sau khi thành công, gọi action để lấy lại chi tiết
+      dispatch(getRequestDetailRequest(id))
     } catch (error) {
-      console.error('Error change order status', error)
+      console.error(
+        'Error changing order status:',
+        error.response?.data || error.message
+      )
     }
   }
 
@@ -84,7 +97,7 @@ const TransactionRequestDetail = () => {
       axios
         .put(
           `http://localhost:9999/api/inventory/request/${id}/status`,
-          { status: 'APPROVED' },
+          { status: 'APPROVED', is_cancel: false },
           {
             headers: {
               Authorization: `Bearer ${token}`

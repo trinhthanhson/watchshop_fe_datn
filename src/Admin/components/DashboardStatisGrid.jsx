@@ -18,7 +18,8 @@ const DashboardStatisGrid = () => {
   const orders = useSelector((state) => state.orders.orders)
   const customers = useSelector((state) => state.customers.customers)
   const [doanhthu, setDoanhThu] = useState(null)
-
+  const [startDate, setStartDate] = useState(null)
+  const [endDate, setEndDate] = useState(null)
   useEffect(() => {
     try {
       dispatch(getAllOrdersRequest())
@@ -28,25 +29,29 @@ const DashboardStatisGrid = () => {
     }
   }, [dispatch])
   useEffect(() => {
-    const fetchTotalPrice = async () => {
+    const fetchTotalPrice = async (startDate, endDate) => {
       try {
         const token = localStorage.getItem('token')
         const response = await axios.get(
-          'http://localhost:9999/api/inventory/statistic/sales',
+          `http://localhost:9999/api/statistic/revenue/report`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
               'Content-Type': 'application/json'
+            },
+            params: {
+              // Thêm tham số start và end
+              start: startDate,
+              end: endDate
             }
           }
         )
-        // Assuming you want the total price from the first object in the data array
         if (
           response.data &&
           response.data.data &&
           response.data.data.length > 0
         ) {
-          setDoanhThu(response.data?.data[0].total_price)
+          setDoanhThu(response.data.data[0].total_price)
         } else {
           console.error('Unexpected response format:', response.data)
         }
@@ -55,7 +60,7 @@ const DashboardStatisGrid = () => {
       }
     }
 
-    fetchTotalPrice()
+    fetchTotalPrice(startDate, endDate)
   }, [])
   // Calculate the total price of all orders
   const totalPrice =
