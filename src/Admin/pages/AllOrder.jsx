@@ -131,6 +131,7 @@ const AllOrder = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Orders')
     XLSX.writeFile(workbook, 'orders.xlsx')
   }
+
   return (
     <>
       <div className="ml-[18%] w-[80%] font-RobotoMedium">
@@ -256,8 +257,8 @@ const AllOrder = () => {
                 <td>{order.total_price.toLocaleString('en')} VNĐ</td>
                 <td>{new Date(order.created_at).toLocaleDateString()}</td>
                 <td className="text-center align-middle">
-                  <span className="inline-block bg-gray-500 text-white px-2 py-1 border border-black rounded-md text-sm">
-                    {order?.order_status?.status_name}
+                  <span className="inline-block text-black px-2 py-1 border rounded-md text-sm bg-blue-">
+                    {order?.order_status?.status_name || 'Unknown'}
                   </span>
                 </td>
               </tr>

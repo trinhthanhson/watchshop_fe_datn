@@ -112,7 +112,7 @@ const AdminOrderDetail = () => {
       console.error('Error changing order status', error)
     }
   }
-  console.log("dd",check)
+  console.log('dd', check)
   // Lấy tên trạng thái tiếp theo
   useEffect(() => {
     const fetchNextStatusName = async () => {

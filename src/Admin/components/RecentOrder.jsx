@@ -68,7 +68,7 @@ const RecentOrder = () => {
                           ])
                         ).values()
                       ]
-                        .slice(0, 3) // Giới hạn chỉ hiển thị 3 hình ảnh
+                        .slice(0, 2) // Giới hạn chỉ hiển thị 3 hình ảnh
                         .map((uniqueItem, index) => (
                           <img
                             key={index}
@@ -83,8 +83,10 @@ const RecentOrder = () => {
                             }
                           />
                         ))}
-                      {order.orderDetails.length > 3 && (
-                        <span className="text-sm text-gray-500">...</span> // Hiển thị "..." nếu có nhiều hơn 3 hình ảnh
+                      {order.orderDetails.length > 2 && (
+                        <span className="text-sm font-medium text-gray-600 ml-2">
+                          +{order.orderDetails.length - 2} ...
+                        </span>
                       )}
                     </td>
                     <td className="max-w-xs overflow-hidden text-ellipsis">

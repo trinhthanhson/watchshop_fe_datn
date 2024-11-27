@@ -7,6 +7,7 @@ import {
   getAllCartRequest,
   getUserProfileRequest
 } from '../../redux/actions/actions'
+import { toast } from 'react-toastify'
 
 const Checkout = () => {
   const activeStep = -1
@@ -122,6 +123,8 @@ const Checkout = () => {
       }
 
       const data = await response.json()
+      toast.success('Đặt hàng thành công')
+
       if (data.code === 201) {
         setSuccess('Order placed successfully!')
         navigate('/orders-history')
