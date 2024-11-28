@@ -2,16 +2,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { sortByDate } from '../../../utils/sort'
-import { getAllQuantityProductSuccess } from '../../../redux/actions/statistic/action'
+import { getAllQuantityProductRequest } from '../../../redux/actions/statistic/action'
 
 const RecentActualInventory = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const orders = useSelector((state) => state.orders.orders)
-
+  const quantity_report = useSelector((state) => state)
+  console.log(quantity_report)
   useEffect(() => {
     try {
-      dispatch(getAllQuantityProductSuccess())
+      dispatch(getAllQuantityProductRequest({ filter: 'week' })) // Đảm bảo truyền filter dưới dạng object
     } catch (error) {
       console.error('Error dispatch', error)
     }
@@ -20,7 +20,7 @@ const RecentActualInventory = () => {
   return (
     <div className="bg-white px-4 pt-3 pb-4 rounded-md border border-gray-200 flex-1">
       <div className="flex justify-between">
-        <strong className="text-sub font-semibold">Đơn hàng gần đây</strong>
+        <strong className="text-sub font-semibold">Thống kê tồn kho</strong>
 
         <p
           onClick={() => navigate('/manager/orders')}
@@ -48,7 +48,7 @@ const RecentActualInventory = () => {
             </tr>
           </thead>
           <tbody>
-            {orders?.data &&
+            {/* {orders?.data &&
               sortByDate(orders?.data, 'create_at')
                 .slice(0, 3)
                 .map((order, index) => (
@@ -102,7 +102,7 @@ const RecentActualInventory = () => {
                       {order?.order_status?.status_name}
                     </td>
                   </tr>
-                ))}
+                ))} */}
           </tbody>
         </table>
       </div>

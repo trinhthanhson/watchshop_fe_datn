@@ -33,7 +33,7 @@ const DashboardStatisGrid = () => {
       try {
         const token = localStorage.getItem('token')
         const response = await axios.get(
-          'http://localhost:9999/api/statistic/sales',
+          'http://localhost:9999/api/statistic/sales/top',
           {
             headers: {
               Authorization: `Bearer ${token}`,

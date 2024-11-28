@@ -23,8 +23,9 @@ export const getStatisticFailure = (error) => ({
 })
 
 // -------- Get quantity product report ---------
-export const getAllQuantityProductRequest = () => ({
-  type: GET_QUANTITY_PRODUCT_REPORT_REQUEST
+export const getAllQuantityProductRequest = (filter) => ({
+  type: GET_QUANTITY_PRODUCT_REPORT_REQUEST,
+  payload: filter
 })
 
 export const getAllQuantityProductSuccess = (quantity_report) => ({
