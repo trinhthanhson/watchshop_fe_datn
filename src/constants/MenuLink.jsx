@@ -22,38 +22,38 @@ export const DASHBOARD_SIDEBAR_TOP_LINKS = [
   },
   {
     key: 'products',
-    label: 'Products',
+    label: 'Sản phẩm',
     path: '/manager/products',
     icon: <HiOutlineCube />
   },
   {
     key: 'orders',
-    label: 'Orders',
+    label: 'Đơn hàng',
     path: '/manager/orders',
     icon: <HiOutlineShoppingCart />
   },
   {
     key: 'customers',
-    label: 'Customers',
+    label: 'Khách hàng',
     path: '/manager/customers',
     icon: <HiOutlineUserGroup />
   },
 
   {
     key: 'category',
-    label: 'Category',
+    label: 'Loại sản phẩm',
     path: '/manager/category',
     icon: <HiOutlineServer />
   },
   {
     key: 'brand',
-    label: 'Brand',
+    label: 'Hãng sản phẩm',
     path: '/manager/brand',
     icon: <HiOutlineServer />
   },
   {
     key: 'coupons',
-    label: 'Coupons',
+    label: 'Giảm giá',
     path: '/manager/coupons',
     icon: <HiOutlineReceiptTax />
   }
@@ -62,13 +62,13 @@ export const DASHBOARD_SIDEBAR_TOP_LINKS = [
 export const DASHBOARD_SIDEBAR_TOP_LINKS_SHIPPER = [
   {
     key: 'orders',
-    label: 'Orders',
+    label: 'Đơn hàng',
     path: '/manager/shipper',
     icon: <HiOutlineShoppingCart />
   },
   {
     key: 'ordership',
-    label: 'Order received ',
+    label: 'Đơn hàng đã nhận',
     path: '/manager/shipper/receive',
     icon: <HiOutlineShoppingCart />
   }
@@ -82,72 +82,72 @@ export const DASHBOARD_SIDEBAR_TOP_LINKS_INVENTORY = [
   },
   {
     key: 'products',
-    label: 'Product',
+    label: 'Sản phẩm',
     path: '/inventory/product',
     icon: <MdWatch />
   },
   {
     key: 'request',
-    label: 'Transaction Request',
+    label: 'Phiếu đề nghị',
     path: '/inventory/request',
     icon: <GrTransaction />
   },
   {
     key: 'transaction',
-    label: 'Transaction',
+    label: 'Phiếu nhập/xuất',
     path: '/inventory/transaction',
     icon: <GrTransaction />
   },
   {
     key: 'staff',
-    label: 'Staff Inventory',
+    label: 'Nhân viên kho',
     path: '/inventory/staff ',
     icon: <FaPeopleLine />
   },
   {
     key: 'type',
-    label: 'Type Transaction',
+    label: 'Loại phiếu',
     path: '/inventory/type',
     icon: <BiText />
   },
   {
     key: 'brand',
-    label: 'Brand',
+    label: 'Hãng sản phẩm',
     path: '/inventory/brand',
     icon: <HiOutlineServer />
   },
   {
     key: 'category',
-    label: 'Category',
+    label: 'Loại sản phẩm',
     path: '/inventory/category',
     icon: <HiOutlineServer />
   },
   {
     key: 'supplier',
-    label: 'Supplier',
+    label: 'Nhà cung cấp',
     path: '/inventory/supplier',
     icon: <HiOutlineServer />
   },
   {
     key: 'report',
-    label: 'Report',
+    label: 'Báo cáo',
     icon: <HiOutlineDocumentText />,
     subLinks: [
       {
         key: 'report-import',
-        label: 'Report Import',
+        label: 'Báo cáo nhập',
         path: '/inventory/report/import',
         icon: <HiOutlineDocumentReport />
       },
       {
         key: 'report-export',
-        label: 'Report Export',
+        label: 'Báo cáo xuất',
         path: '/inventory/report/export',
         icon: <HiOutlineDocumentReport />
       },
       {
         key: 'report-all',
-        label: 'Report All',
+        label: 'Báo cáo tổng',
         path: '/inventory/report/all',
         icon: <HiOutlineDocumentReport />
       }
@@ -158,7 +158,7 @@ export const DASHBOARD_SIDEBAR_TOP_LINKS_INVENTORY = [
 export const DASHBOARD_SIDEBAR_BOTTOM_LINKS = [
   {
     key: 'settings',
-    label: 'Settings',
+    label: 'Cài đặt',
     path: '/manager/settings',
     icon: <HiOutlineCog />
   }

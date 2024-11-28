@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FaShoppingCart } from 'react-icons/fa'
+import {
+  FaShoppingCart,
+  FaUser,
+  FaClipboardList,
+  FaSignOutAlt
+} from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllCartRequest } from '../redux/actions/actions'
 import axios from 'axios'
@@ -399,24 +404,36 @@ const Navbar = () => {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="origin-top-left z-10 absolute right-3 mt-2 w-40 rounded-md bg-white shadow-md p-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="origin-top-left z-10 absolute right-3 mt-2 w-60 rounded-md bg-white shadow-md p-1 ring-black ring-opacity-5 focus:outline-none">
                       <Menu.Item>
                         {({ active }) => (
                           <div
-                            className={`${active && 'text-white bg-primary font-normal'} block text-primary focus:bg-hoverPrimary cursor-pointer px-4 py-2 rounded-md`}
+                            className={`${
+                              active
+                                ? 'text-white bg-primary font-normal'
+                                : 'text-primary'
+                            } block focus:bg-hoverPrimary cursor-pointer px-4 py-2 rounded-md flex items-center`}
                             onClick={() => navigate('/profile')}
                           >
-                            Your Profile
+                            <FaUser className="mr-2" />{' '}
+                            {/* Biểu tượng người dùng */}
+                            <span>Thông tin cá nhân</span>
                           </div>
                         )}
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
                           <div
-                            className={`${active && 'text-white bg-primary font-normal'} block text-primary focus:bg-hoverPrimary cursor-pointer px-4 py-2 rounded-md`}
+                            className={`${
+                              active
+                                ? 'text-white bg-primary font-normal'
+                                : 'text-primary'
+                            } block focus:bg-hoverPrimary cursor-pointer px-4 py-2 rounded-md flex items-center`}
                             onClick={() => navigate('/orders-history')}
                           >
-                            Orders History
+                            <FaClipboardList className="mr-2" />{' '}
+                            {/* Biểu tượng lịch sử đơn hàng */}
+                            <span>Lịch sử đơn hàng</span>
                           </div>
                         )}
                       </Menu.Item>
@@ -424,9 +441,15 @@ const Navbar = () => {
                         {({ active }) => (
                           <div
                             onClick={handleLogout}
-                            className={`${active && 'text-white bg-primary font-normal'} block text-primary focus:bg-hoverPrimary cursor-pointer px-4 py-2 rounded-md`}
+                            className={`${
+                              active
+                                ? 'text-white bg-primary font-normal'
+                                : 'text-primary'
+                            } block focus:bg-hoverPrimary cursor-pointer px-4 py-2 rounded-md flex items-center`}
                           >
-                            Logout
+                            <FaSignOutAlt className="mr-2" />{' '}
+                            {/* Biểu tượng đăng xuất */}
+                            <span>Đăng xuất</span>
                           </div>
                         )}
                       </Menu.Item>

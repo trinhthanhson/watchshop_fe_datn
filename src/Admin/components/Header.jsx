@@ -5,8 +5,9 @@ import {
   HiOutlineChatAlt,
   HiOutlineSearch
 } from 'react-icons/hi'
+import { FaUser, FaSignOutAlt } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
-
+import { IoIosSettings } from 'react-icons/io'
 const Header = () => {
   const navigate = useNavigate()
 
@@ -114,24 +115,35 @@ const Header = () => {
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="origin-top-right z-10 absolute right-0 mt-2 w-40 rounded-md bg-white shadow-md p-1 ring-black ring-opacity-5 focus:outline-none">
+            <Menu.Items className="origin-top-right z-10 absolute right-0 mt-2 w-60 rounded-md bg-white shadow-md p-1 ring-black ring-opacity-5 focus:outline-none">
               <Menu.Item>
                 {({ active }) => (
                   <div
-                    className={`${active && 'text-white bg-primary font-normal'} block text-primary focus:bg-hoverPrimary cursor-pointer px-4 py-2 rounded-md`}
+                    className={`${
+                      active
+                        ? 'text-white bg-primary font-normal'
+                        : 'text-primary'
+                    } block focus:bg-hoverPrimary cursor-pointer px-4 py-2 rounded-md flex items-center`}
                     onClick={() => navigate('/manager/profile')}
                   >
-                    Your Profile
+                    <FaUser className="mr-2" /> {/* Biểu tượng người dùng */}
+                    <span>Thông tin cá nhân</span>
                   </div>
                 )}
               </Menu.Item>
               <Menu.Item>
                 {({ active }) => (
                   <div
-                    className={`${active && 'text-white bg-primary font-normal'} block text-primary focus:bg-hoverPrimary cursor-pointer px-4 py-2 rounded-md`}
+                    className={`${
+                      active
+                        ? 'text-white bg-primary font-normal'
+                        : 'text-primary'
+                    } block focus:bg-hoverPrimary cursor-pointer px-4 py-2 rounded-md flex items-center`}
                     onClick={() => navigate('/manager/settings')}
                   >
-                    Settings
+                    <IoIosSettings className="mr-2" />{' '}
+                    {/* Biểu tượng cài đặt */}
+                    <span>Cài đặt</span>
                   </div>
                 )}
               </Menu.Item>
@@ -139,9 +151,15 @@ const Header = () => {
                 {({ active }) => (
                   <div
                     onClick={handleLogout}
-                    className={`${active && 'text-white bg-primary font-normal'} block text-primary focus:bg-hoverPrimary cursor-pointer px-4 py-2 rounded-md`}
+                    className={`${
+                      active
+                        ? 'text-white bg-primary font-normal'
+                        : 'text-primary'
+                    } block focus:bg-hoverPrimary cursor-pointer px-4 py-2 rounded-md flex items-center`}
                   >
-                    Logout
+                    <FaSignOutAlt className="mr-2" />{' '}
+                    {/* Biểu tượng đăng xuất */}
+                    <span>Đăng xuất</span>
                   </div>
                 )}
               </Menu.Item>

@@ -17,14 +17,13 @@ const ColumnChartStatistics = () => {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [viewMode, setViewMode] = useState('chart') // 'chart' or 'table'
-  const [typeName, selectType] = useState('EXPORT')
   // Fetch yearly data
   const fetchData = async () => {
     try {
       const token = localStorage.getItem('token')
 
       const response = await fetch(
-        `http://localhost:9999/api/statistic/year?year=${selectedYear}&type=${typeName}`, // Truyền year và typeName vào URL
+        `http://localhost:9999/api/statistic/year?year=${selectedYear}`, // Truyền year và typeName vào URL
         {
           method: 'GET', // Đảm bảo phương thức GET
           headers: {
@@ -111,10 +110,6 @@ const ColumnChartStatistics = () => {
     setSelectedYear(parseInt(event.target.value))
     setStartDate('')
     setEndDate('')
-  }
-
-  const handleTypeChange = (event) => {
-    selectType(parseInt(event.target.value))
   }
 
   // Handle date range submission
@@ -207,20 +202,6 @@ const ColumnChartStatistics = () => {
             <option value={2022}>2022</option>
             <option value={2023}>2023</option>
             <option value={2024}>2024</option>
-          </select>
-        </div>
-        <div className="ml-4">
-          <label htmlFor="typeSelect" className="mr-2 font-RobotoMedium">
-            Chọn loại:
-          </label>
-          <select
-            id="typeSelect"
-            value={typeName}
-            onChange={handleTypeChange}
-            className="rounded-md font-RobotoMedium focus:border-none"
-          >
-            <option value="IMPORT">IMPORT</option>
-            <option value="EXPORT">EXPORT</option>
           </select>
         </div>
       </div>

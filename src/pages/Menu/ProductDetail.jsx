@@ -293,7 +293,7 @@ const ProductDetail = () => {
             <div className="p-5">
               <div className="flex items-center mb-5">
                 <h2 className="text-primary text-2xl flex items-center">
-                  Reviews ({calculateAverageRating()} / 5)
+                  Đánh giá ({calculateAverageRating()} / 5)
                 </h2>
                 <FaStar
                   className="ml-1 text-yellow-500"
@@ -318,7 +318,7 @@ const ProductDetail = () => {
                   </div>
                 ))
               ) : (
-                <p className="text-main text-lg">No reviews yet.</p>
+                <p className="text-main text-lg">Chưa có đánh giá.</p>
               )}
             </div>
           </div>
@@ -351,19 +351,19 @@ const ProductDetail = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Object.entries({
-              'Band Material': selectedProduct?.band_material,
-              'Band Width': selectedProduct?.band_width,
-              'Case Diameter': selectedProduct?.case_diameter,
-              'Case Material': selectedProduct?.case_material,
-              'Case Thickness': selectedProduct?.case_thickness,
-              Color: selectedProduct?.color,
-              'Dial Type': selectedProduct?.dial_type,
-              Functions: selectedProduct?.func,
-              Gender: selectedProduct?.gender,
-              Model: selectedProduct?.model,
-              Movement: selectedProduct?.machine_movement,
-              Series: selectedProduct?.series,
-              'Water Resistance': selectedProduct?.water_resistance
+              'Chất liệu dây đeo': selectedProduct?.band_material,
+              'Độ rộng dây đeo': selectedProduct?.band_width,
+              'Đường kính mặt đồng hồ': selectedProduct?.case_diameter,
+              'Chất liệu vỏ': selectedProduct?.case_material,
+              'Độ dày mặt đồng hồ': selectedProduct?.case_thickness,
+              'Màu sắc': selectedProduct?.color,
+              'Loại mặt số': selectedProduct?.dial_type,
+              'Chức năng': selectedProduct?.func,
+              'Giới tính': selectedProduct?.gender,
+              'Mẫu mã': selectedProduct?.model,
+              'Bộ máy': selectedProduct?.machine_movement,
+              'Dòng sản phẩm': selectedProduct?.series,
+              'Khả năng chống nước': selectedProduct?.water_resistance
             })
               // Lọc ra các mục có giá trị khác null
               .filter(([, value]) => value !== '')

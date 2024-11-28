@@ -182,155 +182,124 @@ const Login = () => {
   return (
     <Helmet title="Login">
       <div className="full-screen relative z-[-1]">
+        {/* Background */}
         <img
-          className="fixed h-full w-full hover:cursor-none"
+          className="fixed h-full w-full object-cover hover:cursor-none"
           src="https://firebasestorage.googleapis.com/v0/b/watch-shop-3a14f.appspot.com/o/images%2Fbackground.jpg?alt=media&token=edae71b6-7155-4d79-b78c-636c0a929ce6"
           alt="Background"
         />
+        {/* Logo */}
         <img
           onClick={handleGoHome}
-          className="absolute cursor-pointer w-[100px] h-[80px] ml-3 py-[10px] pl-3"
+          className="absolute cursor-pointer w-16 h-12 sm:w-24 sm:h-16 md:w-28 md:h-20 top-4 left-4"
           src="https://firebasestorage.googleapis.com/v0/b/watch-shop-3a14f.appspot.com/o/images%2Flogo.png?alt=media&token=ff560732-bd5c-43d0-9271-7bcd3d9204ea"
           alt="Logo"
         />
+        {/* Login Form */}
         <div
-          className="layout_login absolute flex justify-center items-center mt-[10%] ml-[27%] w-[45%] rounded-[15px]"
+          className="layout_login absolute top-1/2 left-1/2 transform -translate-x-1/2 flex flex-col justify-center items-center w-[90%] max-w-[500px] sm:max-w-[600px] lg:max-w-[700px] p-6 sm:p-8 rounded-lg"
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0.9)', // Nền trắng với độ trong suốt 90%
             backdropFilter: 'blur(5px)', // Hiệu ứng mờ nền phía sau
             border: '1px solid rgba(200, 200, 200, 0.8)', // Viền màu trắng xám
             boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.3)', // Bóng đổ để hộp nổi bật
-            height: '50vh', // Giảm chiều cao để nhỏ gọn hơn
-            padding: '20px' // Khoảng cách bên trong
+            marginTop: '10%'
           }}
         >
-          <div className="flex-col col-span-1 w-2/3">
-            {showForgotPassword ? (
-              <div className="forgot-password-form flex flex-col items-center justify-center">
-                <h1 className="text-center mb-8 text-main text-[25px] uppercase text-white">
-                  Forgot Password
-                </h1>
-                <div className="input">
-                  <label className="text-white">Email</label>
-                  <input
-                    type="text"
-                    value={email}
-                    onChange={handleEmailChange}
-                    className="h-8 w-[45%] outline-0 bg-[#ebebeb] p-2 rounded"
-                    style={{ width: '300px' }}
-                  />
-                </div>
-                <div className="btn_submit" style={{ width: '300px' }}>
-                  <button
-                    className="uppercase"
-                    type="button"
-                    onClick={handleForgotPasswordSubmit}
-                    disabled={loading}
-                  >
-                    {loading ? 'Đang gửi...' : 'Gửi'}
-                  </button>
-                </div>
-                {message && <p className="text-white mt-4">{message}</p>}
-                <div className="btn_submit" style={{ width: '300px' }}>
-                  <button
-                    className="text-white mt-4 underline"
-                    onClick={handleCloseForgotPassword}
-                  >
-                    Back to Login
-                  </button>
-                </div>
+          {/* Forgot Password */}
+          {showForgotPassword ? (
+            <div className="forgot-password-form flex flex-col items-center justify-center w-full">
+              <h1 className="text-center mb-8 text-main text-lg sm:text-xl lg:text-2xl uppercase text-black ">
+                Quên mật khẩu
+              </h1>
+              <div className="input w-full mb-4">
+                <label className="text-gray-700 block mb-2">Email</label>
+                <input
+                  type="text"
+                  value={email}
+                  onChange={handleEmailChange}
+                  className="h-10 w-full border border-gray-300 bg-gray-100 p-2 rounded-md"
+                />
               </div>
-            ) : (
-              <>
-                <h1 className="font-RobotoSemibold text-center mb-8 text-main text-[25px] uppercase text-red ml-[50px]">
-                  Đăng Nhập
-                </h1>
-                {message && (
-                  <p
-                    className="text-white mt-4"
-                    style={{ color: 'rgb(255 191 124)', marginLeft: '200px' }}
-                  >
-                    {message}
-                  </p>
-                )}
-                <div className="input mb-4 w-[700px] ml-[-120px]">
-                  <label className="text-red text-xl block text-center mb-2 ml-[15%]">
-                    Username
-                  </label>
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={handleUsernameChange}
-                    className="h-12 bg-[#ebebeb] p-3 rounded border-2 border-[#666]"
-                    style={{
-                      height: '40px',
-                      padding: '12px', // Cân chỉnh padding đều
-                      borderRadius: '5px' // Đảm bảo border-radius giống nhau
-                    }}
-                  />
-                </div>
-                <div className="input mb-4 w-[700px] ml-[-120px]">
-                  <label className="text-red text-xl block text-center mb-2 ml-[15%]">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={handlePasswordChange}
-                    className="h-12 outline-0 bg-[#ebebeb] p-3 rounded border-2 border-[#666]"
-                    style={{
-                      height: '40px',
-                      padding: '12px',
-                      borderRadius: '5px'
-                    }}
-                  />
-                </div>
-                {passwordError && (
-                  <p
-                    className="text-red-500"
-                    style={{ color: 'red', marginLeft: 130 }}
-                  >
-                    {passwordError}
-                  </p>
-                )}
-                <a
-                  onClick={handleForgotPassword}
-                  className="link_forgotPass text-red mt-2"
-                >
-                  Quên Mật Khẩu
+              <button
+                className="uppercase w-full bg-blue-500 text-white py-2 rounded-md mt-4 hover:bg-blue-600"
+                type="button"
+                onClick={handleForgotPasswordSubmit}
+                disabled={loading}
+              >
+                {loading ? 'Đang gửi...' : 'Gửi'}
+              </button>
+              {message && <p className="text-green-500 mt-4">{message}</p>}
+              <button
+                className="text-blue-500 mt-4 underline"
+                onClick={handleCloseForgotPassword}
+              >
+                Back to Login
+              </button>
+            </div>
+          ) : (
+            <>
+              {/* Login */}
+              <h1 className="font-RobotoSemibold text-center mb-8 text-main text-[25px] uppercase text-red ml-[50px]">
+                Đăng Nhập
+              </h1>
+              {message && (
+                <p className="text-red-500 text-center mb-4">{message}</p>
+              )}
+              <div className="input mb-4 w-full">
+                <label className="text-gray-700 block text-center mb-2 font-RobotoSemibold text-red">
+                  Tên đăng nhập
+                </label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={handleUsernameChange}
+                  className="h-10 w-full border border-gray-300 bg-gray-100 p-2 rounded-md"
+                />
+              </div>
+              <div className="input mb-4 w-full">
+                <label className="text-gray-700 block text-center mb-2 font-RobotoSemibold text-red">
+                  Mật khẩu
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  className="h-10 w-full border border-gray-300 bg-gray-100 p-2 rounded-md"
+                />
+              </div>
+              {passwordError && (
+                <p className="text-red text-center mb-4">{passwordError}</p>
+              )}
+              <a
+                onClick={handleForgotPassword}
+                className="font-RobotoSemibold text-red underline text-center block mb-4 cursor-pointer"
+              >
+                Quên Mật Khẩu
+              </a>
+              <button
+                className="w-full bg-red text-white py-2 rounded-md hover:bg-red"
+                type="button"
+                onClick={handleLogin}
+                disabled={isLoggingIn}
+              >
+                {isLoggingIn ? 'Đang đăng nhập...' : 'Đăng nhập'}
+              </button>
+              <button
+                className="w-full bg-red text-white py-2 rounded-md mt-4"
+                type="button"
+                onClick={handleGoogleLogin}
+              >
+                Đăng nhập bằng Google
+              </button>
+              <div className="text-center mt-6">
+                <span>Bạn chưa có tài khoản? </span>
+                <a className="text-red underline" href="/signup">
+                  Đăng Ký Ngay
                 </a>
-                <div className="btn_submit mt-3 ml-8">
-                  {' '}
-                  {/* Thêm margin-top để căn khoảng cách cho nút */}
-                  <button
-                    className="uppercase"
-                    type="button"
-                    onClick={handleLogin}
-                    disabled={isLoggingIn}
-                  >
-                    {isLoggingIn ? 'Đang đăng nhập...' : 'Đăng nhập'}
-                  </button>
-                </div>
-                <div className="btn_submit mt-3 ml-8">
-                  {' '}
-                  {/* Thêm margin-top để căn khoảng cách cho nút */}
-                  <button
-                    className="uppercase"
-                    type="button"
-                    onClick={handleGoogleLogin}
-                  >
-                    Đăng nhập bằng Google
-                  </button>
-                </div>
-                <div className="ml-[26%] text-red mt-6">
-                  <span>Bạn chưa có tài khoản? </span>
-                  <a className="link_signup  text-red " href="/signup">
-                    Đăng Ký Ngay
-                  </a>
-                </div>
-              </>
-            )}
-          </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </Helmet>

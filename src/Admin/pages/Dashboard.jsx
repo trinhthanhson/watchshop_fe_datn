@@ -3,6 +3,7 @@ import DashboardStatisGrid from '../components/DashboardStatisGrid'
 import PieChartStatistics from '../components/PieChartStatistics'
 import RecentOrder from '../components/RecentOrder'
 import NewCustomers from '../components/NewCustomers'
+import RecentActualInventory from '../components/inventory/RecentActualInventory'
 
 const Dashboard = () => {
   return (
@@ -16,6 +17,7 @@ const Dashboard = () => {
         <RecentOrder />
         <NewCustomers />
       </div>
+      <RecentActualInventory />
     </div>
   )
 }

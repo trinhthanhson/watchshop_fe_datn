@@ -33,6 +33,7 @@ import staffManagerReducer from './manager/staffReducer'
 import createTransactionReducer from './inventory/manager/createTransactionReducer'
 import statisticReducer from './statistic/statisticReducer'
 import getDataNotFullReducer from './inventory/manager/getDataNotFullReducer'
+import quantityReportReducer from './statistic/quantityReportReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -68,7 +69,8 @@ const rootReducer = combineReducers({
   managerStaff: staffManagerReducer,
   createTransaction: createTransactionReducer,
   statistic: statisticReducer,
-  notfull: getDataNotFullReducer
+  notfull: getDataNotFullReducer,
+  quantity_report: quantityReportReducer
 })
 
 export default rootReducer

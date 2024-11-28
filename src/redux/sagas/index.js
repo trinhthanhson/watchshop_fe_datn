@@ -33,6 +33,7 @@ import staffManagerSaga from './manager/staffSaga'
 import createTransactionSaga from './inventory/manager/createTransaction'
 import statisticSaga from './statistic/statisticSaga'
 import dataNotFullSaga from './inventory/manager/getDataNotFullSaga'
+import quantityReportSaga from './statistic/quantityReportSaga'
 export default function* rootSaga() {
   yield all([
     newSaga(),
@@ -68,6 +69,7 @@ export default function* rootSaga() {
     typeSaga(),
     createTransactionSaga(),
     statisticSaga(),
-    dataNotFullSaga()
+    dataNotFullSaga(),
+    quantityReportSaga()
   ])
 }

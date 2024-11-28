@@ -1,17 +1,17 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { getAllOrdersRequest } from '../../redux/actions/actions'
-import { sortByDate } from '../../utils/sort'
 import { useNavigate } from 'react-router-dom'
+import { sortByDate } from '../../../utils/sort'
+import { getAllQuantityProductSuccess } from '../../../redux/actions/statistic/action'
 
-const RecentOrder = () => {
+const RecentActualInventory = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const orders = useSelector((state) => state.orders.orders)
 
   useEffect(() => {
     try {
-      dispatch(getAllOrdersRequest())
+      dispatch(getAllQuantityProductSuccess())
     } catch (error) {
       console.error('Error dispatch', error)
     }
@@ -110,4 +110,4 @@ const RecentOrder = () => {
   )
 }
 
-export default RecentOrder
+export default RecentActualInventory

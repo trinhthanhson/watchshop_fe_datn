@@ -86,7 +86,7 @@ const Sidebar = () => {
                 <div>
                   <HiOutlineUserGroup />
                 </div>
-                <div>Order Status</div>
+                <div>Quá trình đơn hàng</div>
               </div>
             </Link>
             <Link key="staffs" to="/manager/staffs">
@@ -106,7 +106,7 @@ const Sidebar = () => {
                 <div>
                   <HiOutlineUserGroup />
                 </div>
-                <div>Staffs</div>
+                <div>Nhân viên</div>
               </div>
             </Link>
           </>
@@ -160,7 +160,7 @@ const Sidebar = () => {
           style={{ color: 'rgb(253 0 15)' }}
         >
           <HiOutlineLogout />
-          <div onClick={handleLogout}>Logout</div>
+          <div onClick={handleLogout}>Đăng xuất</div>
         </div>
       </div>
     </div>
