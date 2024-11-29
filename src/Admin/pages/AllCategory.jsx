@@ -14,7 +14,8 @@ const AllCategory = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(null)
   const [newCategoryName, setNewCategoryName] = useState('')
   const [deletedCategoryId, setDeletedCategoryId] = useState(null)
-
+  const [currentPage, setCurrentPage] = useState(1) // Trang hiện tại
+  const itemsPerPage = 10 // Số s
   useEffect(() => {
     try {
       dispatch(getAllCategoriesRequest())
@@ -30,6 +31,19 @@ const AllCategory = () => {
   const handleCloseDialog = () => {
     setShowDialog(false)
     setNewCategoryName('')
+  }
+
+  // Tính toán sản phẩm cho trang hiện tại
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentProducts = categories?.data?.slice(startIndex, endIndex)
+
+  const totalPages = Math.ceil((categories?.data?.length || 0) / itemsPerPage)
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage)
+    }
   }
 
   const handleAddCategory = async () => {
@@ -149,8 +163,8 @@ const AllCategory = () => {
             </tr>
           </thead>
           <tbody>
-            {categories?.data &&
-              categories?.data.map((category, index) => (
+            {currentProducts &&
+              currentProducts.map((category, index) => (
                 <tr
                   key={category.slug}
                   className=" hover:bg-gray-100 transition-colors ease-in-out transform "
@@ -198,6 +212,44 @@ const AllCategory = () => {
               ))}
           </tbody>
         </table>
+
+        {/* Điều khiển phân trang */}
+        <div className="flex justify-center mt-4 space-x-2 mb-2">
+          {/* Nút Previous */}
+          <button
+            className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+
+          {/* Hiển thị số trang */}
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+            (page) => (
+              <button
+                key={page}
+                className={`p-2 border rounded-md transition-transform duration-200 transform cursor-pointer ${
+                  currentPage === page
+                    ? 'bg-primary text-white'
+                    : 'hover:bg-gray-300'
+                }`}
+                onClick={() => handlePageChange(page)}
+              >
+                {page}
+              </button>
+            )
+          )}
+
+          {/* Nút Next */}
+          <button
+            className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
       </div>
       <div className="fixed right-6 bottom-3 hover:bg-gray-300 transition-transform rounded-full duration-200 transform hover:scale-125 p-2 ">
         <IoIosAddCircle

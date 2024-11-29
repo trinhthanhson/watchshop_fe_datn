@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllCustomersRequest } from '../../redux/actions/actions'
 import { getStatus } from '../../constants/Status'
@@ -10,6 +10,8 @@ const AllCustomers = () => {
   const dispatch = useDispatch()
   const customers = useSelector((state) => state.customers.customers)
   const navigate = useNavigate()
+  const [currentPage, setCurrentPage] = useState(1) // Trang hiện tại
+  const itemsPerPage = 10 // Số sản phẩm mỗi trang
   useEffect(() => {
     try {
       dispatch(getAllCustomersRequest())
@@ -17,6 +19,20 @@ const AllCustomers = () => {
       console.error('Error dispatch', error)
     }
   }, [dispatch])
+
+  // Tính toán sản phẩm cho trang hiện tại
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentCustomer = customers?.data?.slice(startIndex, endIndex)
+
+  const totalPages = Math.ceil((customers?.data?.length || 0) / itemsPerPage)
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage)
+    }
+  }
+
   return (
     <div className="flex flex-col gap-4 w-[80%] ml-[18%] rounded-md shadow-md bg-white mt-5">
       <table className="w-full text-gray-700">
@@ -33,8 +49,8 @@ const AllCustomers = () => {
           </tr>
         </thead>
         <tbody>
-          {customers?.data &&
-            customers?.data
+          {currentCustomer &&
+            currentCustomer
               .filter((customer) => customer.username !== 'admin')
               .map((customer) => (
                 <tr
@@ -70,6 +86,44 @@ const AllCustomers = () => {
               ))}
         </tbody>
       </table>
+
+      {/* Điều khiển phân trang */}
+      <div className="flex justify-center mt-4 space-x-2 mb-2">
+        {/* Nút Previous */}
+        <button
+          className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+
+        {/* Hiển thị số trang */}
+        {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+          (page) => (
+            <button
+              key={page}
+              className={`p-2 border rounded-md transition-transform duration-200 transform cursor-pointer ${
+                currentPage === page
+                  ? 'bg-primary text-white'
+                  : 'hover:bg-gray-300'
+              }`}
+              onClick={() => handlePageChange(page)}
+            >
+              {page}
+            </button>
+          )
+        )}
+
+        {/* Nút Next */}
+        <button
+          className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
     </div>
   )
 }

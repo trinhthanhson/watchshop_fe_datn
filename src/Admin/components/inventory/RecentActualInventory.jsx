@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { getAllQuantityProductRequest } from '../../../redux/actions/statistic/action'
-import { Button } from '@mui/material'
 
 const RecentActualInventory = () => {
   const dispatch = useDispatch()
@@ -10,11 +9,11 @@ const RecentActualInventory = () => {
   const quantity_report = useSelector(
     (state) => state.quantity_report.quantity_report
   )
-  console.log(quantity_report)
-
   const [filter, setFilter] = useState('week') // Giá trị mặc định là 'week'
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1) // Trang hiện tại
+  const itemsPerPage = 10 // Số sản phẩm mỗi trang
   const handleReset = () => {
     setStartDate(null)
     setEndDate(null)
@@ -34,6 +33,20 @@ const RecentActualInventory = () => {
     }
   }, [dispatch, filter, startDate, endDate])
 
+  // Tính toán sản phẩm cho trang hiện tại
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentProducts = quantity_report?.data?.slice(startIndex, endIndex)
+
+  const totalPages = Math.ceil(
+    (quantity_report?.data?.length || 0) / itemsPerPage
+  )
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage)
+    }
+  }
   return (
     <div className="bg-white px-4 pt-3 pb-4 ">
       <div className="flex justify-between">
@@ -100,8 +113,8 @@ const RecentActualInventory = () => {
             </tr>
           </thead>
           <tbody>
-            {quantity_report?.data &&
-              quantity_report.data.map((item, index) => (
+            {currentProducts &&
+              currentProducts.map((item, index) => (
                 <tr
                   key={index}
                   className="cursor-pointer hover:bg-gray-100 transition-colors"
@@ -126,6 +139,44 @@ const RecentActualInventory = () => {
               ))}
           </tbody>
         </table>
+
+        {/* Điều khiển phân trang */}
+        <div className="flex justify-center mt-4 space-x-2 mb-2">
+          {/* Nút Previous */}
+          <button
+            className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+
+          {/* Hiển thị số trang */}
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+            (page) => (
+              <button
+                key={page}
+                className={`p-2 border rounded-md transition-transform duration-200 transform cursor-pointer ${
+                  currentPage === page
+                    ? 'bg-primary text-white'
+                    : 'hover:bg-gray-300'
+                }`}
+                onClick={() => handlePageChange(page)}
+              >
+                {page}
+              </button>
+            )
+          )}
+
+          {/* Nút Next */}
+          <button
+            className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   )

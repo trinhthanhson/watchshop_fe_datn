@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllCouponsRequest } from '../../redux/actions/actions'
 import { IoIosAddCircle } from 'react-icons/io'
@@ -11,6 +11,8 @@ const AllCoupons = () => {
   const dispatch = useDispatch()
   const coupons = useSelector((state) => state.coupons.coupons)
   const navigate = useNavigate()
+  const [currentPage, setCurrentPage] = useState(1) // Trang hiện tại
+  const itemsPerPage = 10 // Số sản phẩm mỗi trang
 
   useEffect(() => {
     try {
@@ -37,6 +39,20 @@ const AllCoupons = () => {
       alert('Error deleting coupon. Please try again.')
     }
   }
+
+  // Tính toán sản phẩm cho trang hiện tại
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentCoupons = coupons?.data?.slice(startIndex, endIndex)
+
+  const totalPages = Math.ceil((coupons?.data?.length || 0) / itemsPerPage)
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage)
+    }
+  }
+
   return (
     <>
       <div className="flex flex-col gap-4 w-[80%] ml-[18%] rounded-md shadow-md bg-white mt-5">
@@ -54,8 +70,8 @@ const AllCoupons = () => {
             </tr>
           </thead>
           <tbody>
-            {coupons.data &&
-              coupons?.data.map((coupon) => (
+            {currentCoupons &&
+              currentCoupons.map((coupon) => (
                 <tr
                   key={coupons.coupon_id}
                   className=" hover:bg-gray-100 transition-colors ease-in-out transform "
@@ -108,6 +124,44 @@ const AllCoupons = () => {
               ))}
           </tbody>
         </table>
+
+        {/* Điều khiển phân trang */}
+        <div className="flex justify-center mt-4 space-x-2 mb-2">
+          {/* Nút Previous */}
+          <button
+            className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+
+          {/* Hiển thị số trang */}
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+            (page) => (
+              <button
+                key={page}
+                className={`p-2 border rounded-md transition-transform duration-200 transform cursor-pointer ${
+                  currentPage === page
+                    ? 'bg-primary text-white'
+                    : 'hover:bg-gray-300'
+                }`}
+                onClick={() => handlePageChange(page)}
+              >
+                {page}
+              </button>
+            )
+          )}
+
+          {/* Nút Next */}
+          <button
+            className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
       </div>
 
       <Link to="/manager/create-coupon">
