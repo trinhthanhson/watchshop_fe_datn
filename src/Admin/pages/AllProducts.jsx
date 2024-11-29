@@ -92,7 +92,7 @@ const AllProducts = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-4 w-[80%] ml-[18%] rounded-md shadow-md bg-white mt-5">
+      <div className="flex flex-col  w-[80%] ml-[18%] rounded-md shadow-md bg-white">
         {/* Bộ lọc theo ngày */}
         <div className="flex justify-end p-4">
           <select
@@ -105,7 +105,7 @@ const AllProducts = () => {
             <option value="oldest">Cũ nhất</option>
           </select>
           <MdFileDownload
-            className="cursor-pointer text-primary"
+            className="cursor-pointer text-primary mt-1 ml-1 hover:bg-gray-300 transition-transform rounded-full duration-200 transform"
             fontSize={25}
             onClick={exportToExcel}
           />
@@ -128,17 +128,12 @@ const AllProducts = () => {
           </thead>
           <tbody>
             {filteredAndSortedProducts?.map((product) => (
-              <tr key={product.product_id}>
+              <tr
+                key={product.product_id}
+                className="cursor-pointer hover:bg-gray-100 transition-colors"
+              >
+                <td>{product?.product_id}</td>
                 <td
-                  className="cursor-pointer"
-                  onClick={() =>
-                    navigate(`/manager/product/${product?.product_id}`)
-                  }
-                >
-                  {product?.product_id}
-                </td>
-                <td
-                  className="cursor-pointer"
                   onClick={() =>
                     navigate(`/manager/product/${product?.product_id}`)
                   }
@@ -177,7 +172,7 @@ const AllProducts = () => {
                 <td>{product?.quantity}</td>
                 <td>{getStatus(product?.status)}</td>
                 <td>
-                  <span>
+                  <span className="cursor-pointer inline-flex rounded-full hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2">
                     <MdModeEditOutline
                       className="cursor-pointer text-primary"
                       fontSize={25}
@@ -188,7 +183,7 @@ const AllProducts = () => {
                       }
                     />
                   </span>
-                  <span>
+                  <span className="cursor-pointer inline-flex rounded-full hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2">
                     <MdDelete
                       className="cursor-pointer text-primary"
                       fontSize={25}
@@ -201,7 +196,7 @@ const AllProducts = () => {
           </tbody>
         </table>
       </div>
-      <div className="fixed right-6 bottom-3">
+      <div className="fixed right-6 bottom-3 hover:bg-gray-300 transition-transform rounded-full duration-200 transform hover:scale-125 p-2 ">
         <IoIosAddCircle
           fontSize={50}
           className="cursor-pointer text-primary"

@@ -196,7 +196,7 @@ const AllCategoryInventory = () => {
           </tbody>
         </table>
       </div>
-      <div className="fixed right-6 bottom-3">
+      <div className="fixed right-6 bottom-3 hover:bg-gray-300 transition-transform rounded-full duration-200 transform hover:scale-125 p-2 ">
         <IoIosAddCircle
           fontSize={50}
           className="cursor-pointer text-primary"

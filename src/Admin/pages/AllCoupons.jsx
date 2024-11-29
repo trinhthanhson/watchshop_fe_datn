@@ -56,7 +56,10 @@ const AllCoupons = () => {
           <tbody>
             {coupons.data &&
               coupons?.data.map((coupon) => (
-                <tr key={coupons.coupon_id}>
+                <tr
+                  key={coupons.coupon_id}
+                  className=" hover:bg-gray-100 transition-colors ease-in-out transform "
+                >
                   <td>{coupon?.coupon_id}</td>
                   <td>
                     <img
@@ -82,7 +85,7 @@ const AllCoupons = () => {
                       coupon?.staff_update?.last_name}
                   </td>
                   <td>
-                    <span>
+                    <span className="cursor-pointer inline-flex rounded-full hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2">
                       <MdModeEditOutline
                         className="cursor-pointer text-primary"
                         fontSize={25}
@@ -93,7 +96,7 @@ const AllCoupons = () => {
                         }
                       />
                     </span>
-                    <span>
+                    <span className="cursor-pointer inline-flex rounded-full hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2">
                       <MdDelete
                         className="cursor-pointer text-primary"
                         fontSize={25}

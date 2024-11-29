@@ -28,7 +28,7 @@ const AllCustomers = () => {
             <td>Ngay Tao</td>
             <td>Diem</td>
             <td>Hang</td>
-            <td className="rounded-e-md">Trạng Thái</td>
+            <td>Trạng Thái</td>
             <td className="rounded-e-md">Actions</td>
           </tr>
         </thead>
@@ -37,7 +37,10 @@ const AllCustomers = () => {
             customers?.data
               .filter((customer) => customer.username !== 'admin')
               .map((customer) => (
-                <tr key={customer.user_id}>
+                <tr
+                  key={customer.user_id}
+                  className=" hover:bg-gray-100 transition-colors"
+                >
                   <td>{customer?.user_id}</td>
                   <td>
                     <img
@@ -54,14 +57,15 @@ const AllCustomers = () => {
                   <td>{customer?.points.toLocaleString('en')}</td>
                   <td>{getRank(customer?.points)}</td>
                   <td>{getStatus(customer?.status)}</td>
-                  <MdModeEditOutline
-                    className="cursor-pointer text-primary"
-                    style={{ marginTop: '30px' }}
-                    fontSize={25}
-                    onClick={() =>
-                      navigate(`/manager/user-customer/${customer?.user_id}`)
-                    }
-                  />
+                  <td className="">
+                    <MdModeEditOutline
+                      className="cursor-pointer inline-flex rounded-full h-10 w-10 hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2"
+                      fontSize={25}
+                      onClick={() =>
+                        navigate(`/manager/user-customer/${customer?.user_id}`)
+                      }
+                    />
+                  </td>
                 </tr>
               ))}
         </tbody>

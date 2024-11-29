@@ -54,7 +54,7 @@ const RecentOrder = () => {
                 .map((order, index) => (
                   <tr
                     key={index}
-                    className="cursor-pointer"
+                    className="cursor-pointer hover:bg-gray-100 transition-colors"
                     onClick={() => navigate(`/manager/order/${order.order_id}`)}
                   >
                     <td>{index + 1}</td>

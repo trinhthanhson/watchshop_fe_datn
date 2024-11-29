@@ -151,7 +151,10 @@ const AllCategory = () => {
           <tbody>
             {categories?.data &&
               categories?.data.map((category, index) => (
-                <tr key={category.slug}>
+                <tr
+                  key={category.slug}
+                  className=" hover:bg-gray-100 transition-colors ease-in-out transform "
+                >
                   <td>{index + 1}</td>
                   <td>
                     <img
@@ -172,7 +175,7 @@ const AllCategory = () => {
                   </td>
                   <td>{getStatus(category?.status)}</td>
                   <td>
-                    <span>
+                    <span className="cursor-pointer inline-flex rounded-full hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2">
                       <MdModeEditOutline
                         className="cursor-pointer text-primary"
                         fontSize={25}
@@ -181,7 +184,7 @@ const AllCategory = () => {
                         }
                       />
                     </span>
-                    <span>
+                    <span className="cursor-pointer inline-flex rounded-full hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2">
                       <MdDelete
                         className="cursor-pointer text-primary"
                         fontSize={25}
@@ -196,7 +199,7 @@ const AllCategory = () => {
           </tbody>
         </table>
       </div>
-      <div className="fixed right-6 bottom-3">
+      <div className="fixed right-6 bottom-3 hover:bg-gray-300 transition-transform rounded-full duration-200 transform hover:scale-125 p-2 ">
         <IoIosAddCircle
           fontSize={50}
           className="cursor-pointer text-primary"

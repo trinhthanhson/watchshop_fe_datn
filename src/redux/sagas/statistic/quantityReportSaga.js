@@ -7,24 +7,28 @@ import {
 import { GET_QUANTITY_PRODUCT_REPORT_REQUEST } from '../../actions/statistic/type'
 
 function* quantityProductReportSaga(action) {
-  const { filter } = action.payload // Lấy filter từ payload
-  console.log('Filter being sent:', filter)
-
+  const { filter, start, end } = action.payload // Lấy các tham số từ payload
   try {
     const token = localStorage.getItem('token')
     const response = yield call(
       axios.get,
       'http://localhost:9999/api/statistic/quantity/report',
       {
-        params: { filter }, // Truyền tham số filter
+        params: {
+          filter: filter || '',
+          start: start || '',
+          end: end || ''
+        },
         headers: {
           Authorization: `Bearer ${token}`
         }
       }
     )
 
+    // Gửi dữ liệu thành công lên reducer
     yield put(getAllQuantityProductSuccess(response.data))
   } catch (error) {
+    // Gửi lỗi lên reducer
     yield put(getAllQuantityProductFailure(error.message))
   }
 }

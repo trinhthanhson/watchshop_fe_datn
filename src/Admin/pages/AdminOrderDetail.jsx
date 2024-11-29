@@ -152,7 +152,7 @@ const AdminOrderDetail = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center bg-gray-200 border border-gray-300 rounded-lg p-4">
+      <div className="flex justify-center items-center bg-gray-200 border border-gray-300 rounded-lg p-4 w-[80%] ml-[18%]">
         <h1 className="uppercase font-RobotoSemibold text-main text-3xl md:text-3xl xl:text-[3rem] text-center">
           {orderDetail?.is_cancel
             ? 'Đã huỷ'
@@ -193,7 +193,7 @@ const AdminOrderDetail = () => {
           </div>
         </div>
 
-        <div className="flex-[0.4] w-[80%] ml-[20px] mr-[30px] rounded-md shadow-md bg-white mt-2">
+        <div className="flex-[0.4] w-[80%] ml-[10px] mr-[30px] rounded-md shadow-md bg-white mt-2">
           <div className="ml-5">
             <h5 className="text-left text-lg font-RobotoSemibold text-primary py-3">
               Chi Tiết Hóa Đơn
@@ -238,12 +238,12 @@ const AdminOrderDetail = () => {
         </div>
       </div>
 
-      <div className="flex justify-center items-center bg-gray-200 border border-gray-300 rounded-lg p-4">
+      <div className="flex justify-center items-center bg-gray-200 border border-gray-300 rounded-lg p-4 w-[80%] ml-[18%] mt-2">
         <h1 className="uppercase font-RobotoSemibold text-main text-3xl md:text-3xl xl:text-[3rem] text-center">
           {check === 'True' ? 'Kho đã xác nhận' : 'Kho chưa xác nhận'}
         </h1>
       </div>
-      <div className="flex flex-col gap-4 w-[80%] ml-[18%] rounded-md shadow-md bg-white mt-5">
+      <div className="flex flex-col gap-4 w-[80%] ml-[18%] rounded-md shadow-md bg-white mt-2">
         <table className="w-full text-gray-700">
           <thead className="text-white font-RobotoSemibold text-[18px] ">
             <tr className="bg-primary">

@@ -104,7 +104,7 @@ const AllStaff = () => {
               <td>Avatar</td>
               <td>Username</td>
               <td>Ngày Tạo</td>
-              <td className="rounded-e-md">Trạng Thái</td>
+              <td>Trạng Thái</td>
               <td className="rounded-e-md">Actions</td>
             </tr>
           </thead>
@@ -113,7 +113,10 @@ const AllStaff = () => {
               staffs?.data
                 .filter((staff) => staff.username !== 'admin')
                 .map((staff) => (
-                  <tr key={staff.user_id}>
+                  <tr
+                    key={staff.user_id}
+                    className=" hover:bg-gray-100 transition-colors ease-in-out transform "
+                  >
                     <td>{staff?.user_id}</td>
                     <td>
                       <img
@@ -129,21 +132,22 @@ const AllStaff = () => {
                     <td>{new Date(staff.created_at).toLocaleDateString()}</td>
                     <td>{getStatus(staff?.status)}</td>
                     <td>
-                      <MdModeEditOutline
-                        className="cursor-pointer text-primary"
-                        style={{ marginTop: '30px' }}
-                        fontSize={25}
-                        onClick={() =>
-                          navigate(`/manager/user-staff/${staff?.user_id}`)
-                        }
-                      />
+                      <span className="cursor-pointer inline-flex rounded-full hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2">
+                        <MdModeEditOutline
+                          className="cursor-pointer text-primary"
+                          fontSize={25}
+                          onClick={() =>
+                            navigate(`/manager/user-staff/${staff?.user_id}`)
+                          }
+                        />
+                      </span>
                     </td>
                   </tr>
                 ))}
           </tbody>
         </table>
       </div>
-      <div className="fixed right-6 bottom-3">
+      <div className="fixed right-6 bottom-3 hover:bg-gray-300 transition-transform rounded-full duration-200 transform hover:scale-125 p-2 ">
         <IoIosAddCircle
           fontSize={50}
           className="cursor-pointer text-primary"

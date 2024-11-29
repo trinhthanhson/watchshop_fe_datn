@@ -219,13 +219,13 @@ const OrderStatus = () => {
                       setEditingStatus(status)
                       setEditedName(status.status_name)
                     }}
-                    className="bg-primary hover:bg-hoverPrimary text-white px-3 py-1 rounded-lg"
+                    className="cursor-pointer inline-flex bg-primary text-white rounded-full hover:bg-hoverPrimary transition-transform duration-200 ease-in-out transform hover:scale-110 p-2"
                   >
                     Sửa
                   </button>
                   <button
                     onClick={() => handleDeleteStatus(status.status_id)}
-                    className="bg-primary hover:bg-hoverPrimary text-white px-3 py-1 rounded-lg"
+                    className="cursor-pointer inline-flex bg-primary text-white rounded-full hover:bg-hoverPrimary transition-transform duration-200 ease-in-out transform hover:scale-110 p-2"
                   >
                     Xóa
                   </button>

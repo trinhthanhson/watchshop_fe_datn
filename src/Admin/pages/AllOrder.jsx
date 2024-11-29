@@ -203,7 +203,7 @@ const AllOrder = () => {
             {filteredOrders.map((order, index) => (
               <tr
                 key={index}
-                className="cursor-pointer"
+                className="cursor-pointer hover:bg-gray-100 transition-colors ease-in-out transform "
                 onClick={() => navigate(`/manager/order/${order.order_id}`)}
               >
                 <td>{index + 1}</td>
@@ -256,8 +256,8 @@ const AllOrder = () => {
                 <td>{order.total_quantity}</td>
                 <td>{order.total_price.toLocaleString('en')} VNĐ</td>
                 <td>{new Date(order.created_at).toLocaleDateString()}</td>
-                <td className="text-center align-middle">
-                  <span className="inline-block text-black px-2 py-1 border rounded-md text-sm bg-blue-">
+                <td className="text-center align-middle ">
+                  <span className="inline-block text-black px-2 py-1 border rounded-md text-sm bg-blue-200">
                     {order?.order_status?.status_name || 'Unknown'}
                   </span>
                 </td>
@@ -278,16 +278,16 @@ const AllOrder = () => {
         </div>
       </div>
 
-      <div className="flex justify-center mt-5">
+      <div className="flex justify-center mt-2">
         <button
           onClick={exportPDF}
-          className="bg-primary text-white px-4 py-2 rounded-md shadow-md hover:bg-hoverPrimary transition duration-300 ease-in-out"
+          className="bg-primary text-white px-4 py-2 rounded-md shadow-md hover:bg-hoverPrimary transition duration-300 ease-in-out ml-[10%] hover:scale-110 "
         >
           Xuất PDF
         </button>
         <button
           onClick={exportToExcel}
-          className="bg-primary text-white px-4 py-2 rounded-md shadow-md hover:bg-hoverPrimary transition duration-300 ease-in-out"
+          className="bg-primary text-white px-4 py-2 rounded-md shadow-md hover:bg-hoverPrimary transition duration-300 ease-in-out ml-1  hover:scale-110  "
         >
           Xuất EXCEL
         </button>

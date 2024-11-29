@@ -27,8 +27,8 @@ const NewCustomers = () => {
         >
           More
         </p>
-      </div>
-      <div className="mt-4 flex flex-col gap-3">
+      </div>{' '}
+      <div className="mt-4 flex flex-col gap-3 ">
         {customers?.data &&
           sortByDate(
             customers?.data.filter((customer) => customer.username !== 'admin'),
@@ -36,7 +36,10 @@ const NewCustomers = () => {
           )
             .slice(0, 5)
             .map((customer) => (
-              <div key={customer?.user_id} className="flex items-start">
+              <div
+                key={customer?.user_id}
+                className="flex items-start  hover:bg-gray-100 transition-colors"
+              >
                 <div
                   className="w-[50px] h-[50px] bg-primary rounded-md"
                   style={{ backgroundColor: 'rgb(167 167 167)' }}
