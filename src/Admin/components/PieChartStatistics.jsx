@@ -18,6 +18,7 @@ const COLORS = [
   '#38bdf8',
   '#396264'
 ]
+
 const renderActiveShape = (props) => {
   const {
     cx,
@@ -109,7 +110,7 @@ const PieChartStatistics = () => {
   }
 
   return (
-    <div className="bg-white p-4 rounded-md border border-gray-200 flex flex-col flex-[0.45]">
+    <div className="bg-white p-4 rounded-md border border-gray-200 flex flex-col ">
       <strong className="text-sub font-semibold">Sản phẩm phổ biến</strong>
       <div className="w-full mt-3 flex-1 text-xs">
         {mostSoldProducts && mostSoldProducts.length > 0 ? (
@@ -117,8 +118,8 @@ const PieChartStatistics = () => {
             <PieChart>
               <Pie
                 data={mostSoldProducts}
-                cx="-50%"
-                cy="40%"
+                cx="-90%" // Đặt trung tâm của biểu đồ
+                cy="40%" // Đặt trung tâm của biểu đồ
                 labelLine={false}
                 outerRadius={200}
                 activeIndex={activeIndex}
@@ -126,6 +127,9 @@ const PieChartStatistics = () => {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 dataKey="total_quantity"
+                label={({ percent }) => {
+                  return `${(percent * 100).toFixed(2)}%` // Hiển thị phần trăm trên miếng hình tròn
+                }}
               >
                 {mostSoldProducts.map((entry, index) => (
                   <Cell
