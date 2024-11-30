@@ -18,7 +18,7 @@ const NewCustomers = () => {
   }, [dispatch])
 
   return (
-    <div className="flex-[0.45] bg-white p-4 rounded-md border border-gray-200">
+    <div className="flex-[0.45] bg-white p-4 rounded-md border border-gray-200 h-full">
       <div className="flex justify-between">
         <strong className="text-sub font-medium">Khách hàng mới</strong>
         <p

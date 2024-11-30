@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { getAllQuantityProductRequest } from '../../../redux/actions/statistic/action'
+import { getAllRevenueProductRequest } from '../../../redux/actions/statistic/action'
 
-const RecentActualInventory = () => {
+const RecentRevenueProduct = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const quantity_report = useSelector(
-    (state) => state.quantity_report.quantity_report
+    (state) => state.revenue_product.revenue_product
   )
   const [filter, setFilter] = useState('all') // Giá trị mặc định là 'week'
   const [startDate, setStartDate] = useState(null)
@@ -22,7 +22,7 @@ const RecentActualInventory = () => {
   useEffect(() => {
     try {
       dispatch(
-        getAllQuantityProductRequest({
+        getAllRevenueProductRequest({
           filter: filter,
           start: startDate,
           end: endDate
@@ -50,7 +50,9 @@ const RecentActualInventory = () => {
   return (
     <div className="bg-white px-4 pt-3 pb-4 ">
       <div className="flex justify-between">
-        <strong className="text-sub font-semibold">Thống kê tồn kho</strong>
+        <strong className="text-sub font-semibold">
+          Thống doanh thu theo sản phẩm
+        </strong>
       </div>
       <div className="mt-3">
         {/* Bộ lọc */}
@@ -60,7 +62,7 @@ const RecentActualInventory = () => {
             onChange={(e) => setFilter(e.target.value)}
             className="border rounded px-2 py-1"
           >
-            <option value="all">Tất cả</option>
+            <option value="">Tất cả</option>
             <option value="week">Tuần</option>
             <option value="month">Tháng</option>
             <option value="year">Năm</option>
@@ -97,7 +99,7 @@ const RecentActualInventory = () => {
         <table className="w-full text-gray-700">
           <thead className="text-white font-medium bg-primary">
             <tr
-              className="bg-primary"
+              className="bg-primary "
               style={{
                 backgroundColor: 'rgb(171, 171, 171)',
                 color: 'rgba(0, 0, 0, 0.8)'
@@ -105,22 +107,15 @@ const RecentActualInventory = () => {
             >
               <td className="rounded-s-md">STT</td>
               <td>Hình ảnh</td>
-              <td>Tên sản phẩm</td>
-              <td className="text-center align-middle">Số lượng tồn kho</td>
-              <td className="text-center align-middle">Tổng nhập</td>
-              <td className="text-center align-middle">Tổng xuất</td>
-              <td className="text-center align-middle">Tồn kho hiện tại</td>
+              <td className="text-center align-middle">Tên sản phẩm</td>
+              <td className="text-center align-middle">Doanh thu</td>
               {/* Hiển thị cột Period Value nếu có giá trị */}
               {currentProducts?.some((item) => item.period_value) && (
-                <td className="rounded-e-md text-center align-middle">
-                  Chu kỳ
-                </td>
+                <td className="text-center align-middle">Chu kỳ</td>
               )}
               {/* Hiển thị cột Date Range nếu có giá trị */}
               {currentProducts?.some((item) => item.date_range) && (
-                <td className="rounded-e-md text-center align-middle">
-                  Khoảng thời gian
-                </td>
+                <td className="text-center align-middle"> Khoảng thời gian</td>
               )}
             </tr>
           </thead>
@@ -129,13 +124,13 @@ const RecentActualInventory = () => {
               currentProducts.map((item, index) => (
                 <tr
                   key={index}
-                  className="cursor-pointer hover:bg-gray-100 transition-colors "
+                  className="cursor-pointer hover:bg-gray-100 transition-colors"
                   onClick={() =>
                     navigate(`/manager/product/${item.product_id}`)
                   }
                 >
-                  <td>{index + 1}</td>
-                  <td>
+                  <td className="text-center align-middle">{index + 1}</td>
+                  <td className="text-center align-middle">
                     <img
                       className="w-10 h-10 rounded-full"
                       src={item.image || 'default-image-url'}
@@ -145,15 +140,8 @@ const RecentActualInventory = () => {
                   <td className="cursor-pointer truncate overflow-hidden text-ellipsis whitespace-nowrap max-w-[150px]">
                     {item.product_name}
                   </td>
-                  <td className="text-center align-middle">{item.quantity}</td>
                   <td className="text-center align-middle">
-                    {item.total_import}
-                  </td>
-                  <td className="text-center align-middle">
-                    {item.total_export}
-                  </td>
-                  <td className="text-center align-middle">
-                    {item.current_stock}
+                    {item.total_sold.toLocaleString('en')} VND
                   </td>
                   {/* Hiển thị giá trị Period Value nếu có */}
                   {item.period_value && (
@@ -214,4 +202,4 @@ const RecentActualInventory = () => {
   )
 }
 
-export default RecentActualInventory
+export default RecentRevenueProduct

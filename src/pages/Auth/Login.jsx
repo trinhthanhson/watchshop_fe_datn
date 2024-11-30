@@ -166,7 +166,7 @@ const Login = () => {
       const { code, message } = response.data
       if (code === 200 && message === 'success') {
         setMessage(
-          'The password reset password has been sent to your email. Please go to your email to get the password to log in'
+          'Mật khẩu của bạn đã được gửi về email, vui lòng kiểm tra email để lấy mật khẩu đăng nhập'
         )
       } else {
         setMessage('Incorrect email please enter the correct registered email')

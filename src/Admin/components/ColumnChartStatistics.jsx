@@ -34,15 +34,13 @@ const ColumnChartStatistics = () => {
       )
 
       const result = await response.json()
-      console.log('dataaaaaaaaaaaaa', result.data)
       if (response.ok) {
         // Log toàn bộ dữ liệu để kiểm tra
-        console.log('Full response data:', result.data)
 
         const fullYearData = Array.from({ length: 12 }, (_, index) => {
           // Log từng item trong data để kiểm tra
           const monthData = result?.data.find(
-            (item) => item.month === index + 1
+            (item) => item?.month === index + 1
           )
           console.log('Month data:', monthData) // Xem monthData có dữ liệu không
           return {
@@ -228,14 +226,14 @@ const ColumnChartStatistics = () => {
       </div>
 
       {/* Display chart or table */}
-      <div className="w-full mt-3 flex-1 text-xs">
+      <div className="w-full mt-3 flex-1 text-xs ml-5">
         {viewMode === 'chart' ? (
           <ResponsiveContainer width="100%" height="60%">
             <BarChart
               width={500}
               height={300}
               data={data}
-              margin={{ top: 20, right: 10, left: -10, bottom: 0 }}
+              margin={{ top: 20, right: 10, left: 10, bottom: 0 }}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis

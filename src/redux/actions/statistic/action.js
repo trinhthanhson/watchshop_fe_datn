@@ -2,10 +2,12 @@ import {
   GET_QUANTITY_PRODUCT_REPORT_FAILURE,
   GET_QUANTITY_PRODUCT_REPORT_REQUEST,
   GET_QUANTITY_PRODUCT_REPORT_SUCCESS,
+  GET_REVENUE_PRODUCT_REPORT_FAILURE,
+  GET_REVENUE_PRODUCT_REPORT_REQUEST,
+  GET_REVENUE_PRODUCT_REPORT_SUCCESS,
   GET_STATISTIC_FAILURE
 } from './type'
-import { GET_STATISTIC_SUCCESS } from './type'
-import { GET_STATISTIC_REQUEST } from './type'
+import { GET_STATISTIC_SUCCESS, GET_STATISTIC_REQUEST } from './type'
 
 export const getStatisticRequest = (type, startDate, endDate) => ({
   type: GET_STATISTIC_REQUEST,
@@ -35,6 +37,23 @@ export const getAllQuantityProductSuccess = (quantity_report) => ({
 
 export const getAllQuantityProductFailure = (error) => ({
   type: GET_QUANTITY_PRODUCT_REPORT_FAILURE,
+  payload: error
+})
+// -----------------------------------------------
+
+// -------- Get quantity product report ---------
+export const getAllRevenueProductRequest = (filter) => ({
+  type: GET_REVENUE_PRODUCT_REPORT_REQUEST,
+  payload: filter
+})
+
+export const getAllRevenueProductSuccess = (revenue_product) => ({
+  type: GET_REVENUE_PRODUCT_REPORT_SUCCESS,
+  payload: revenue_product
+})
+
+export const getAllRevenueProductFailure = (error) => ({
+  type: GET_REVENUE_PRODUCT_REPORT_FAILURE,
   payload: error
 })
 // -----------------------------------------------

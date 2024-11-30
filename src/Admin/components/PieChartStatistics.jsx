@@ -11,7 +11,6 @@ const COLORS = [
   '#38bdf8',
   '#396264'
 ]
-
 const PieChartStatistics = () => {
   const [mostSoldProducts, setMostSoldProducts] = useState([])
 
@@ -65,39 +64,44 @@ const PieChartStatistics = () => {
     <div className="bg-white p-4 rounded-md border border-gray-200 flex flex-col flex-[0.45]">
       <strong className="text-sub font-semibold">Sản phẩm phổ biến</strong>
       <div className="w-full mt-3 flex-1 text-xs">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={mostSoldProducts}
-              cx="50%"
-              cy="45%"
-              labelLine={false}
-              label={renderCustomizedLabel}
-              outerRadius={105}
-              dataKey="total_quantity"
-            >
-              {mostSoldProducts.map((entry, index) => (
-                <Cell
-                  key={`cell-${entry.product_id}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-            <Legend
-              layout="horizontal"
-              verticalAlign="bottom"
-              align="center"
-              payload={mostSoldProducts.map((entry, index) => ({
-                value: entry.product_name,
-                type: 'circle',
-                color: COLORS[index % COLORS.length]
-              }))}
-            />
-          </PieChart>
-        </ResponsiveContainer>
+        {mostSoldProducts && mostSoldProducts.length > 0 ? (
+          <ResponsiveContainer width={800} height={500}>
+            <PieChart>
+              <Pie
+                data={mostSoldProducts}
+                cx="50%"
+                cy="45%"
+                labelLine={false}
+                label={renderCustomizedLabel}
+                outerRadius={200}
+                dataKey="total_quantity"
+              >
+                {mostSoldProducts.map((entry, index) => (
+                  <Cell
+                    key={`cell-${entry.product_id}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Legend
+                layout="horizontal"
+                verticalAlign="bottom"
+                align="center"
+                payload={mostSoldProducts.map((entry, index) => ({
+                  value: entry.product_name,
+                  type: 'circle',
+                  color: COLORS[index % COLORS.length]
+                }))}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        ) : (
+          <div>Loading...</div>
+        )}
       </div>
     </div>
   )
 }
 
 export default PieChartStatistics
+1

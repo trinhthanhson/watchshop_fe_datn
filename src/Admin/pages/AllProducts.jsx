@@ -164,7 +164,7 @@ const AllProducts = () => {
                   />
                 </td>
                 <td
-                  className="cursor-pointer"
+                  className="cursor-pointer truncate overflow-hidden text-ellipsis whitespace-nowrap max-w-[150px]"
                   onClick={() =>
                     navigate(`/manager/product/${product?.product_id}`)
                   }

@@ -10,3 +10,12 @@ export const GET_QUANTITY_PRODUCT_REPORT_SUCCESS =
 export const GET_QUANTITY_PRODUCT_REPORT_FAILURE =
   'GET_QUANTITY_PRODUCT_REPORT_FAILURE'
 // --------------------------------------------------------------
+
+// -------------Get revenue product report----------------------
+export const GET_REVENUE_PRODUCT_REPORT_REQUEST =
+  'GET_REVENUE_PRODUCT_REPORT_REQUEST'
+export const GET_REVENUE_PRODUCT_REPORT_SUCCESS =
+  'GET_REVENUE_PRODUCT_REPORT_SUCCESS'
+export const GET_REVENUE_PRODUCT_REPORT_FAILURE =
+  'GET_REVENUE_PRODUCT_REPORT_FAILURE'
+// --------------------------------------------------------------
