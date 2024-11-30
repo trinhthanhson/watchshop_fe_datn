@@ -23,21 +23,18 @@ const Layout = () => {
     isInventoryPage
   ) {
     return (
-      <div className="flex flex-col min-h-screen bg-gray-50">
+      <div>
         <Routers />
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      {/* Responsive Navbar */}
+    <div>
       <Navbar />
-      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Content */}
+      <div>
         <Routers />
-      </main>
-      {/* Responsive Footer */}
+      </div>
       <Footer />
     </div>
   )

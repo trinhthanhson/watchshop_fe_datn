@@ -15,7 +15,7 @@ const AdminUserStaffDetail = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const token = localStorage.getItem('token')
-  const navigate = useNavigate() // Use useNavigate for redirection
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -24,12 +24,11 @@ const AdminUserStaffDetail = () => {
           `http://localhost:9999/api/manager/staff/${id}/find`,
           {
             headers: {
-              Authorization: `Bearer ${token}` // Add the Authorization header
+              Authorization: `Bearer ${token}`
             }
           }
         )
         const user = response.data.data
-        console.log(user?.user?.status)
         setFormData({
           firstname: user.first_name,
           lastname: user.last_name,
@@ -62,11 +61,11 @@ const AdminUserStaffDetail = () => {
       await axios.put(
         `http://localhost:9999/api/manager/staff/${id}/update`,
         {
-          status: formData.status // Send the updated status
+          status: formData.status
         },
         {
           headers: {
-            Authorization: `Bearer ${token}` // Add the Authorization header
+            Authorization: `Bearer ${token}`
           }
         }
       )
@@ -76,93 +75,110 @@ const AdminUserStaffDetail = () => {
       setError('Failed to update user: ' + error.message)
     }
   }
+
   if (loading) {
-    return <div>Loading...</div>
+    return <div className="text-center mt-10">Loading...</div>
   }
 
   if (error) {
-    return <div>Error: {error}</div>
+    return <div className="text-center text-red-500 mt-10">Error: {error}</div>
   }
 
   return (
-    <div className="flex">
-      <aside className="w-[200px] bg-gray-800 text-white h-screen">
-        {/* Your sidebar content here */}
-      </aside>
-      <main className="flex-1 p-5 ml-[200px]">
-        <h2 className="text-2xl font-semibold mb-4">Thông tin</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <label>
-            Fist Name:
-            <input
-              disabled
-              type="text"
-              name="firstname"
-              value={formData.firstname}
-              onChange={handleChange}
-              className="border rounded p-2 w-full"
-            />
-          </label>
-          <label>
-            Last Name:
-            <input
-              disabled
-              type="text"
-              name="lastname"
-              value={formData.lastname}
-              onChange={handleChange}
-              className="border rounded p-2 w-full"
-            />
-          </label>
-          <label>
-            Gender:
-            <input
-              disabled
-              type="text"
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              className="border rounded p-2 w-full"
-            />
-          </label>
-          <label>
-            Email:
-            <input
-              disabled
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="border rounded p-2 w-full"
-            />
-          </label>
-          <label>
-            Phone:
-            <input
-              disabled
-              type="text"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="border rounded p-2 w-full"
-            />
-          </label>
-          <label>
-            Status:
-            <select
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="border rounded p-2 w-full"
+    <div className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8">
+      <main className="flex-1 p-8  min-h-screen">
+        <div className="max-w-3xl mx-auto bg-white p-8 rounded shadow-md">
+          <h2 className="text-3xl font-semibold mb-6 text-gray-700">
+            Thông tin nhân viên
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">
+                First Name
+              </label>
+              <input
+                disabled
+                type="text"
+                name="firstname"
+                value={formData.firstname}
+                onChange={handleChange}
+                className="border border-gray-300 rounded w-full p-3 bg-gray-100"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">
+                Last Name
+              </label>
+              <input
+                disabled
+                type="text"
+                name="lastname"
+                value={formData.lastname}
+                onChange={handleChange}
+                className="border border-gray-300 rounded w-full p-3 bg-gray-100"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">
+                Gender
+              </label>
+              <input
+                disabled
+                type="text"
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                className="border border-gray-300 rounded w-full p-3 bg-gray-100"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">
+                Email
+              </label>
+              <input
+                disabled
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="border border-gray-300 rounded w-full p-3 bg-gray-100"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">
+                Phone
+              </label>
+              <input
+                disabled
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="border border-gray-300 rounded w-full p-3 bg-gray-100"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">
+                Status
+              </label>
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                className="border border-gray-300 rounded w-full p-3"
+              >
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="INACTIVE">INACTIVE</option>
+              </select>
+            </div>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white w-full p-3 rounded hover:bg-blue-600"
             >
-              <option value="ACTIVE">ACTIVE</option>
-              <option value="INACTIVE">INACTIVE</option>
-            </select>
-          </label>
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-            Cập nhật
-          </button>
-        </form>
+              Cập nhật
+            </button>
+          </form>
+        </div>
       </main>
     </div>
   )

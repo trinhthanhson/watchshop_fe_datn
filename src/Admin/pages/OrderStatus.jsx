@@ -176,115 +176,117 @@ const OrderStatus = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl bg-gray-50 shadow-lg rounded-lg">
-      <h1 className="text-3xl font-bold mb-6 text-gray-700 text-center">
-        Quản Lý Trạng Thái Đơn Hàng
-      </h1>
+    <div className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-col  w-[70%] ml-[25%] rounded-md shadow-md bg-white">
+        <h1 className="text-3xl font-bold mb-6 text-gray-700 text-center mt-2">
+          Quản Lý Trạng Thái Đơn Hàng
+        </h1>
 
-      <div className="mb-6">
-        <input
-          type="text"
-          placeholder="Nhập tên trạng thái mới..."
-          value={newStatusName}
-          onChange={(e) => setNewStatusName(e.target.value)}
-          className="border border-gray-300 rounded-lg px-4 py-2 w-full mb-4 focus:outline-none focus:ring-2"
-        />
-        <button
-          onClick={handleAddStatus}
-          className="bg-primary hover:bg-hoverPrimary text-white px-4 py-2 rounded-lg w-full font-bold"
-        >
-          Thêm Trạng Thái
-        </button>
-      </div>
-
-      {statuses.length > 0 ? (
-        <div
-          ref={listRef}
-          className="flex flex-col items-center bg-white shadow-md rounded-lg p-4 relative"
-        >
-          {statuses.map((status, index) => (
-            <div key={status.status_id} className="w-full">
-              <div className="flex justify-between items-center bg-gray-100 border border-black-300 rounded-lg px-4 py-3">
-                <div>
-                  <p className="font-semibold text-gray-700">
-                    {status.status_name}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Thứ tự: {status.status_index}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => {
-                      setEditingStatus(status)
-                      setEditedName(status.status_name)
-                    }}
-                    className="cursor-pointer inline-flex bg-primary text-white rounded-full hover:bg-hoverPrimary transition-transform duration-200 ease-in-out transform hover:scale-110 p-2"
-                  >
-                    Sửa
-                  </button>
-                  <button
-                    onClick={() => handleDeleteStatus(status.status_id)}
-                    className="cursor-pointer inline-flex bg-primary text-white rounded-full hover:bg-hoverPrimary transition-transform duration-200 ease-in-out transform hover:scale-110 p-2"
-                  >
-                    Xóa
-                  </button>
-                </div>
-              </div>
-              {/* Thêm mũi tên nếu không phải trạng thái cuối */}
-              {index < statuses.length - 1 && (
-                <div className="flex justify-center my-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    className="w-6 h-6 text-gray-400"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4 10l8 8 8-8"
-                    />
-                  </svg>
-                </div>
-              )}
-            </div>
-          ))}
+        <div className="mb-6 ml-2 mr-2">
+          <input
+            type="text"
+            placeholder="Nhập tên trạng thái mới..."
+            value={newStatusName}
+            onChange={(e) => setNewStatusName(e.target.value)}
+            className="border border-gray-300 rounded-lg px-4 py-2 w-full mb-4 focus:outline-none focus:ring-2"
+          />
+          <button
+            onClick={handleAddStatus}
+            className="bg-primary hover:bg-hoverPrimary text-white px-4 py-2 rounded-lg w-full font-bold"
+          >
+            Thêm Trạng Thái
+          </button>
         </div>
-      ) : (
-        <p className="text-center text-gray-500">Đang tải...</p>
-      )}
 
-      {/* Modal for Editing */}
-      {editingStatus && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-lg font-bold mb-4">Chỉnh sửa trạng thái</h2>
-            <input
-              type="text"
-              value={editedName}
-              onChange={(e) => setEditedName(e.target.value)}
-              className="border border-gray-300 rounded-lg px-4 py-2 w-full mb-4 focus:outline-none focus:ring-2"
-            />
-            <div className="flex justify-end gap-4">
-              <button
-                onClick={() => setEditingStatus(null)}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg"
-              >
-                Hủy
-              </button>
-              <button
-                onClick={handleEditStatus}
-                className="bg-primary hover:bg-hoverPrimary text-white px-4 py-2 rounded-lg"
-              >
-                Lưu
-              </button>
+        {statuses.length > 0 ? (
+          <div
+            ref={listRef}
+            className="flex flex-col items-center bg-white shadow-md rounded-lg p-4 relative"
+          >
+            {statuses.map((status, index) => (
+              <div key={status.status_id} className="w-full">
+                <div className="flex justify-between items-center bg-gray-100 border border-black-300 rounded-lg px-4 py-3">
+                  <div>
+                    <p className="font-semibold text-gray-700">
+                      {status.status_name}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Thứ tự: {status.status_index}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        setEditingStatus(status)
+                        setEditedName(status.status_name)
+                      }}
+                      className="cursor-pointer inline-flex bg-primary text-white rounded-full hover:bg-hoverPrimary transition-transform duration-200 ease-in-out transform hover:scale-110 p-2"
+                    >
+                      Sửa
+                    </button>
+                    <button
+                      onClick={() => handleDeleteStatus(status.status_id)}
+                      className="cursor-pointer inline-flex bg-primary text-white rounded-full hover:bg-hoverPrimary transition-transform duration-200 ease-in-out transform hover:scale-110 p-2"
+                    >
+                      Xóa
+                    </button>
+                  </div>
+                </div>
+                {/* Thêm mũi tên nếu không phải trạng thái cuối */}
+                {index < statuses.length - 1 && (
+                  <div className="flex justify-center my-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      strokeWidth="2"
+                      stroke="currentColor"
+                      className="w-6 h-6 text-gray-400"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4 10l8 8 8-8"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500">Đang tải...</p>
+        )}
+
+        {/* Modal for Editing */}
+        {editingStatus && (
+          <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+              <h2 className="text-lg font-bold mb-4">Chỉnh sửa trạng thái</h2>
+              <input
+                type="text"
+                value={editedName}
+                onChange={(e) => setEditedName(e.target.value)}
+                className="border border-gray-300 rounded-lg px-4 py-2 w-full mb-4 focus:outline-none focus:ring-2"
+              />
+              <div className="flex justify-end gap-4">
+                <button
+                  onClick={() => setEditingStatus(null)}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg"
+                >
+                  Hủy
+                </button>
+                <button
+                  onClick={handleEditStatus}
+                  className="bg-primary hover:bg-hoverPrimary text-white px-4 py-2 rounded-lg"
+                >
+                  Lưu
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }

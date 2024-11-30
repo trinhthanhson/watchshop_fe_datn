@@ -118,7 +118,7 @@ const PieChartStatistics = () => {
             <PieChart>
               <Pie
                 data={mostSoldProducts}
-                cx="-90%" // Đặt trung tâm của biểu đồ
+                cx="-70%" // Đặt trung tâm của biểu đồ
                 cy="40%" // Đặt trung tâm của biểu đồ
                 labelLine={false}
                 outerRadius={200}
