@@ -145,8 +145,8 @@ const AllBrand = () => {
   }
 
   return (
-    <>
-      <div className="flex flex-col gap-4 w-[80%] ml-[18%] rounded-md shadow-md bg-white mt-5">
+    <div className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-col gap-4 w-[90%] ml-[15%] rounded-md shadow-md bg-white mt-2">
         <table className="w-full text-gray-700">
           <thead className="text-white font-RobotoSemibold text-[18px] ">
             <tr className="bg-primary">
@@ -309,7 +309,7 @@ const AllBrand = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }
 

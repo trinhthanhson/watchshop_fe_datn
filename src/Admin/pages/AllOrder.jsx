@@ -149,11 +149,11 @@ const AllOrder = () => {
   }
 
   return (
-    <>
-      <div className="ml-[18%] w-[80%] font-RobotoMedium">
+    <div className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="ml-[15%] w-[90%] font-RobotoMedium">
         <div className="flex justify-between">
           <div className="p-2 flex items-center justify-center gap-2">
-            <label>Ngày bắt đầu</label>
+            <label className="text-[13px]">Ngày bắt đầu</label>
             <DatePicker
               className="text-center p-[3px] rounded-md border-primary border-[1px]"
               selected={startDate}
@@ -162,7 +162,7 @@ const AllOrder = () => {
           </div>
 
           <div className="p-2 flex items-center justify-center gap-2">
-            <label>Ngày kết thúc</label>
+            <label className="text-[13px]">Ngày kết thúc</label>
             <DatePicker
               className="text-center p-[3px] rounded-md border-primary border-[1px]"
               selected={endDate}
@@ -171,9 +171,9 @@ const AllOrder = () => {
           </div>
 
           <div className="p-2 flex items-center justify-center gap-2">
-            <label>Trạng thái</label>
+            <label className="text-[13px]">Trạng thái</label>
             <select
-              className="p-[3px] rounded-md border-primary border-[1px] text-center"
+              className="p-[3px] rounded-md border-primary border-[1px] text-center text-[13px]"
               value={status || ''}
               onChange={(e) => setStatus(e.target.value)}
             >
@@ -191,7 +191,7 @@ const AllOrder = () => {
           <div className="p-2">
             <button
               onClick={() => handleReset()}
-              className="text-center text-[14px] bg-primary text-white rounded-md shadow-md uppercase px-5 py-[7px] font-RobotoMedium hover:bg-hoverPrimary transition duration-200 ease-in-out"
+              className="text-center text-[10px] bg-primary text-white rounded-md shadow-md uppercase px-1 py-[7px] font-RobotoMedium hover:bg-hoverPrimary transition duration-200 ease-in-out mr-5"
             >
               Đặt lại
             </button>
@@ -199,7 +199,7 @@ const AllOrder = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 w-[85%] ml-[13%] rounded-md shadow-md bg-white mt-5">
+      <div className="flex flex-col gap-4 w-[90%] ml-[15%] rounded-md shadow-md bg-white mt-2">
         <table className="w-full text-gray-700">
           <thead className="text-white font-RobotoSemibold text-[18px] ">
             <tr className="bg-primary">
@@ -219,7 +219,7 @@ const AllOrder = () => {
             {currentProducts.map((order, index) => (
               <tr
                 key={index}
-                className="cursor-pointer hover:bg-gray-100 transition-colors ease-in-out transform "
+                className="cursor-pointer hover:bg-gray-100 transition-colors "
                 onClick={() => navigate(`/manager/order/${order.order_id}`)}
               >
                 <td>{index + 1}</td>
@@ -268,7 +268,9 @@ const AllOrder = () => {
                     </div>
                   ))}
                 </td>
-                <td>{order.address}</td>
+                <td className="truncate overflow-hidden text-ellipsis whitespace-nowrap max-w-[150px]">
+                  {order.address}
+                </td>
                 <td>{order.total_quantity}</td>
                 <td>{order.total_price.toLocaleString('en')} VNĐ</td>
                 <td>{new Date(order.created_at).toLocaleDateString()}</td>
@@ -323,7 +325,7 @@ const AllOrder = () => {
 
       <div className="w-[80%] ml-[18%] mt-2">
         <div className="flex justify-between font-RobotoMedium">
-          <div className="text-primary rounded-md p-2 ml-[40%]">
+          <div className="text-primary rounded-md p-2 ml-[45%]">
             Số đơn hàng: {filteredOrders ? filteredOrders.length : 0}
           </div>
           <div className="text-primary rounded-md p-2">
@@ -335,7 +337,7 @@ const AllOrder = () => {
       <div className="flex justify-center mt-2">
         <button
           onClick={exportPDF}
-          className="bg-primary text-white px-4 py-2 rounded-md shadow-md hover:bg-hoverPrimary transition duration-300 ease-in-out ml-[10%] hover:scale-110 "
+          className="bg-primary text-white px-4 py-2 rounded-md shadow-md hover:bg-hoverPrimary transition duration-300 ease-in-out ml-[20%] hover:scale-110 "
         >
           Xuất PDF
         </button>
@@ -346,7 +348,7 @@ const AllOrder = () => {
           Xuất EXCEL
         </button>
       </div>
-    </>
+    </div>
   )
 }
 

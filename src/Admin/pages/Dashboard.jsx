@@ -8,9 +8,9 @@ import RecentRevenueProduct from '../components/inventory/RecentRevenueProduct'
 
 const Dashboard = () => {
   return (
-    <div className="flex flex-col gap-4 w-[80%] ml-[18%]">
+    <div className="flex flex-col gap-4 w-[80%] ml-[19%]">
       <DashboardStatisGrid />
-      <div className="flex flex-row gap-4 w-full">
+      <div className="flex flex-row gap-4 w-full ">
         <ColumnChartStatistics />
       </div>
       <div className="flex justify-between w-full md:space-x-4 ">

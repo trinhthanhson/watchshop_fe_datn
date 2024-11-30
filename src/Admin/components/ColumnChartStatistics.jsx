@@ -162,7 +162,7 @@ const ColumnChartStatistics = () => {
   }
 
   return (
-    <div className="h-[24rem] bg-white p-4 rounded-md border border-gray-200 flex flex-col flex-1">
+    <div className="h-[30rem] bg-white p-4 rounded-md border border-gray-200 flex flex-col flex-1 ">
       <strong className="text-sub font-semibold">Thống kê doanh thu</strong>
       <div className="flex justify-end items-start mt-3">
         <div className="flex gap-4 items-center">
@@ -228,12 +228,12 @@ const ColumnChartStatistics = () => {
       {/* Display chart or table */}
       <div className="w-full mt-3 flex-1 text-xs ml-5">
         {viewMode === 'chart' ? (
-          <ResponsiveContainer width="100%" height="60%">
+          <ResponsiveContainer width="100%" height="90%">
             <BarChart
               width={500}
               height={300}
               data={data}
-              margin={{ top: 20, right: 10, left: 10, bottom: 0 }}
+              margin={{ top: 20, right: 10, left: 1, bottom: 0 }}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis

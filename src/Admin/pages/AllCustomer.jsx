@@ -34,95 +34,101 @@ const AllCustomers = () => {
   }
 
   return (
-    <div className="flex flex-col gap-4 w-[80%] ml-[18%] rounded-md shadow-md bg-white mt-5">
-      <table className="w-full text-gray-700">
-        <thead className="text-white font-RobotoSemibold text-[18px] ">
-          <tr className="bg-primary">
-            <td className="rounded-s-md">ID</td>
-            <td>Avatar</td>
-            <td>Username</td>
-            <td>Ngay Tao</td>
-            <td>Diem</td>
-            <td>Hang</td>
-            <td>Trạng Thái</td>
-            <td className="rounded-e-md">Actions</td>
-          </tr>
-        </thead>
-        <tbody>
-          {currentCustomer &&
-            currentCustomer
-              .filter((customer) => customer.username !== 'admin')
-              .map((customer) => (
-                <tr
-                  key={customer.user_id}
-                  className=" hover:bg-gray-100 transition-colors"
-                >
-                  <td>{customer?.user_id}</td>
-                  <td>
-                    <img
-                      src={
-                        customer?.avatar ||
-                        'https://firebasestorage.googleapis.com/v0/b/watch-shop-3a14f.appspot.com/o/images%2Flogo.png?alt=media&token=ff560732-bd5c-43d0-9271-7bcd3d9204ea'
-                      }
-                      alt={customer?.username}
-                      className="w-[68px] h-[50px] object-contain rounded-md bg-primary"
-                    />
-                  </td>
-                  <td>{customer?.username}</td>
-                  <td>{new Date(customer.created_at).toLocaleDateString()}</td>
-                  <td>{customer?.points.toLocaleString('en')}</td>
-                  <td>{getRank(customer?.points)}</td>
-                  <td>{getStatus(customer?.status)}</td>
-                  <td className="">
-                    <MdModeEditOutline
-                      className="cursor-pointer inline-flex rounded-full h-10 w-10 hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2"
-                      fontSize={25}
-                      onClick={() =>
-                        navigate(`/manager/user-customer/${customer?.user_id}`)
-                      }
-                    />
-                  </td>
-                </tr>
-              ))}
-        </tbody>
-      </table>
+    <div className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-col gap-4 w-[90%] ml-[15%] rounded-md shadow-md bg-white mt-5">
+        <table className="w-full text-gray-700">
+          <thead className="text-white font-RobotoSemibold text-[18px] ">
+            <tr className="bg-primary">
+              <td className="rounded-s-md">ID</td>
+              <td>Avatar</td>
+              <td>Username</td>
+              <td>Ngay Tao</td>
+              <td>Diem</td>
+              <td>Hang</td>
+              <td>Trạng Thái</td>
+              <td className="rounded-e-md">Hành Động</td>
+            </tr>
+          </thead>
+          <tbody>
+            {currentCustomer &&
+              currentCustomer
+                .filter((customer) => customer.username !== 'admin')
+                .map((customer) => (
+                  <tr
+                    key={customer.user_id}
+                    className=" hover:bg-gray-100 transition-colors"
+                  >
+                    <td>{customer?.user_id}</td>
+                    <td>
+                      <img
+                        src={
+                          customer?.avatar ||
+                          'https://firebasestorage.googleapis.com/v0/b/watch-shop-3a14f.appspot.com/o/images%2Flogo.png?alt=media&token=ff560732-bd5c-43d0-9271-7bcd3d9204ea'
+                        }
+                        alt={customer?.username}
+                        className="w-[68px] h-[50px] object-contain rounded-md bg-primary"
+                      />
+                    </td>
+                    <td>{customer?.username}</td>
+                    <td>
+                      {new Date(customer.created_at).toLocaleDateString()}
+                    </td>
+                    <td>{customer?.points.toLocaleString('en')}</td>
+                    <td>{getRank(customer?.points)}</td>
+                    <td>{getStatus(customer?.status)}</td>
+                    <td className="">
+                      <MdModeEditOutline
+                        className="cursor-pointer inline-flex rounded-full h-10 w-10 hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2"
+                        fontSize={25}
+                        onClick={() =>
+                          navigate(
+                            `/manager/user-customer/${customer?.user_id}`
+                          )
+                        }
+                      />
+                    </td>
+                  </tr>
+                ))}
+          </tbody>
+        </table>
 
-      {/* Điều khiển phân trang */}
-      <div className="flex justify-center mt-4 space-x-2 mb-2">
-        {/* Nút Previous */}
-        <button
-          className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
+        {/* Điều khiển phân trang */}
+        <div className="flex justify-center mt-4 space-x-2 mb-2">
+          {/* Nút Previous */}
+          <button
+            className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
 
-        {/* Hiển thị số trang */}
-        {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-          (page) => (
-            <button
-              key={page}
-              className={`p-2 border rounded-md transition-transform duration-200 transform cursor-pointer ${
-                currentPage === page
-                  ? 'bg-primary text-white'
-                  : 'hover:bg-gray-300'
-              }`}
-              onClick={() => handlePageChange(page)}
-            >
-              {page}
-            </button>
-          )
-        )}
+          {/* Hiển thị số trang */}
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+            (page) => (
+              <button
+                key={page}
+                className={`p-2 border rounded-md transition-transform duration-200 transform cursor-pointer ${
+                  currentPage === page
+                    ? 'bg-primary text-white'
+                    : 'hover:bg-gray-300'
+                }`}
+                onClick={() => handlePageChange(page)}
+              >
+                {page}
+              </button>
+            )
+          )}
 
-        {/* Nút Next */}
-        <button
-          className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
+          {/* Nút Next */}
+          <button
+            className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   )

@@ -110,8 +110,8 @@ const AllProducts = () => {
   }
 
   return (
-    <>
-      <div className="flex flex-col  w-[80%] ml-[18%] rounded-md shadow-md bg-white">
+    <div className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-col  w-[90%] ml-[15%] rounded-md shadow-md bg-white">
         {/* Bộ lọc theo ngày */}
         <div className="flex justify-end p-4">
           <select
@@ -139,10 +139,9 @@ const AllProducts = () => {
               <td>Loại Sản phẩm</td>
               <td>Hãng Sản Phẩm</td>
               <td>Giá Sản Phẩm</td>
-              <td>Mô tả</td>
               <td>Số lượng</td>
               <td>Trạng Thái</td>
-              <td className="rounded-e-md">Action</td>
+              <td className="rounded-e-md">Hành Động</td>
             </tr>
           </thead>
           <tbody>
@@ -178,15 +177,6 @@ const AllProducts = () => {
                     style: 'currency',
                     currency: 'VND'
                   })}
-                </td>
-                <td
-                  onClick={() =>
-                    navigate(`/manager/product/${product?.product_id}`)
-                  }
-                >
-                  {product?.detail && product.detail.length > 50
-                    ? `${product?.detail.substring(0, 10)}...`
-                    : product.detail}
                 </td>
                 <td>{product?.quantity}</td>
                 <td>{getStatus(product?.status)}</td>
@@ -260,7 +250,7 @@ const AllProducts = () => {
           onClick={() => navigate('/manager/create-product')}
         />
       </div>
-    </>
+    </div>
   )
 }
 

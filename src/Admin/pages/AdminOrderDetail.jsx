@@ -96,7 +96,7 @@ const AdminOrderDetail = () => {
         return
       }
 
-      const response = await axios.post(
+      await axios.post(
         `http://localhost:9999/api/staff/order/${id}/create/request`,
         {},
         {
@@ -270,12 +270,6 @@ const AdminOrderDetail = () => {
 
                   <td>
                     <p>{orderItem?.product_order?.product_name}</p>
-                    <span className="text-[12px]">
-                      {
-                        orderItem?.product_order?.category_product
-                          ?.category_name
-                      }
-                    </span>
                   </td>
                   <td>{orderItem?.quantity}</td>
                   <td>

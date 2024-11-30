@@ -1,8 +1,15 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts'
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  Sector
+} from 'recharts'
 
-const RADIAN = Math.PI / 180
 const COLORS = [
   '#880e0e',
   '#3a241b',
@@ -11,8 +18,66 @@ const COLORS = [
   '#38bdf8',
   '#396264'
 ]
+const renderActiveShape = (props) => {
+  const {
+    cx,
+    cy,
+    innerRadius,
+    outerRadius,
+    startAngle,
+    endAngle,
+    fill,
+    payload,
+    value,
+    percent
+  } = props
+
+  // Tính toán vị trí thông tin nằm dưới chân nửa dưới của hình tròn
+  const x = cx
+  const y = cy + outerRadius + 20 // Đưa thông tin xuống dưới nửa dưới của vòng tròn
+
+  return (
+    <g>
+      {/* Vẽ phần lồi */}
+      <Sector
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius + 10} // Tăng kích thước lồi
+        startAngle={startAngle}
+        endAngle={endAngle}
+        fill={fill}
+      />
+
+      {/* Hiển thị thông tin sản phẩm bên dưới */}
+      <text x={x} y={y} textAnchor="middle" fill={fill} fontSize={14}>
+        {payload.product_name}
+      </text>
+      <text
+        x={x}
+        y={y + 20} // Khoảng cách thêm để tách thông tin
+        textAnchor="middle"
+        fill="#333"
+        fontSize={12}
+      >
+        {`Số lượng: ${value}`}
+      </text>
+      <text
+        x={x}
+        y={y + 40} // Khoảng cách thêm để tách thông tin
+        textAnchor="middle"
+        fill="#999"
+        fontSize={12}
+      >
+        {`(${(percent * 100).toFixed(2)}%)`}
+      </text>
+    </g>
+  )
+}
+
 const PieChartStatistics = () => {
   const [mostSoldProducts, setMostSoldProducts] = useState([])
+  const [activeIndex, setActiveIndex] = useState(null)
 
   useEffect(() => {
     async function fetchMostSoldProducts() {
@@ -35,29 +100,12 @@ const PieChartStatistics = () => {
     fetchMostSoldProducts()
   }, [])
 
-  const renderCustomizedLabel = ({
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    percent
-  }) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5
-    const x = cx + radius * Math.cos(-midAngle * RADIAN)
-    const y = cy + radius * Math.sin(-midAngle * RADIAN)
+  const handleMouseEnter = (_, index) => {
+    setActiveIndex(index) // Cập nhật trạng thái phần được hover
+  }
 
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="white"
-        textAnchor={x > cx ? 'start' : 'end'}
-        dominantBaseline="central"
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-      </text>
-    )
+  const handleMouseLeave = () => {
+    setActiveIndex(null) // Xóa trạng thái khi rời chuột
   }
 
   return (
@@ -65,15 +113,18 @@ const PieChartStatistics = () => {
       <strong className="text-sub font-semibold">Sản phẩm phổ biến</strong>
       <div className="w-full mt-3 flex-1 text-xs">
         {mostSoldProducts && mostSoldProducts.length > 0 ? (
-          <ResponsiveContainer width={800} height={500}>
+          <ResponsiveContainer width="100%" height={600}>
             <PieChart>
               <Pie
                 data={mostSoldProducts}
-                cx="50%"
-                cy="45%"
+                cx="-50%"
+                cy="40%"
                 labelLine={false}
-                label={renderCustomizedLabel}
                 outerRadius={200}
+                activeIndex={activeIndex}
+                activeShape={renderActiveShape} // Sử dụng hình dạng lồi tùy chỉnh
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
                 dataKey="total_quantity"
               >
                 {mostSoldProducts.map((entry, index) => (
@@ -83,10 +134,13 @@ const PieChartStatistics = () => {
                   />
                 ))}
               </Pie>
+              <Tooltip
+                formatter={(value) => [`${value} sản phẩm`, 'Số lượng']}
+              />
               <Legend
-                layout="horizontal"
+                layout="vertical"
                 verticalAlign="bottom"
-                align="center"
+                align="left"
                 payload={mostSoldProducts.map((entry, index) => ({
                   value: entry.product_name,
                   type: 'circle',
@@ -104,4 +158,3 @@ const PieChartStatistics = () => {
 }
 
 export default PieChartStatistics
-1
