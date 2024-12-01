@@ -75,14 +75,7 @@ const AllCouponDetail = () => {
                   <td>
                     {coupondetail?.product_coupon?.updatePrices[0].price_new}
                   </td>
-                  <td>
-                    {Math.ceil(
-                      coupondetail?.product_coupon?.updatePrices[0].price_new -
-                        coupondetail?.product_coupon?.updatePrices[0]
-                          .price_new *
-                          coupondetail?.percent
-                    ).toLocaleString('en')}
-                  </td>
+                  <td></td>
                   <td>{getStatus(coupondetail?.status)}</td>
                   <td>
                     <span>
