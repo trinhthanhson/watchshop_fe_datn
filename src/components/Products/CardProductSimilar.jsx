@@ -11,64 +11,83 @@ import { toast } from 'react-toastify'
 
 const CardProductSimilar = ({ product }) => {
   const navigate = useNavigate()
-  const [priceDiscount, setPriceDiscount] = useState(null)
 
-  const coupons = useSelector((state) => state.coupons.coupons.data)
-  const [discountedPrice, setDiscountedPrice] = useState(null)
   const roleName = localStorage.getItem('role_name')
   const decryptedRole = decryptData(roleName)
   const dispatch = useDispatch()
   const {
     product_id,
-    product_name,
-    updatePrices,
+    band_material,
+    band_width,
+    brand_id,
+    case_diameter,
+    case_material,
+    case_thickness,
+    category_id,
+    color,
+    detail,
+    dial_type,
+    func,
+    gender,
+    machine_movement,
+    model,
+    product_name, // Sử dụng thay cho product_name
+    quantity,
+    series,
+    water_resistance,
     image,
-    category_product,
-    brand_product,
+    created_by,
+    updated_by,
     status,
-    quantity
+    created_at,
+    updated_at,
+    brand_name,
+    category_name,
+    created_by_name,
+    updated_by_name,
+    current_price,
+    discounted_price
   } = product
-  const price = updatePrices[0]?.price_new || 0
-  const formattedPrice = price.toLocaleString('en')
-  useEffect(() => {
-    dispatch(getAllCouponsRequest())
-  }, [dispatch])
 
-  useEffect(() => {
-    if (Array.isArray(coupons) && coupons.length > 0) {
-      const now = new Date()
+  // useEffect(() => {
+  //   dispatch(getAllCouponsRequest())
+  // }, [dispatch])
 
-      // Find valid coupon
-      const validCoupon = coupons.find((coupon) => {
-        const startDate = new Date(coupon.start_date)
-        const endDate = new Date(coupon.end_date)
-        return now >= startDate && now <= endDate
-      })
+  // useEffect(() => {
+  //   if (Array.isArray(coupons) && coupons.length > 0) {
+  //     const now = new Date()
 
-      if (validCoupon && validCoupon.couponDetails.length > 0) {
-        // Filter active coupon details for the current product
-        const activeCouponDetails = validCoupon.couponDetails.filter(
-          (detail) =>
-            detail.status === 'ACTIVE' && detail.product_id === product_id
-        )
+  //     // Find valid coupon
+  //     const validCoupon = coupons.find((coupon) => {
+  //       const startDate = new Date(coupon.start_date)
+  //       const endDate = new Date(coupon.end_date)
+  //       return now >= startDate && now <= endDate
+  //     })
 
-        if (activeCouponDetails.length > 0) {
-          // Assuming each detail has a percentage discount
-          const maxPercent = Math.max(
-            ...activeCouponDetails.map(
-              (detail) => parseFloat(detail.percent) || 0
-            )
-          )
+  //     if (validCoupon && validCoupon.couponDetails.length > 0) {
+  //       // Filter active coupon details for the current product
+  //       const activeCouponDetails = validCoupon.couponDetails.filter(
+  //         (detail) =>
+  //           detail.status === 'ACTIVE' && detail.product_id === product_id
+  //       )
 
-          // Calculate discount amount and apply it
-          const discountAmount = price * maxPercent
-          const newPrice = price - discountAmount
-          setDiscountedPrice(Math.ceil(newPrice).toLocaleString('en'))
-          setPriceDiscount(Math.ceil(newPrice))
-        }
-      }
-    }
-  }, [coupons, price, product_id])
+  //       if (activeCouponDetails.length > 0) {
+  //         // Assuming each detail has a percentage discount
+  //         const maxPercent = Math.max(
+  //           ...activeCouponDetails.map(
+  //             (detail) => parseFloat(detail.percent) || 0
+  //           )
+  //         )
+
+  //         // Calculate discount amount and apply it
+  //         const discountAmount = price * maxPercent
+  //         const newPrice = price - discountAmount
+  //         setDiscountedPrice(Math.ceil(newPrice).toLocaleString('en'))
+  //         setPriceDiscount(Math.ceil(newPrice))
+  //       }
+  //     }
+  //   }
+  // }, [coupons, price, product_id])
   const handleAddToCart = () => {
     dispatch(
       addCartRequest({
@@ -84,7 +103,7 @@ const CardProductSimilar = ({ product }) => {
       state: {
         product: product,
         quantity: 1,
-        price: priceDiscount || product.updatePrices[0]?.price_new
+        price: discounted_price
       }
     })
   }
@@ -94,11 +113,11 @@ const CardProductSimilar = ({ product }) => {
       <div>
         <div className="bg-primary rounded-bl-[35px] py-2 pl-8 pr-5 text-center absolute top-0 right-0 w-fit">
           <p className="text-white font-RobotoMedium text-sm 3xl:text-base">
-            {category_product.category_name}
+            {product.category_name}
           </p>
 
           <p className="text-white font-RobotoMedium text-sm 3xl:text-base">
-            {brand_product.brand_name}
+            {product.brand_name}
           </p>
         </div>
         <div className="mb-0 md:h-[200px] lg:h-[250px] xl:h-[35vh]">
@@ -151,15 +170,8 @@ const CardProductSimilar = ({ product }) => {
                   Giá
                 </p>
                 <p className="text-base font-RobotoSemibold 3xl:text-lg text-main">
-                  {discountedPrice
-                    ? `${discountedPrice} VNĐ`
-                    : `${formattedPrice} VNĐ`}
+                  {`${discounted_price.toLocaleString('en')} VNĐ`}
                 </p>
-                {discountedPrice && (
-                  <p className="text-sm text-red-500 line-through">
-                    {formattedPrice} VNĐ
-                  </p>
-                )}
                 <div className="absolute h-full border-l border-grayWhite top-0 left-[50%]"></div>
               </div>
             </div>

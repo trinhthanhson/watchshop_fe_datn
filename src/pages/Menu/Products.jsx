@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react'
 import CardProductItem from '../../components/Products/CardProductItem'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  getAllProductsCustomerRequest,
   getAllCategoriesRequest,
   getAllBrandRequest
 } from '../../redux/actions/actions'
 import axios from 'axios'
+import { getAllProductCouponRequest } from '../../redux/actions/user/action'
 
 const ProductByCategory = () => {
   const [categoryFilter, setCategoryFilter] = useState('')
@@ -25,13 +25,15 @@ const ProductByCategory = () => {
   const loadingBrands = useSelector((state) => state.brands.loading)
   const errorBrands = useSelector((state) => state.brands.error)
   const productsCustomer = useSelector(
-    (state) => state.productsCustomer.productsCustomer.data
+    (state) => state.product_coupon.product_coupon.data
   )
   useEffect(() => {
     dispatch(getAllCategoriesRequest())
-    dispatch(getAllProductsCustomerRequest())
+    dispatch(getAllProductCouponRequest())
     dispatch(getAllBrandRequest())
   }, [dispatch])
+  console.log(productsCustomer)
+
   useEffect(() => {
     if (searchKeyword) {
       const fetchSearchResults = async () => {
@@ -56,22 +58,16 @@ const ProductByCategory = () => {
   const filterProducts = (productsCustomer) => {
     if (
       categoryFilter &&
-      productsCustomer?.category_product?.category_id !==
-        parseInt(categoryFilter)
+      productsCustomer?.category_id !== parseInt(categoryFilter)
     ) {
       return false
     }
-    if (
-      brandFilter &&
-      productsCustomer?.brand_product?.brand_id !== parseInt(brandFilter)
-    ) {
+    if (brandFilter && productsCustomer?.brand_id !== parseInt(brandFilter)) {
       return false
     }
     if (priceRangeFilter) {
       const [min, max] = priceRangeFilter.split('-')
-      const productPrice = parseInt(
-        productsCustomer?.updatePrices[0]?.price_new
-      )
+      const productPrice = parseInt(productsCustomer.discounted_price)
       if (
         (min && productPrice < parseInt(min)) ||
         (max && productPrice > parseInt(max))
@@ -86,8 +82,8 @@ const ProductByCategory = () => {
   }
   const sortProducts = (productsCustomer) => {
     return productsCustomer.sort((a, b) => {
-      const priceA = parseInt(a.updatePrices[0]?.price_new)
-      const priceB = parseInt(b.updatePrices[0]?.price_new)
+      const priceA = parseInt(a.discounted_price)
+      const priceB = parseInt(b.discounted_price)
       return sortOrder === 'asc' ? priceA - priceB : priceB - priceA
     })
   }

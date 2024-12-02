@@ -10,6 +10,7 @@ import {
 } from '../../redux/actions/actions'
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa'
 import { decryptData } from '../../cryptoUtils/cryptoUtils'
+import { getAllProductCouponRequest } from '../../redux/actions/user/action'
 
 const ProductDetail = () => {
   const { id } = useParams()
@@ -19,7 +20,7 @@ const ProductDetail = () => {
   const navigate = useNavigate()
   const [priceDiscount, setPriceDiscount] = useState(null)
   const productsCustomer = useSelector(
-    (state) => state.productsCustomer.productsCustomer.data
+    (state) => state.product_coupon.product_coupon.data
   )
   const roleName = localStorage.getItem('role_name')
   const decryptedRole = decryptData(roleName)
@@ -33,7 +34,7 @@ const ProductDetail = () => {
     : []
 
   useEffect(() => {
-    dispatch(getAllProductsCustomerRequest())
+    dispatch(getAllProductCouponRequest())
     dispatch(getAllCouponsRequest())
     dispatch(getReviewProductRequest(id)) // Thêm dòng này
   }, [dispatch, id])
@@ -157,25 +158,15 @@ const ProductDetail = () => {
                     Giá
                   </p>
                   <p className="text-main font-RobotoMedium text-[18px] lg:text-[17px] 3xl:text-[20px]">
-                    {discountedPrice
-                      ? `${discountedPrice} VNĐ`
-                      : `${selectedProduct?.updatePrices[0]?.price_new.toLocaleString('en')} VNĐ`}
+                    {`${selectedProduct?.discounted_price.toLocaleString('en')} VNĐ`}
                   </p>
-                  {discountedPrice && (
-                    <p className="text-sm text-red-500 line-through">
-                      {selectedProduct?.updatePrices[0]?.price_new.toLocaleString(
-                        'en'
-                      )}{' '}
-                      VNĐ
-                    </p>
-                  )}
                 </div>
                 <div className="col-span-12 sm:col-span-6 mb-2 sm:mb-0 pr-[10px] mr-[10px]">
                   <p className="font-serif text-sub text-[18px] 3xl:text-[17px]">
                     Loại
                   </p>
                   <p className="text-main font-RobotoMedium text-[18px] lg:text-[17px] 3xl:text-[20px]">
-                    {selectedProduct?.category_product?.category_name}
+                    {selectedProduct?.category_name}
                   </p>
                 </div>
                 <div className="col-span-12 sm:col-span-6 mb-2 sm:mb-0 pr-[10px] mr-[10px]  mt-[20px]">
@@ -183,7 +174,7 @@ const ProductDetail = () => {
                     Hãng
                   </p>
                   <p className="text-main font-RobotoMedium text-[18px] lg:text-[17px] 3xl:text-[20px]">
-                    {selectedProduct?.brand_product?.brand_name}
+                    {selectedProduct?.brand_name}
                   </p>
                 </div>
               </div>

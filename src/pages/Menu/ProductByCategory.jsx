@@ -7,6 +7,7 @@ import {
   getAllCategoriesRequest,
   getAllBrandRequest
 } from '../../redux/actions/actions'
+import { getAllProductCouponRequest } from '../../redux/actions/user/action'
 
 const ProductByCategory = () => {
   const { category_id } = useParams() // Lấy category_id từ URL
@@ -23,7 +24,7 @@ const ProductByCategory = () => {
   const loadingCategories = useSelector((state) => state.categories.loading)
   const errorCategories = useSelector((state) => state.categories.error)
   const productsCustomer = useSelector(
-    (state) => state.productsCustomer.productsCustomer?.data || []
+    (state) => state.product_coupon.product_coupon?.data || []
   )
   const brands = useSelector((state) => state.brands.brands?.data || [])
 
@@ -31,7 +32,7 @@ const ProductByCategory = () => {
   const errorbrands = useSelector((state) => state.brands.error)
   useEffect(() => {
     dispatch(getAllCategoriesRequest())
-    dispatch(getAllProductsCustomerRequest())
+    dispatch(getAllProductCouponRequest())
     dispatch(getAllBrandRequest())
   }, [dispatch])
 
@@ -42,21 +43,15 @@ const ProductByCategory = () => {
   }, [category_id])
 
   const filterProducts = (product) => {
-    if (
-      categoryFilter &&
-      product?.category_product?.category_id !== parseInt(categoryFilter)
-    ) {
+    if (categoryFilter && product?.category_id !== parseInt(categoryFilter)) {
       return false
     }
-    if (
-      brandFilter &&
-      product?.brand_product?.brand_id !== parseInt(brandFilter)
-    ) {
+    if (brandFilter && product?.brand_id !== parseInt(brandFilter)) {
       return false
     }
     if (priceRangeFilter) {
       const [min, max] = priceRangeFilter.split('-').map(Number)
-      const productPrice = parseInt(product?.updatePrices[0]?.price_new)
+      const productPrice = parseInt(product?.discouted_price)
       if ((min && productPrice < min) || (max && productPrice > max)) {
         return false
       }
@@ -66,8 +61,8 @@ const ProductByCategory = () => {
 
   const sortProducts = (products) => {
     return products.sort((a, b) => {
-      const priceA = parseInt(a.updatePrices[0]?.price_new)
-      const priceB = parseInt(b.updatePrices[0]?.price_new)
+      const priceA = parseInt(a.discouted_price)
+      const priceB = parseInt(b.discouted_price)
       return sortOrder === 'asc' ? priceA - priceB : priceB - priceA
     })
   }

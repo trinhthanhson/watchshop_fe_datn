@@ -35,6 +35,7 @@ import statisticReducer from './statistic/statisticReducer'
 import getDataNotFullReducer from './inventory/manager/getDataNotFullReducer'
 import quantityReportReducer from './statistic/quantityReportReducer'
 import revenueProductReducer from './statistic/revenueProductReducer'
+import getProductCouponReducer from './user/getProductCouponReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -72,7 +73,8 @@ const rootReducer = combineReducers({
   statistic: statisticReducer,
   notfull: getDataNotFullReducer,
   quantity_report: quantityReportReducer,
-  revenue_product: revenueProductReducer
+  revenue_product: revenueProductReducer,
+  product_coupon: getProductCouponReducer
 })
 
 export default rootReducer

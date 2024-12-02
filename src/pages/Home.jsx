@@ -4,8 +4,8 @@ import 'slick-carousel/slick/slick-theme.css'
 //import { menu } from '../apis/mock-data'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { getAllProductsCustomerRequest } from '../redux/actions/actions'
 import CardProductItem from '../components/Products/CardProductItem'
+import { getAllProductCouponRequest } from '../redux/actions/user/action'
 
 const Home = () => {
   const settings = {
@@ -20,13 +20,13 @@ const Home = () => {
 
   const dispatch = useDispatch()
   const productsCustomer = useSelector(
-    (state) => state.productsCustomer.productsCustomer.data
+    (state) => state.product_coupon.product_coupon.data
   )
 
   const [display, setDisplay] = useState(5)
 
   useEffect(() => {
-    dispatch(getAllProductsCustomerRequest())
+    dispatch(getAllProductCouponRequest())
   }, [dispatch])
 
   return (
