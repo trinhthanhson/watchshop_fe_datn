@@ -1,19 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import CartItem from '../components/Cart/CartItem'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  getAllCartRequest,
-  getAllCouponsRequest
-} from '../redux/actions/actions'
+import { getAllCartRequest } from '../redux/actions/actions'
 import { useNavigate } from 'react-router-dom'
 
 const Cart = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const cart = useSelector((state) => state.cart.cart.data)
-  const coupons = useSelector((state) => state.coupons.coupons.data)
-  const [discountedPrices, setDiscountedPrices] = useState([]) // Array to store discounted prices for each cart item
-
+  console.log(cart)
   const cartDetailRef = useRef(null)
   const getAllCart = useCallback(() => {
     dispatch(getAllCartRequest())
@@ -30,66 +25,14 @@ const Cart = () => {
   const handleDeleteSuccess = () => {
     getAllCart()
   }
+  const totalPrice = cart?.reduce((total, item) => {
+    // Lấy giá trị discounted_price và quantity từ mỗi item
+    const discountedPrice = item.discounted_price || 0 // Đảm bảo giá trị không null/undefined
+    const quantity = item.quantity || 0 // Đảm bảo giá trị không null/undefined
 
-  useEffect(() => {
-    if (
-      Array.isArray(coupons) &&
-      coupons.length > 0 &&
-      Array.isArray(cart) &&
-      cart.length > 0
-    ) {
-      const now = new Date()
-      const newDiscountedPrices = cart.map((cartItem) => {
-        const price = cartItem.product_cart?.updatePrices[0]?.price_new || 0
-
-        // Find a valid coupon for the current time
-        const validCoupon = coupons.find((coupon) => {
-          const startDate = new Date(coupon.start_date)
-          const endDate = new Date(coupon.end_date)
-          return now >= startDate && now <= endDate
-        })
-
-        if (validCoupon && validCoupon.couponDetails.length > 0) {
-          // Filter active coupon details for the current product
-          const activeCouponDetails = validCoupon.couponDetails.filter(
-            (detail) =>
-              detail.status === 'ACTIVE' &&
-              detail.product_id === cartItem.product_cart?.product_id
-          )
-          if (activeCouponDetails.length > 0) {
-            // Assuming each detail has a percentage discount
-            const maxPercent = Math.max(
-              ...activeCouponDetails.map(
-                (detail) => parseFloat(detail.percent) || 0
-              )
-            )
-
-            // Calculate the discounted price
-            const discountAmount = price * maxPercent
-
-            const newPrice = price - discountAmount
-            console.log(newPrice)
-
-            return Math.ceil(newPrice) // Raw discounted price for calculations
-          }
-        }
-
-        return price // Use the regular price if no discount applies
-      })
-
-      setDiscountedPrices(newDiscountedPrices)
-    }
-  }, [coupons, cart])
-
-  // Calculate total price using the discounted prices
-  const totalPrice = discountedPrices.reduce((total, price, index) => {
-    const quantity = cart[index]?.quantity || 0
-    return total + price * quantity
+    // Cộng dồn vào tổng
+    return total + discountedPrice * quantity
   }, 0)
-
-  useEffect(() => {
-    dispatch(getAllCouponsRequest())
-  }, [dispatch])
 
   const handleOrderButtonClick = () => {
     navigate('/checkout')
