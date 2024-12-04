@@ -12,7 +12,6 @@ const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
   const dispatch = useDispatch()
 
   const cart_get = useSelector((state) => state.cart.cart.data)
-  console.log(cart)
   const handleQuantityChange = async (newQuantity) => {
     if (newQuantity <= cart?.quantity) {
       try {

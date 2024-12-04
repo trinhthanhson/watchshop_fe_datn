@@ -89,7 +89,7 @@ const AllCoupons = () => {
                   </td>
                   <td>{new Date(coupon?.start_date).toLocaleDateString()}</td>
                   <td>{new Date(coupon?.end_date).toLocaleDateString()}</td>
-                  <td>{coupon?.percent * 100 + '%'}</td>
+                  <td>{coupon?.percent + '%'}</td>
                   <td>
                     {coupon?.staff_create?.first_name +
                       ' ' +

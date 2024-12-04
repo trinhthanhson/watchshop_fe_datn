@@ -8,7 +8,6 @@ const Cart = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const cart = useSelector((state) => state.cart.cart.data)
-  console.log(cart)
   const cartDetailRef = useRef(null)
   const getAllCart = useCallback(() => {
     dispatch(getAllCartRequest())

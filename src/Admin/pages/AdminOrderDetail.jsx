@@ -272,12 +272,7 @@ const AdminOrderDetail = () => {
                     <p>{orderItem?.product_order?.product_name}</p>
                   </td>
                   <td>{orderItem?.quantity}</td>
-                  <td>
-                    {orderItem.product_order.updatePrices[0].price_new.toLocaleString(
-                      'en'
-                    )}{' '}
-                    VNĐ
-                  </td>
+                  <td>{orderItem.price.toLocaleString('en')} VNĐ</td>
                   <td>
                     {new Date(orderDetail.created_at).toLocaleDateString()}
                   </td>

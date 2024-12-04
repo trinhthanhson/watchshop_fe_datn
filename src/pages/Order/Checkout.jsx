@@ -92,6 +92,14 @@ const Checkout = () => {
   }
 
   const handleOrder = async () => {
+    const cleanCart = cart?.data?.map((item) => {
+      return Object.entries(item).reduce((acc, [key, value]) => {
+        if (value !== null) {
+          acc[key] = value // Chỉ thêm các trường khác null
+        }
+        return acc
+      }, {})
+    })
     if (!address) {
       setError('Please enter a shipping address.')
       return
@@ -99,6 +107,15 @@ const Checkout = () => {
     setLoading(true)
     setError(null)
     setSuccess(null)
+    const body = JSON.stringify({
+      cart: cleanCart,
+      total_price,
+      address,
+      recipient_name: recipientName,
+      note,
+      recipient_phone: recipientPhone
+    })
+    console.log(body)
     try {
       const response = await fetch(
         'http://localhost:9999/api/customer/order/buy-cart',
@@ -109,6 +126,7 @@ const Checkout = () => {
             Authorization: `Bearer ${token}`
           },
           body: JSON.stringify({
+            cart: cart?.data,
             total_price,
             address,
             recipient_name: recipientName,
@@ -186,13 +204,15 @@ const Checkout = () => {
     }
   }
 
-  const total_price = Array.isArray(cart?.data)
-    ? cart.data.reduce((total, item) => {
-        const price = item.product_cart?.updatePrices[0]?.price_new || 0 // Lấy giá mới nhất của sản phẩm
-        const quantity = item.quantity || 0 // Số lượng của sản phẩm
-        return total + price * quantity // Tính tổng giá trị cho từng sản phẩm
-      }, 0)
-    : 0
+  const total_price = cart?.data?.reduce((total, item) => {
+    // Lấy giá trị discounted_price và quantity từ mỗi item
+    const discountedPrice = item.discounted_price || 0 // Đảm bảo giá trị không null/undefined
+    const quantity = item.quantity || 0 // Đảm bảo giá trị không null/undefined
+
+    // Cộng dồn vào tổng
+    return total + discountedPrice * quantity
+  }, 0)
+
   return (
     <>
       <section className="relative flex flex-col-reverse md:flex-row items-center bg-[url('https://www.highlandscoffee.com.vn/vnt_upload/cake/SPECIALTYCOFFEE/Untitled-1-01.png')]">
