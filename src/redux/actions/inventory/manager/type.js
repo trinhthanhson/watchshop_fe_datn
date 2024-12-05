@@ -9,3 +9,12 @@ export const GET_DATA_NOT_FULL_REQUEST = 'GET_DATA_NOT_FULL_REQUEST'
 export const GET_DATA_NOT_FULL_SUCCESS = 'GET_DATA_NOT_FULL_SUCCESS'
 export const GET_DATA_NOT_FULL_FAILURE = 'GET_DATA_NOT_FULL_FAILURE'
 // ----------------------------------------------
+
+// -------------transaction----------------------
+export const GET_ALL_REQUEST_NOT_FULL_REQUEST =
+  'GET_ALL_REQUEST_NOT_FULL_REQUEST'
+export const GET_ALL_REQUEST_NOT_FULL_SUCCESS =
+  'GET_ALL_REQUEST_NOT_FULL_SUCCESS'
+export const GET_ALL_REQUEST_NOT_FULL_FAILURE =
+  'GET_ALL_REQUEST_NOT_FULL_FAILURE'
+// ----------------------------------------------

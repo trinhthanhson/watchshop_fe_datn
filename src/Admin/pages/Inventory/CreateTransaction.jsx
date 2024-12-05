@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   getAllProductsRequest,
-  getAllRequestRequest,
   getAllSupplierRequest,
   getUserProfileRequest
 } from '../../../redux/actions/actions'
 import { useNavigate } from 'react-router-dom'
 import {
   createTransactionRequest,
+  getAllRequestNotFullRequest,
   getDataNotFullRequest
 } from '../../../redux/actions/inventory/manager/action'
 
@@ -35,14 +35,13 @@ const CreateRequest = () => {
 
   const products = useSelector((state) => state.products?.products?.data)
   const user = useSelector((state) => state.user?.user?.data)
-  const request = useSelector((state) => state.request?.request?.data)
+  const request = useSelector((state) => state.request_all?.request_all?.data)
   const supplier = useSelector((state) => state.suppliers?.suppliers?.data)
-
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(getAllProductsRequest())
-    dispatch(getAllRequestRequest()) // Lấy danh sách các phiếu đề nghị
+    dispatch(getAllRequestNotFullRequest()) // Lấy danh sách các phiếu đề nghị
     dispatch(getUserProfileRequest())
     dispatch(getAllSupplierRequest())
   }, [dispatch])
@@ -155,7 +154,7 @@ const CreateRequest = () => {
     // Gửi request ID để lấy dữ liệu từ API
     dispatch(getDataNotFullRequest(selectedRequestId))
   }
-  
+
   useEffect(() => {
     if (dataNotFull) {
       // Chuyển đổi dữ liệu từ API thành bảng
@@ -167,7 +166,7 @@ const CreateRequest = () => {
         unitPrice: detail?.price || 0,
         totalPrice: detail.quantityRequest * detail?.price || 0,
         note: detail?.note || '',
-        stock: detail?.productQuantitya
+        stock: detail?.productQuantity
       }))
       setItems(updatedItems)
     } else {
@@ -210,6 +209,7 @@ const CreateRequest = () => {
       }))
     }
     dispatch(createTransactionRequest(payload, navigate))
+    setItems(null)
   }
 
   return (
@@ -310,7 +310,7 @@ const CreateRequest = () => {
             <option value="">-- Chọn phiếu đề nghị --</option>
             {request?.map((req) => (
               <option key={req?.request_id} value={req?.request_id}>
-                {req.content}
+                {req.transaction_code + ' - ' + req.content}
               </option>
             ))}
           </select>

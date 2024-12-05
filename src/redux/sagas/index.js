@@ -36,6 +36,7 @@ import dataNotFullSaga from './inventory/manager/getDataNotFullSaga'
 import quantityReportSaga from './statistic/quantityReportSaga'
 import revenueProductSaga from './statistic/revenueProductSaga'
 import getProductCouponSaga from './user/getProductCouponSaga'
+import getAllRequestNotFullSaga from './inventory/manager/getAllRequestNotFullSaga'
 export default function* rootSaga() {
   yield all([
     newSaga(),
@@ -74,6 +75,7 @@ export default function* rootSaga() {
     dataNotFullSaga(),
     quantityReportSaga(),
     revenueProductSaga(),
-    getProductCouponSaga()
+    getProductCouponSaga(),
+    getAllRequestNotFullSaga()
   ])
 }
