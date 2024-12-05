@@ -19,7 +19,6 @@ function* getAllSupplierSaga() {
         }
       }
     )
-    console.log('dđ', response)
     yield put(getAllSupplierSuccess(response.data))
   } catch (error) {
     yield put(getAllSupplierFailure(error))

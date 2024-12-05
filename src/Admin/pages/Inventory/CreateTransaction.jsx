@@ -155,11 +155,11 @@ const CreateRequest = () => {
     // Gửi request ID để lấy dữ liệu từ API
     dispatch(getDataNotFullRequest(selectedRequestId))
   }
-
+  
   useEffect(() => {
     if (dataNotFull) {
       // Chuyển đổi dữ liệu từ API thành bảng
-      const updatedItems = dataNotFull?.product_request.map((detail) => ({
+      const updatedItems = dataNotFull?.product_request?.map((detail) => ({
         product_id: detail?.productId,
         name: detail?.productName || '',
         quantity: detail?.remainingQuantity || 0,
