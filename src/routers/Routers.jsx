@@ -85,7 +85,11 @@ const Routers = () => {
           decryptedRole === 'STAFF' ||
           decryptedRole === 'SHIPPER' ||
           decryptedRole === 'WAREHOUSE_STAFF' ||
-          decryptedRole === 'WAREHOUSE_MANAGER'
+          decryptedRole === 'WAREHOUSE_MANAGER' ||
+          decryptedRole === 'WAREHOUSE_KEEPER' ||
+          decryptedRole === 'SALESPERSON' ||
+          decryptedRole === 'BUSINESS_STAFF' ||
+          decryptedRole === 'DIRECTOR'
         ) {
           setIsLoggedIn(true)
         }

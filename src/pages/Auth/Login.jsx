@@ -125,7 +125,12 @@ const Login = () => {
     console.log(userRole)
     if (userRole != null) {
       localStorage.setItem('role_name', encryptData(userRole))
-      if (userRole === 'MANAGER' || userRole === 'STAFF') {
+      if (
+        userRole === 'MANAGER' ||
+        userRole === 'STAFF' ||
+        userRole === 'BUSINESS_STAFF' ||
+        userRole === 'SALESPERSON'
+      ) {
         navigate('/manager')
       } else if (userRole === 'CUSTOMER') {
         navigate('/home')
@@ -133,7 +138,9 @@ const Login = () => {
         navigate('/manager/shipper')
       } else if (
         userRole === 'WAREHOUSE_STAFF' ||
-        userRole === 'WAREHOUSE_MANAGER'
+        userRole === 'WAREHOUSE_MANAGER' ||
+        userRole === 'WAREHOUSE_KEEPER' ||
+        userRole === 'DIRECTOR'
       ) {
         navigate('/inventory')
       }
