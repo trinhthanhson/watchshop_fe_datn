@@ -23,10 +23,8 @@ import reviewProductReducer from './reviewProductReducer'
 import roleReducer from './roleReducer'
 import addProductsBatchReducers from './addProductBatchReducers'
 import supplierReducer from './supplierReducer'
-import requestReducer from './requestReducer'
 import createRequestReducer from './createRequestReducer'
 import requestDetailReducer from './requestDetailReducer'
-import transactionReducer from './transactionReducer'
 import transactionDetailReducer from './transactionDetailReducer'
 import typeReducer from './typeReducer'
 import staffManagerReducer from './manager/staffReducer'
@@ -37,6 +35,10 @@ import quantityReportReducer from './statistic/quantityReportReducer'
 import revenueProductReducer from './statistic/revenueProductReducer'
 import getProductCouponReducer from './user/getProductCouponReducer'
 import getAllRequestNotFullReducer from './inventory/manager/getAllRequestNotFullReducer'
+import transactionImportReducer from './inventory/manager/transactionImportReducer'
+import transactionExportReducer from './inventory/manager/transactionExportReducer'
+import requestImportReducer from './inventory/manager/requestImportReducer'
+import requestExportReducer from './inventory/manager/requestExportReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -64,9 +66,11 @@ const rootReducer = combineReducers({
   roles: roleReducer,
   suppliers: supplierReducer,
   createRequest: createRequestReducer,
-  request: requestReducer,
+  request_import: requestImportReducer,
+  request_export: requestExportReducer,
   requestDetail: requestDetailReducer,
-  transaction: transactionReducer,
+  transaction_import: transactionImportReducer,
+  transaction_export: transactionExportReducer,
   transactionDetail: transactionDetailReducer,
   type: typeReducer,
   managerStaff: staffManagerReducer,

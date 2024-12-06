@@ -89,14 +89,40 @@ export const DASHBOARD_SIDEBAR_TOP_LINKS_INVENTORY = [
   {
     key: 'request',
     label: 'Phiếu đề nghị',
-    path: '/inventory/request',
-    icon: <GrTransaction />
+    icon: <GrTransaction />,
+    subLinks: [
+      {
+        key: 'request-import',
+        label: 'Đề nghị nhập',
+        path: '/inventory/request/import',
+        icon: <GrTransaction />
+      },
+      {
+        key: 'request-export',
+        label: 'Đề nghị xuất',
+        path: '/inventory/request/export',
+        icon: <GrTransaction />
+      }
+    ]
   },
   {
     key: 'transaction',
-    label: 'Phiếu nhập/xuất',
-    path: '/inventory/transaction',
-    icon: <GrTransaction />
+    label: 'Giao dịch',
+    icon: <GrTransaction />,
+    subLinks: [
+      {
+        key: 'transaction-import',
+        label: 'Phiếu nhập',
+        path: '/inventory/transaction/import',
+        icon: <GrTransaction />
+      },
+      {
+        key: 'transaction-export',
+        label: 'Phiếu xuất',
+        path: '/inventory/transaction/export',
+        icon: <GrTransaction />
+      }
+    ]
   },
   {
     key: 'staff',

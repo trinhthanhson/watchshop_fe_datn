@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import {
-  getAllRequestRequest,
-  getOrderDetailRequest
-} from '../../redux/actions/actions'
+import { getOrderDetailRequest } from '../../redux/actions/actions'
 import axios from 'axios'
+import { getAllRequestExportRequest } from '../../redux/actions/inventory/manager/action'
 
 const AdminOrderDetail = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
   const orderDetail = useSelector((state) => state.orderDetail.orderDetail)
-  const tranRequest = useSelector((state) => state.request.request.data)
+  const tranRequest = useSelector(
+    (state) => state.request_export.request_export.data
+  )
   const isOrderInRequest = tranRequest?.some(
     (request) => request?.order_id === orderDetail?.order_id
   )
@@ -44,7 +44,7 @@ const AdminOrderDetail = () => {
   useEffect(() => {
     try {
       dispatch(getOrderDetailRequest(id))
-      dispatch(getAllRequestRequest())
+      dispatch(getAllRequestExportRequest())
       checkTransactionStatus(id) // Gọi hàm kiểm tra trạng thái giao dịch
     } catch (error) {
       console.error('Error dispatch', error)
@@ -107,7 +107,7 @@ const AdminOrderDetail = () => {
       )
 
       dispatch(getOrderDetailRequest(id)) // Gọi lại để lấy dữ liệu sau khi tạo phiếu
-      dispatch(getAllRequestRequest())
+      dispatch(getAllRequestExportRequest())
     } catch (error) {
       console.error('Error changing order status', error)
     }

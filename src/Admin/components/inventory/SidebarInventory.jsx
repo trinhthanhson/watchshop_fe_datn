@@ -29,8 +29,10 @@ const SidebarInventory = () => {
 
   return (
     <div
-      className="fixed bg-primary w-70 h-full p-8 flex flex-col text-white font-RobotoMedium"
-      style={{ backgroundColor: 'rgb(199 199 199)' }}
+      className="fixed bg-primary w-60 h-full p-8 flex flex-col text-white font-RobotoMedium overflow-y-auto"
+      style={{
+        backgroundColor: 'rgb(199, 199, 199)'
+      }}
     >
       <div className="flex items-center justify-center gap-3">
         <img
@@ -64,7 +66,7 @@ const SidebarInventory = () => {
               }
             >
               <div>{link.icon}</div>
-              <div>{link.label}</div>
+              <div className="h-full">{link.label}</div>
             </div>
             {/* Hiển thị menu con nếu có */}
             {link.subLinks && expandedKey === link.key && (
@@ -83,8 +85,19 @@ const SidebarInventory = () => {
                         backgroundColor:
                           location.pathname === subLink.path
                             ? 'rgb(220, 220, 220)'
-                            : 'transparent'
+                            : 'transparent',
+                        transition: 'background-color 0.3s ease'
                       }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor =
+                          'rgb(230, 230, 230)')
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor =
+                          location.pathname === subLink.path
+                            ? 'rgb(220, 220, 220)'
+                            : 'transparent')
+                      }
                     >
                       <div>{subLink.icon}</div>
                       <div>{subLink.label}</div>

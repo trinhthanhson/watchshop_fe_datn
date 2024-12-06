@@ -6,22 +6,22 @@ import { MdFileDownload } from 'react-icons/md'
 import { BiDetail } from 'react-icons/bi'
 import * as XLSX from 'xlsx'
 import { getStatusRequest, getStatusText } from '../../../constants/Status'
-import { getAllTransactionRequest } from '../../../redux/actions/actions'
+import { getAllRequestImportRequest } from '../../../redux/actions/inventory/manager/action'
 
-const Transaction = () => {
+const TransactionRequestImport = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const transaction = useSelector((state) => state.transaction?.transaction)
+  const request = useSelector((state) => state.request_import?.request_import)
   const [sortOrder, setSortOrder] = useState('all') // Trạng thái bộ lọc
   useEffect(() => {
     try {
-      dispatch(getAllTransactionRequest())
+      dispatch(getAllRequestImportRequest())
     } catch (error) {
       console.error('Error dispatch', error)
     }
   }, [dispatch])
 
-  const filteredAndSortedRequest = transaction?.data
+  const filteredAndSortedRequest = request?.data
     ?.filter(
       () => (sortOrder === 'all' ? true : Request.quantity > 0) // Nếu 'all' được chọn, không lọc
     )
@@ -95,34 +95,32 @@ const Transaction = () => {
               <td>Ngày tạo</td>
               <td>Người tạo</td>
               <td>Loại phiếu</td>
+              <td>Trạng Thái</td>
               <td>Chi tiết</td>
             </tr>
           </thead>
           <tbody>
-            {filteredAndSortedRequest?.map((transaction, index) => (
-              <tr key={transaction.request_id}>
+            {filteredAndSortedRequest?.map((request, index) => (
+              <tr key={request.request_id}>
                 <td>{index + 1}</td>
-                <td>{transaction?.transaction_code}</td>
-                <td>{transaction?.total_quantity}</td>
-                <td>{transaction?.total_price.toLocaleString('vi-VN')}</td>
+                <td>{request?.transaction_code}</td>
+                <td>{request?.total_quantity}</td>
+                <td>{request?.total_price.toLocaleString('vi-VN')}</td>
+                <td>{new Date(request?.created_at).toLocaleDateString()}</td>
                 <td>
-                  {new Date(transaction?.created_at).toLocaleDateString()}
+                  {request?.staff_created_request?.first_name +
+                    ' ' +
+                    request?.staff_created_request?.last_name}
                 </td>
 
-                <td>
-                  {transaction?.staff_transaction?.first_name +
-                    ' ' +
-                    transaction?.staff_transaction?.last_name}
-                </td>
-                <td>{transaction?.type_transaction?.type_name}</td>
+                <td>{request?.type_request?.type_name}</td>
+                <td>{getStatusRequest(request?.status)}</td>
                 <td>
                   <BiDetail
                     className="cursor-pointer"
                     size={30}
                     onClick={() =>
-                      navigate(
-                        `/inventory/transaction/${transaction?.transaction_id}`
-                      )
+                      navigate(`/inventory/request/${request?.request_id}`)
                     }
                   />
                 </td>
@@ -135,11 +133,11 @@ const Transaction = () => {
         <IoIosAddCircle
           fontSize={50}
           className="cursor-pointer text-primary"
-          onClick={() => navigate('/inventory/create-transaction')}
+          onClick={() => navigate('/inventory/create-request')}
         />
       </div>
     </>
   )
 }
 
-export default Transaction
+export default TransactionRequestImport

@@ -5,17 +5,17 @@ import { IoIosAddCircle } from 'react-icons/io'
 import { MdFileDownload } from 'react-icons/md'
 import { BiDetail } from 'react-icons/bi'
 import * as XLSX from 'xlsx'
-import { getAllRequestRequest } from '../../../redux/actions/actions'
 import { getStatusRequest, getStatusText } from '../../../constants/Status'
+import { getAllRequestExportRequest } from '../../../redux/actions/inventory/manager/action'
 
-const TransactionRequest = () => {
+const TransactionRequestExport = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const request = useSelector((state) => state.request?.request)
+  const request = useSelector((state) => state.request_export?.request_export)
   const [sortOrder, setSortOrder] = useState('all') // Trạng thái bộ lọc
   useEffect(() => {
     try {
-      dispatch(getAllRequestRequest())
+      dispatch(getAllRequestExportRequest())
     } catch (error) {
       console.error('Error dispatch', error)
     }
@@ -94,7 +94,6 @@ const TransactionRequest = () => {
               <td>Tổng giá</td>
               <td>Ngày tạo</td>
               <td>Người tạo</td>
-              <td>Người xác nhận</td>
               <td>Loại phiếu</td>
               <td>Trạng Thái</td>
               <td>Chi tiết</td>
@@ -113,15 +112,7 @@ const TransactionRequest = () => {
                     ' ' +
                     request?.staff_created_request?.last_name}
                 </td>
-                <td>
-                  <td>
-                    {request?.staff_updated_request
-                      ? request.staff_updated_request.first_name +
-                        ' ' +
-                        request.staff_updated_request.last_name
-                      : 'Chưa xác nhận'}
-                  </td>
-                </td>
+
                 <td>{request?.type_request?.type_name}</td>
                 <td>{getStatusRequest(request?.status)}</td>
                 <td>
@@ -149,4 +140,4 @@ const TransactionRequest = () => {
   )
 }
 
-export default TransactionRequest
+export default TransactionRequestExport

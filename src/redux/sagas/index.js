@@ -24,9 +24,7 @@ import roleSaga from './roleSaga'
 import watchAddProductsBatch from './addProductBatchSaga'
 import supplierSaga from './supplierSaga'
 import createRequestSaga from './createRequestSaga'
-import requestSaga from './requestSaga'
 import requestDetailSaga from './requestDetailSaga'
-import transactionSaga from './transactionSaga'
 import transactionDetailSaga from './transactionDetailSaga'
 import typeSaga from './typeSaga'
 import staffManagerSaga from './manager/staffSaga'
@@ -37,6 +35,10 @@ import quantityReportSaga from './statistic/quantityReportSaga'
 import revenueProductSaga from './statistic/revenueProductSaga'
 import getProductCouponSaga from './user/getProductCouponSaga'
 import getAllRequestNotFullSaga from './inventory/manager/getAllRequestNotFullSaga'
+import transactionImportSaga from './inventory/manager/transactionImportSaga'
+import transactionExportSaga from './inventory/manager/transactionExportSaga'
+import requestImportSaga from './inventory/manager/requestImportSaga'
+import requestExportSaga from './inventory/manager/requestExportSaga'
 export default function* rootSaga() {
   yield all([
     newSaga(),
@@ -65,9 +67,11 @@ export default function* rootSaga() {
     roleSaga(),
     supplierSaga(),
     createRequestSaga(),
-    requestSaga(),
+    requestImportSaga(),
+    requestExportSaga(),
     requestDetailSaga(),
-    transactionSaga(),
+    transactionImportSaga(),
+    transactionExportSaga(),
     transactionDetailSaga(),
     typeSaga(),
     createTransactionSaga(),

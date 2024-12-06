@@ -108,10 +108,16 @@ export function getStatusRequest(status) {
             Từ chối
           </span>
         )
-      case 'APPROVED':
+      case 'FULL':
         return (
           <span className="capitalize py-1 px-2 rounded-md text-xs text-white bg-primary">
-            Đã xác nhận
+            Đã nhập đủ
+          </span>
+        )
+      case 'NOTFULL':
+        return (
+          <span className="capitalize py-1 px-2 rounded-md text-xs text-white bg-primary">
+            Chưa nhập đủ
           </span>
         )
       default:

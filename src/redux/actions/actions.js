@@ -81,15 +81,9 @@ import {
   CREATE_TRANSACTION_REQUEST,
   CREATE_TRANSACTION_SUCCESS,
   CREATE_TRANSACTION_FAILURE,
-  GET_ALL_REQUEST_REQUEST,
-  GET_ALL_REQUEST_SUCCESS,
-  GET_ALL_REQUEST_FAILURE,
   GET_REQUEST_DETAIL_REQUEST,
   GET_REQUEST_DETAIL_SUCCESS,
   GET_REQUEST_DETAIL_FAILURE,
-  GET_ALL_TRANSACTION_REQUEST,
-  GET_ALL_TRANSACTION_SUCCESS,
-  GET_ALL_TRANSACTION_FAILURE,
   GET_TRANSACTION_DETAIL_REQUEST,
   GET_TRANSACTION_DETAIL_SUCCESS,
   GET_TRANSACTION_DETAIL_FAILURE,
@@ -487,20 +481,6 @@ export const createTransactionFailure = (error) => ({
   error
 })
 
-export const getAllRequestRequest = () => ({
-  type: GET_ALL_REQUEST_REQUEST
-})
-
-export const getAllRequestSuccess = (request) => ({
-  type: GET_ALL_REQUEST_SUCCESS,
-  payload: request
-})
-
-export const getAllRequestFailure = (error) => ({
-  type: GET_ALL_REQUEST_FAILURE,
-  payload: error
-})
-
 export const getRequestDetailRequest = (id) => ({
   type: GET_REQUEST_DETAIL_REQUEST,
   payload: id
@@ -513,20 +493,6 @@ export const getRequestDetailSuccess = (requestDetail) => ({
 
 export const getRequestDetailFailure = (error) => ({
   type: GET_REQUEST_DETAIL_FAILURE,
-  payload: error
-})
-
-export const getAllTransactionRequest = () => ({
-  type: GET_ALL_TRANSACTION_REQUEST
-})
-
-export const getAllTransactionSuccess = (transaction) => ({
-  type: GET_ALL_TRANSACTION_SUCCESS,
-  payload: transaction
-})
-
-export const getAllTransactionFailure = (error) => ({
-  type: GET_ALL_TRANSACTION_FAILURE,
   payload: error
 })
 

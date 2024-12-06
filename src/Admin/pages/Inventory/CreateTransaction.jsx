@@ -209,7 +209,7 @@ const CreateRequest = () => {
       }))
     }
     dispatch(createTransactionRequest(payload, navigate))
-    setItems(null)
+    setItems([])
   }
 
   return (

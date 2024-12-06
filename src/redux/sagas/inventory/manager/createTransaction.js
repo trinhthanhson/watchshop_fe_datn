@@ -26,7 +26,7 @@ function* handleCreateTransaction(action) {
       yield put(createTransactionSuccess(response.data))
 
       // Điều hướng
-      action.navigate('/inventory/transaction')
+      action.navigate('/inventory/transaction/import')
     } else {
       throw new Error(response.data.message || 'Something went wrong')
     }

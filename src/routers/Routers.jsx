@@ -45,19 +45,16 @@ import ProductByBrand from '../pages/Menu/ProductByBrand'
 import OrderAcceptShipper from '../Admin/pages/OrderAcceptShipper'
 import OrderShipperDetail from '../Admin/pages/OrderShipperDetail'
 import OrderReceiveShipper from '../Admin/pages/OrderReceiveShipper'
-import DashboardInevntory from '../Admin/pages/Inventory/DashboardInevntory'
 import LayoutInventory from '../Admin/components/inventory/LayoutInventory'
 import ProductInventory from '../Admin/pages/Inventory/ProductInventory'
 import InventoryProductDetail from '../Admin/pages/Inventory/InventoryProductDetail'
 import InventoryUpdateProduct from '../Admin/pages/Inventory/InventoryUpdateProduct'
-import TransactionRequest from '../Admin/pages/Inventory/TransactionRequest'
 import CreateProductInventory from '../Admin/pages/Inventory/CreateProductInventory'
 import AllCategoryInventory from '../Admin/pages/Inventory/AllCategoryInventory'
 import AllBrandInventory from '../Admin/pages/Inventory/AllBrandInventory'
 import AllSupplierInventory from '../Admin/pages/Inventory/AllSupplierInventory'
 import CreateRequest from '../Admin/pages/Inventory/CreateRequest'
 import TransactionRequestDetail from '../Admin/pages/Inventory/TransactionRequestDetail'
-import Transaction from '../Admin/pages/Inventory/Transaction'
 import TransactionDetail from '../Admin/pages/Inventory/TransactionDetail'
 import { NavigationPaths } from './navigationPaths'
 import { UserRole } from '../enum/UserRole'
@@ -65,6 +62,11 @@ import AllTypeInventory from '../Admin/pages/Inventory/AllTypeInventory'
 import OrderStatus from '../Admin/pages/OrderStatus'
 import CreateTransaction from '../Admin/pages/Inventory/CreateTransaction'
 import StatisticImportReport from '../Admin/pages/statistic/StatisticImportReport'
+import DashboardInventory from '../Admin/pages/Inventory/DashboardInventory'
+import TransactionImport from '../Admin/pages/Inventory/TransactionImport'
+import TransactionExport from '../Admin/pages/Inventory/TransactionExport'
+import TransactionRequestImport from '../Admin/pages/Inventory/TransactionRequestImport'
+import TransactionRequestExport from '../Admin/pages/Inventory/TransactionRequestExport'
 
 const Routers = () => {
   const navigate = useNavigate()
@@ -187,7 +189,7 @@ const Routers = () => {
       </Route>
 
       <Route path="/inventory" element={<LayoutInventory />}>
-        <Route index element={<DashboardInevntory />} />
+        <Route index element={<DashboardInventory />} />
         <Route path="/inventory/product" element={<ProductInventory />} />
         <Route
           path="/inventory/report/import"
@@ -201,7 +203,14 @@ const Routers = () => {
           path="/inventory/update-product/:id"
           element={<InventoryUpdateProduct />}
         />
-        <Route path="/inventory/request" element={<TransactionRequest />} />
+        <Route
+          path="/inventory/request/import"
+          element={<TransactionRequestImport />}
+        />
+        <Route
+          path="/inventory/request/export"
+          element={<TransactionRequestExport />}
+        />
         <Route
           path="/inventory/create-product"
           element={<CreateProductInventory />}
@@ -218,7 +227,14 @@ const Routers = () => {
           path="/inventory/request/:id"
           element={<TransactionRequestDetail />}
         />
-        <Route path="/inventory/transaction" element={<Transaction />} />
+        <Route
+          path="/inventory/transaction/import"
+          element={<TransactionImport />}
+        />
+        <Route
+          path="/inventory/transaction/export"
+          element={<TransactionExport />}
+        />
         <Route path="/inventory/type" element={<AllTypeInventory />} />
         <Route
           path="/inventory/transaction/:id"
