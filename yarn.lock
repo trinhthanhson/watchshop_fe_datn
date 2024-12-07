@@ -2673,6 +2673,7 @@ codepage@~1.15.0:
     slick-carousel "^1.8.1"
     sortablejs "^1.15.3"
     three "^0.163.0"
+    tn_watchshop "file:"
     xlsx "^0.18.5"
 
 color-convert@^2.0.1:
