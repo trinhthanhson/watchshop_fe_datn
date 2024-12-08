@@ -67,6 +67,7 @@ import TransactionImport from '../Admin/pages/Inventory/TransactionImport'
 import TransactionExport from '../Admin/pages/Inventory/TransactionExport'
 import TransactionRequestImport from '../Admin/pages/Inventory/TransactionRequestImport'
 import TransactionRequestExport from '../Admin/pages/Inventory/TransactionRequestExport'
+import AllStaffInventory from '../Admin/pages/Inventory/AllStaffInventory'
 
 const Routers = () => {
   const navigate = useNavigate()
@@ -240,6 +241,7 @@ const Routers = () => {
           element={<TransactionExport />}
         />
         <Route path="/inventory/type" element={<AllTypeInventory />} />
+        <Route path="/inventory/staff" element={<AllStaffInventory />} />
         <Route
           path="/inventory/transaction/:id"
           element={<TransactionDetail />}

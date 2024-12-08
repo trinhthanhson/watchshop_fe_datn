@@ -11,7 +11,6 @@ import {
 } from 'react-icons/hi'
 import { MdWatch } from 'react-icons/md'
 import { GrTransaction } from 'react-icons/gr'
-import { FaPeopleLine } from 'react-icons/fa6'
 import { BiText } from 'react-icons/bi'
 export const DASHBOARD_SIDEBAR_TOP_LINKS = [
   {
@@ -124,12 +123,7 @@ export const DASHBOARD_SIDEBAR_TOP_LINKS_INVENTORY = [
       }
     ]
   },
-  {
-    key: 'staff',
-    label: 'Nhân viên kho',
-    path: '/inventory/staff ',
-    icon: <FaPeopleLine />
-  },
+
   {
     key: 'type',
     label: 'Loại phiếu',

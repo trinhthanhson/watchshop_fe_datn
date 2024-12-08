@@ -39,6 +39,8 @@ import transactionImportSaga from './inventory/manager/transactionImportSaga'
 import transactionExportSaga from './inventory/manager/transactionExportSaga'
 import requestImportSaga from './inventory/manager/requestImportSaga'
 import requestExportSaga from './inventory/manager/requestExportSaga'
+import updateRequestDirectorSaga from './inventory/director/updateRequestSaga'
+import staffInventorySaga from './inventory/director/allStaffInventorySaga'
 export default function* rootSaga() {
   yield all([
     newSaga(),
@@ -80,6 +82,8 @@ export default function* rootSaga() {
     quantityReportSaga(),
     revenueProductSaga(),
     getProductCouponSaga(),
-    getAllRequestNotFullSaga()
+    getAllRequestNotFullSaga(),
+    updateRequestDirectorSaga(),
+    staffInventorySaga()
   ])
 }

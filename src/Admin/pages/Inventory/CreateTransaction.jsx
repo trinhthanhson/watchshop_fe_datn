@@ -208,6 +208,7 @@ const CreateRequest = () => {
         stock: item.stock
       }))
     }
+    console.log(payload)
     dispatch(createTransactionRequest(payload, navigate))
     setItems([])
   }

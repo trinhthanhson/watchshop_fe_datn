@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
-import { HiOutlineLogout } from 'react-icons/hi'
+import { HiOutlineLogout, HiOutlineUserGroup } from 'react-icons/hi'
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import {
   DASHBOARD_SIDEBAR_BOTTOM_LINKS,
   DASHBOARD_SIDEBAR_TOP_LINKS_INVENTORY
@@ -13,7 +13,9 @@ const SidebarInventory = () => {
   const dispatch = useDispatch()
   const [hoveredIndex, setHoveredIndex] = useState(null)
   const [expandedKey, setExpandedKey] = useState(null) // Để mở rộng menu con
+  const user = useSelector((state) => state.user.user.data)
 
+  const isDirector = user?.user?.role_user?.role_name === 'DIRECTOR'
   useEffect(() => {
     try {
       dispatch(getUserProfileRequest())
@@ -108,7 +110,32 @@ const SidebarInventory = () => {
             )}
           </Link>
         ))}
+        {isDirector && (
+          <>
+            <Link key="staffs" to="/inventory/staff">
+              <div
+                className={`flex items-center gap-3 p-3 cursor-pointer hover:no-underline ${location.pathname === '/inventory/staff' ? '' : 'text-textNoneActive'}`}
+                style={{
+                  color: '#000c',
+                  backgroundColor:
+                    hoveredIndex === 'staff' ||
+                    location.pathname === '/inventory/staff'
+                      ? 'rgb(171, 171, 171)'
+                      : 'transparent'
+                }}
+                onMouseEnter={() => setHoveredIndex('staff')}
+                onMouseLeave={() => setHoveredIndex(null)}
+              >
+                <div>
+                  <HiOutlineUserGroup />
+                </div>
+                <div>Nhân viên</div>
+              </div>
+            </Link>
+          </>
+        )}
       </div>
+
       <hr className="opacity-40" />
       <div className="">
         {DASHBOARD_SIDEBAR_BOTTOM_LINKS.map((link) => (

@@ -6,6 +6,8 @@ import {
   getAllProductsRequest,
   getRequestDetailRequest
 } from '../../../redux/actions/actions'
+import { updateTransactionRequest } from '../../../redux/actions/inventory/director/action'
+import { decryptData } from '../../../cryptoUtils/cryptoUtils'
 
 const TransactionRequestDetail = () => {
   const { id } = useParams()
@@ -13,6 +15,8 @@ const TransactionRequestDetail = () => {
   const requestDetail = useSelector(
     (state) => state.requestDetail?.requestDetail
   )
+
+  const isDirector = decryptData(localStorage.getItem('role_name'))
   const products = useSelector((state) => state.products?.products?.data)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
@@ -91,25 +95,8 @@ const TransactionRequestDetail = () => {
     }
   }
 
-  const handleConfirmOrder = async () => {
-    try {
-      const token = localStorage.getItem('token')
-      axios
-        .put(
-          `http://localhost:9999/api/inventory/request/${id}/status`,
-          { status: 'APPROVED', is_cancel: false },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        )
-        .then(() => {
-          dispatch(getRequestDetailRequest(id))
-        })
-    } catch (error) {
-      console.error('Error change order status', error)
-    }
+  const handleUpdateTransaction = async () => {
+    dispatch(updateTransactionRequest(id))
   }
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [editingData, setEditingData] = useState([])
@@ -440,7 +427,7 @@ const TransactionRequestDetail = () => {
       <div className="ml-[18%] w-[80%] flex justify-between">
         <div></div>
         <div className="flex gap-3">
-          {requestDetail?.status === 'WAITING' && (
+          {requestDetail?.status === 'WAITING' && isDirector === 'DIRECTOR' && (
             <button
               onClick={() => handleCancelOrder()}
               className="mt-5 bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
@@ -449,10 +436,10 @@ const TransactionRequestDetail = () => {
             </button>
           )}
 
-          {requestDetail?.status === 'WAITING' && (
+          {requestDetail?.status === 'WAITING' && isDirector === 'DIRECTOR' && (
             <button
               className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
-              onClick={() => handleConfirmOrder()}
+              onClick={() => handleUpdateTransaction()}
             >
               Xác nhận
             </button>

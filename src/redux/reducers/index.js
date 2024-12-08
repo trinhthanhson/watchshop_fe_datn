@@ -39,6 +39,8 @@ import transactionImportReducer from './inventory/manager/transactionImportReduc
 import transactionExportReducer from './inventory/manager/transactionExportReducer'
 import requestImportReducer from './inventory/manager/requestImportReducer'
 import requestExportReducer from './inventory/manager/requestExportReducer'
+import updateRequestReducer from './inventory/director/updateRequestReducer'
+import allStaffInventoryReducer from './inventory/director/allStaffInventoryReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -80,7 +82,9 @@ const rootReducer = combineReducers({
   quantity_report: quantityReportReducer,
   revenue_product: revenueProductReducer,
   product_coupon: getProductCouponReducer,
-  request_all: getAllRequestNotFullReducer
+  request_all: getAllRequestNotFullReducer,
+  update_request: updateRequestReducer,
+  staff_inventory: allStaffInventoryReducer
 })
 
 export default rootReducer
