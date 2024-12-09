@@ -11,26 +11,31 @@ import { getAllRequestImportRequest } from '../../../redux/actions/inventory/man
 const TransactionRequestImport = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  // Dữ liệu từ API
   const request = useSelector((state) => state.request_import?.request_import)
   const [sortOrder, setSortOrder] = useState('all') // Trạng thái bộ lọc
+  const [currentPage, setCurrentPage] = useState(1)
+  const recordsPerPage = 10 // Số bản ghi mỗi trang
   useEffect(() => {
-    try {
-      dispatch(getAllRequestImportRequest())
-    } catch (error) {
-      console.error('Error dispatch', error)
-    }
-  }, [dispatch])
+    dispatch(getAllRequestImportRequest(currentPage, recordsPerPage))
+  }, [dispatch, currentPage, recordsPerPage])
 
   const filteredAndSortedRequest = request?.data
-    ?.filter(
-      () => (sortOrder === 'all' ? true : Request.quantity > 0) // Nếu 'all' được chọn, không lọc
-    )
+    ?.filter(() => {
+      if (sortOrder === 'all') return true
+      return sortOrder === 'newest' || sortOrder === 'oldest'
+    })
     ?.slice()
     .sort((a, b) => {
       const dateA = new Date(a.created_at)
       const dateB = new Date(b.created_at)
       return sortOrder === 'newest' ? dateB - dateA : dateA - dateB
     })
+
+  const totalPages = request?.totalPages || 1 // Lấy totalPages từ API
+
+  // Xuất file Excel
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(
       filteredAndSortedRequest.map((Request) => ({
@@ -86,7 +91,7 @@ const TransactionRequestImport = () => {
         </div>
 
         <table className="w-full text-gray-700">
-          <thead className="text-white font-RobotoSemibold text-[18px] ">
+          <thead className="text-white font-RobotoSemibold text-[18px]">
             <tr className="bg-primary">
               <td className="rounded-s-md">ID</td>
               <td>Số phiếu</td>
@@ -128,6 +133,31 @@ const TransactionRequestImport = () => {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center items-center gap-4 mt-4 border p-4 rounded-md ml-[200px]">
+        <button
+          className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
+          disabled={currentPage === 1} // Disable khi đang ở trang đầu
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} // Tránh trang âm
+        >
+          Previous
+        </button>
+
+        <span className="text-lg font-medium">
+          Page {currentPage} of {totalPages}
+        </span>
+
+        <button
+          className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
+          disabled={currentPage === totalPages} // Disable khi đang ở trang cuối
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          } // Tránh vượt quá totalPages
+        >
+          Next
+        </button>
       </div>
       <div className="fixed right-6 bottom-3 hover:bg-gray-300 transition-transform rounded-full duration-200 transform hover:scale-125 p-2 ">
         <IoIosAddCircle

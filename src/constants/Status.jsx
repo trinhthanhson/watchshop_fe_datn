@@ -120,6 +120,12 @@ export function getStatusRequest(status) {
             Chưa nhập đủ
           </span>
         )
+      case 'ACCEPT':
+        return (
+          <span className="capitalize py-1 px-2 rounded-md text-xs text-white bg-primary">
+            Đã xác nhận
+          </span>
+        )
       default:
         return (
           <span className="capitalize py-1 px-2 rounded-md text-xs text-white bg-primary">

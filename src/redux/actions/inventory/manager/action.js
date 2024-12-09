@@ -106,10 +106,10 @@ export const getAllTransactionExportFailure = (error) => ({
 // -----------------------------------------------
 
 // -------- Get all transaction import ---------
-export const getAllRequestImportRequest = () => ({
-  type: GET_ALL_REQUEST_IMPORT_REQUEST
+export const getAllRequestImportRequest = (page, limit) => ({
+  type: GET_ALL_REQUEST_IMPORT_REQUEST,
+  payload: { page, limit }
 })
-
 export const getAllRequestImportSuccess = (request_import) => ({
   type: GET_ALL_REQUEST_IMPORT_SUCCESS,
   payload: request_import

@@ -5,7 +5,9 @@ import {
 
 const initialState = {
   request_import: [],
-  error: null
+  error: null,
+  currentPage: 1,
+  totalPages: 0
 }
 
 const requestImportReducer = (state = initialState, action) => {
@@ -14,7 +16,9 @@ const requestImportReducer = (state = initialState, action) => {
       return {
         ...state,
         request_import: action.payload,
-        error: null
+        error: null,
+        currentPage: action.payload.currentPage,
+        totalPages: action.payload.totalPages
       }
     case GET_ALL_REQUEST_IMPORT_FAILURE:
       return {

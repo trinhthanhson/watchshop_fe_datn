@@ -6,13 +6,14 @@ import {
 } from '../../../actions/inventory/manager/action'
 import { GET_ALL_REQUEST_IMPORT_REQUEST } from '../../../actions/inventory/manager/type'
 
-function* getAllRequestImportSaga() {
+function* getAllRequestImportSaga(action) {
   try {
     const token = localStorage.getItem('token')
+    const { page, limit } = action.payload // Nhận page và limit từ payload
 
     const response = yield call(
       axios.get,
-      'http://localhost:9999/api/inventory/request/all/import',
+      `http://localhost:9999/api/inventory/request/all/import?page=${page}&limit=${limit}`,
       {
         headers: {
           Authorization: `Bearer ${token}`

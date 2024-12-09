@@ -5,14 +5,13 @@ import {
   getAllTransactionImportSuccess
 } from '../../../actions/inventory/manager/action'
 import { GET_ALL_TRANSACTION_IMPORT_REQUEST } from '../../../actions/inventory/manager/type'
-
 function* getAllTransactionSaga() {
   try {
     const token = localStorage.getItem('token')
 
     const response = yield call(
       axios.get,
-      'http://localhost:9999/api/inventory/transaction/all/import',
+      `http://localhost:9999/api/inventory/transaction/all/import`,
       {
         headers: {
           Authorization: `Bearer ${token}`
