@@ -8,6 +8,10 @@ import {
 } from '../../../redux/actions/actions'
 import { updateTransactionRequest } from '../../../redux/actions/inventory/director/action'
 import { decryptData } from '../../../cryptoUtils/cryptoUtils'
+import {
+  checkRequestExistsRequest,
+  createTransactionExportRequest
+} from '../../../redux/actions/inventory/manager/action'
 
 const TransactionRequestDetail = () => {
   const { id } = useParams()
@@ -21,6 +25,7 @@ const TransactionRequestDetail = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [currentRowIndex, setCurrentRowIndex] = useState(null)
+
   useEffect(() => {
     try {
       dispatch(getAllProductsRequest())
@@ -61,6 +66,12 @@ const TransactionRequestDetail = () => {
 
     setSearchResults(filteredProducts)
   }
+
+  const handleCreateTransaction = async () => {
+    dispatch(createTransactionExportRequest(id))
+    dispatch(checkRequestExistsRequest(id))
+  }
+
   const handleCancelOrder = async () => {
     try {
       const token = localStorage.getItem('token') // Lấy JWT từ localStorage
@@ -296,12 +307,15 @@ const TransactionRequestDetail = () => {
             ))}
           </tbody>
         </table>
-        <button
-          className="bg-primary px-4 py-2 rounded-md text-white w-[7%] ml-[92%] mb-[20px]"
-          onClick={openEditModal}
-        >
-          Sửa
-        </button>
+        {requestDetail?.type_request?.type_name === 'IMPORT' && (
+          <button
+            className="bg-primary px-4 py-2 rounded-md text-white w-[7%] ml-[92%] mb-[20px]"
+            onClick={openEditModal}
+          >
+            Sửa
+          </button>
+        )}
+
         {/* Modal chỉnh sửa */}
         {isEditModalOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -427,23 +441,38 @@ const TransactionRequestDetail = () => {
       <div className="ml-[18%] w-[80%] flex justify-between">
         <div></div>
         <div className="flex gap-3">
-          {requestDetail?.status === 'WAITING' && isDirector === 'DIRECTOR' && (
-            <button
-              onClick={() => handleCancelOrder()}
-              className="mt-5 bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
-            >
-              Hủy
-            </button>
-          )}
+          {requestDetail?.status === 'WAITING' &&
+            isDirector === 'DIRECTOR' &&
+            requestDetail?.type_request?.type_name === 'IMPORT' && (
+              <button
+                onClick={() => handleCancelOrder()}
+                className="mt-5 bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+              >
+                Hủy
+              </button>
+            )}
 
-          {requestDetail?.status === 'WAITING' && isDirector === 'DIRECTOR' && (
-            <button
-              className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
-              onClick={() => handleUpdateTransaction()}
-            >
-              Xác nhận
-            </button>
-          )}
+          {requestDetail?.status === 'WAITING' &&
+            isDirector === 'DIRECTOR' &&
+            requestDetail?.type_request?.type_name === 'IMPORT' && (
+              <button
+                className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+                onClick={() => handleUpdateTransaction()}
+              >
+                Xác nhận
+              </button>
+            )}
+
+          {requestDetail?.status === 'WAITING' &&
+            isDirector === 'WAREHOUSE_KEEPER' &&
+            requestDetail?.type_request?.type_name === 'EXPORT' && (
+              <button
+                className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+                onClick={() => handleCreateTransaction()}
+              >
+                Tạo phiếu xuất kho
+              </button>
+            )}
         </div>
       </div>
     </>

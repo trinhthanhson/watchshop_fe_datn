@@ -48,3 +48,18 @@ export const GET_ALL_REQUEST_EXPORT_REQUEST = 'GET_ALL_REQUEST_EXPORT_REQUEST'
 export const GET_ALL_REQUEST_EXPORT_SUCCESS = 'GET_ALL_REQUEST_EXPORT_SUCCESS'
 export const GET_ALL_REQUEST_EXPORT_FAILURE = 'GET_ALL_REQUEST_EXPORT_FAILURE'
 // --------------------------------------------------------------
+
+// -------------create transaction export ----------------------
+export const CREATE_TRANSACTION_EXPORT_REQUEST =
+  'CREATE_TRANSACTION_EXPORT_REQUEST'
+export const CREATE_TRANSACTION_EXPORT_SUCCESS =
+  'CREATE_TRANSACTION_EXPORT_SUCCESS'
+export const CREATE_TRANSACTION_EXPORT_FAILURE =
+  'CREATE_TRANSACTION_EXPORT_FAILURE'
+// --------------------------------------------------------------
+
+// -------------create transaction export ----------------------
+export const CHECK_REQUEST_EXISTS_REQUEST = 'CHECK_REQUEST_EXISTS_REQUEST'
+export const CHECK_REQUEST_EXISTS_SUCCESS = 'CHECK_REQUEST_EXISTS_SUCCESS'
+export const CHECK_REQUEST_EXISTS_FAILURE = 'CHECK_REQUEST_EXISTS_FAILURE'
+// --------------------------------------------------------------

@@ -41,6 +41,8 @@ import requestImportSaga from './inventory/manager/requestImportSaga'
 import requestExportSaga from './inventory/manager/requestExportSaga'
 import updateRequestDirectorSaga from './inventory/director/updateRequestSaga'
 import staffInventorySaga from './inventory/director/allStaffInventorySaga'
+import createExportSaga from './inventory/manager/createTransactionExportSaga'
+import watchCheckRequestExists from './inventory/manager/checkRequestExistsSaga'
 export default function* rootSaga() {
   yield all([
     newSaga(),
@@ -84,6 +86,8 @@ export default function* rootSaga() {
     getProductCouponSaga(),
     getAllRequestNotFullSaga(),
     updateRequestDirectorSaga(),
-    staffInventorySaga()
+    staffInventorySaga(),
+    createExportSaga(),
+    watchCheckRequestExists()
   ])
 }

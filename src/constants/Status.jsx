@@ -126,6 +126,12 @@ export function getStatusRequest(status) {
             Đã xác nhận
           </span>
         )
+      case 'COMPLETED':
+        return (
+          <span className="capitalize py-1 px-2 rounded-md text-xs text-white bg-primary">
+            Hoàn thành
+          </span>
+        )
       default:
         return (
           <span className="capitalize py-1 px-2 rounded-md text-xs text-white bg-primary">
