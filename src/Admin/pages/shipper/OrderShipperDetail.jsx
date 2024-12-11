@@ -76,6 +76,24 @@ const OrderShipperDetail = () => {
       console.error('Error changing order status', error)
     }
   }
+  // Xử lý xác nhận đơn hàng
+  const handleCancelOrder = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      await axios.put(
+        `http://localhost:9999/api/shipper/order/${id}/status`,
+        { is_cancel: true },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      dispatch(getOrderDetailRequest(id))
+    } catch (error) {
+      console.error('Error changing order status', error)
+    }
+  }
 
   return (
     <>
@@ -170,31 +188,31 @@ const OrderShipperDetail = () => {
               </span>
               {orderDetail?.total_price && (
                 <span className="text-primary font-RobotoSemibold">
-                  {orderDetail.total_price.toLocaleString('en')} VNĐ
+                  {orderDetail?.total_price.toLocaleString('en')} VNĐ
                 </span>
               )}
             </p>
-            <p className="p-5">
-              <span className="text-primary font-RobotoMedium mr-2">
-                Phí vận chuyển:
-              </span>
-              <span className="text-primary font-RobotoSemibold">
-                {(20000).toLocaleString('en')} VNĐ
-              </span>
-            </p>
+
             <p className="p-5">
               <span className="text-primary font-RobotoMedium mr-2">
                 Thanh toán:
               </span>
               {orderDetail?.total_price && (
                 <span className="text-primary font-RobotoSemibold">
-                  {(orderDetail.total_price + 20000).toLocaleString('en')} VNĐ
+                  {orderDetail.total_price.toLocaleString('en')} VNĐ
                 </span>
               )}
             </p>
           </div>
         </div>
       </div>
+      {orderDetail?.is_cancel && (
+        <div className="flex justify-center items-center bg-gray-200 border border-gray-300 rounded-lg p-4 w-[80%] ml-[18%] mt-2">
+          <h1 className="uppercase font-RobotoSemibold text-main text-3xl md:text-3xl xl:text-[3rem] text-center">
+            Giao không thành công
+          </h1>
+        </div>
+      )}
 
       <div className="flex flex-col gap-4 w-[80%] ml-[18%] rounded-md shadow-md bg-white mt-5">
         <table className="w-full text-gray-700">
@@ -239,17 +257,27 @@ const OrderShipperDetail = () => {
           </tbody>
         </table>
       </div>
-
-      <div className="ml-[90%] w-[80%] flex justify-between">
-        {statusIndex <=
-          Math.max(...statuses.map((status) => status.status_index)) && (
-          <button
-            className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
-            onClick={() => handleConfirmOrder()}
-          >
-            {orderDetail && <p>{nextStatusName}</p>}
-          </button>
-        )}
+      <div className="ml-[80%]  gap-4">
+        {!orderDetail?.is_cancel &&
+          statusIndex <=
+            Math.max(...statuses.map((status) => status.status_index)) && (
+            <button
+              className=" mr-[10px] mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+              onClick={() => handleCancelOrder()}
+            >
+              <p>Giao không thành công</p>
+            </button>
+          )}
+        {!orderDetail?.is_cancel &&
+          statusIndex <=
+            Math.max(...statuses.map((status) => status.status_index)) && (
+            <button
+              className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+              onClick={() => handleConfirmOrder()}
+            >
+              {orderDetail && <p>{nextStatusName}</p>}
+            </button>
+          )}
       </div>
     </>
   )

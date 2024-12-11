@@ -69,8 +69,12 @@ const Login = () => {
           }
         )
 
-        const { token, status } = response.data
-
+        const { token, status, lock } = response.data
+        if (lock) {
+          toast.error('Đăng nhập không thành công!')
+          setMessage('Đăng nhập không thành công! Tài khoản của bạn đã bị khóa')
+          return
+        }
         if (status && token) {
           localStorage.setItem('token', token)
           toast.success('Đăng nhập thành công!')

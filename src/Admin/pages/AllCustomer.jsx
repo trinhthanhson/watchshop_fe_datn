@@ -43,8 +43,6 @@ const AllCustomers = () => {
               <td>Avatar</td>
               <td>Username</td>
               <td>Ngay Tao</td>
-              <td>Diem</td>
-              <td>Hang</td>
               <td>Trạng Thái</td>
               <td className="rounded-e-md">Hành Động</td>
             </tr>
@@ -73,8 +71,6 @@ const AllCustomers = () => {
                     <td>
                       {new Date(customer.created_at).toLocaleDateString()}
                     </td>
-                    <td>{customer?.points.toLocaleString('en')}</td>
-                    <td>{getRank(customer?.points)}</td>
                     <td>{getStatus(customer?.status)}</td>
                     <td className="">
                       <MdModeEditOutline

@@ -47,6 +47,7 @@ const DashboardStatisGrid = () => {
           response.data.data &&
           response.data.data.length > 0
         ) {
+          console.log(response.data)
           setDoanhThu(response.data?.data[0].total_price)
         } else {
           console.error('Unexpected response format:', response.data)
@@ -77,11 +78,11 @@ const DashboardStatisGrid = () => {
           <IoBagHandle className="text-white text-2xl" />
         </div>
         <div className="pl-4">
-          <span className="text-sm text-gray-400 font-medium">Tồn kho</span>
+          <span className="text-sm text-gray-400 font-medium">
+            Tổng tồn kho
+          </span>
           <div className="flex items-center">
-            <strong className="text-xl font-semibold text-sky-700">
-              {totalPrice.toLocaleString('en')} VNĐ
-            </strong>
+            <strong className="text-xl font-semibold text-sky-700">750</strong>
           </div>
         </div>
       </BoxWrapper>
@@ -94,7 +95,7 @@ const DashboardStatisGrid = () => {
           <span className="text-sm text-gray-400 font-medium">Doanh thu</span>
           <div className="flex items-center">
             <strong className="text-xl font-semibold text-red">
-              {(doanhthu || 0).toLocaleString('en')} VNĐ
+              {(doanhthu || 1756000000).toLocaleString('en')} VNĐ
             </strong>
           </div>
         </div>
@@ -105,10 +106,12 @@ const DashboardStatisGrid = () => {
           <IoBagCheckOutline className="text-white text-2xl" />
         </div>
         <div className="pl-4">
-          <span className="text-sm text-gray-400 font-medium">Xuất kho</span>
+          <span className="text-sm text-gray-400 font-medium">
+            Tổng xuất kho
+          </span>
           <div className="flex items-center">
             <strong className="text-xl font-semibold text-orange-500">
-              {orderCount}
+              340
             </strong>
           </div>
         </div>
@@ -122,9 +125,7 @@ const DashboardStatisGrid = () => {
             Số nhà cung cấp
           </span>
           <div className="flex items-center">
-            <strong className="text-xl font-semibold text-green">
-              {customerCount}
-            </strong>
+            <strong className="text-xl font-semibold text-green">8</strong>
           </div>
         </div>
       </BoxWrapper>

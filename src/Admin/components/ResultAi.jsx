@@ -24,13 +24,6 @@ const ResultAi = () => {
     <div className="bg-white px-4 pt-3 pb-4 rounded-md border border-gray-200 flex-1">
       <div className="flex justify-between">
         <strong className="text-sub font-semibold">Kết quả dự đoán</strong>
-
-        <p
-          onClick={() => navigate('/manager/orders')}
-          className="cursor-pointer text-sky-600 hover:underline text-[14px] font-semibold"
-        >
-          More
-        </p>
       </div>
       <div className="mt-3">
         <table className="w-full text-gray-700">
@@ -53,8 +46,7 @@ const ResultAi = () => {
               predictedResults.map((result, index) => (
                 <tr
                   key={result.productId}
-                  className="cursor-pointer hover:bg-gray-100 transition-colors"
-                  onClick={() => navigate(`/manager/order/${result.productId}`)}
+                  className=" hover:bg-gray-100 transition-colors"
                 >
                   <td>{index + 1}</td>
                   <td>{result.productId}</td>

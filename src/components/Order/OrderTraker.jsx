@@ -7,7 +7,6 @@ const OrderTracker = ({ orderDetail }) => {
   const [steps, setSteps] = useState([])
   const [activeStep, setActiveStep] = useState(0)
   const [loading, setLoading] = useState(true)
-  console.log(steps)
   useEffect(() => {
     const fetchStatuses = async () => {
       if (!orderDetail || !orderDetail.order_status) {
@@ -27,7 +26,6 @@ const OrderTracker = ({ orderDetail }) => {
         )
         const statusesData = response?.data?.data || []
         setSteps(statusesData.map((status) => status.status_name))
-        console.log(statusesData)
         const currentStatusIndex = orderDetail.order_status.status_index || 0
         setActiveStep(currentStatusIndex)
       } catch (error) {
