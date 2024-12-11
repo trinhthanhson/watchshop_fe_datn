@@ -129,7 +129,7 @@ const OrderBuyNow = () => {
 
     try {
       const response = await fetch(
-        'http://localhost:9999/api/customer/payment/submit',
+        'http://localhost:9999/api/customer/payment/paypal/buy-now',
         {
           method: 'POST',
           headers: {

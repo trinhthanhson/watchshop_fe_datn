@@ -75,8 +75,8 @@ const AdminOrderDetail = () => {
     try {
       const token = localStorage.getItem('token')
       await axios.put(
-        `http://localhost:9999/api/staff/order/${id}/status`,
-        { status_index: statusIndex, is_cancel: false },
+        `http://localhost:9999/api/staff/order/${id}/order-shipper`,
+        { is_delivery: true },
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -294,8 +294,7 @@ const AdminOrderDetail = () => {
                 Hủy Đơn Hàng
               </button>
             )}
-
-          {!orderDetail?.is_cancel &&
+          {/* {!orderDetail?.is_cancel &&
             check === 'True' &&
             statusIndex <=
               Math.max(...statuses.map((status) => status.status_index)) && (
@@ -304,6 +303,17 @@ const AdminOrderDetail = () => {
                 onClick={() => handleConfirmOrder()}
               >
                 {orderDetail && <p>{nextStatusName}</p>}
+              </button>
+            )} */}
+
+          {!orderDetail?.is_cancel &&
+            check === 'True' &&
+            !orderDetail?.is_delivery && (
+              <button
+                className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+                onClick={() => handleConfirmOrder()}
+              >
+                <p>Chuyển giao hàng</p>
               </button>
             )}
           {!isOrderInRequest && (

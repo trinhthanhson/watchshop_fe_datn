@@ -5,6 +5,7 @@ import RecentOrder from '../components/RecentOrder'
 import NewCustomers from '../components/NewCustomers'
 import RecentActualInventory from '../components/inventory/RecentActualInventory'
 import RecentRevenueProduct from '../components/inventory/RecentRevenueProduct'
+import ResultAi from '../components/ResultAi'
 
 const Dashboard = () => {
   return (
@@ -23,6 +24,9 @@ const Dashboard = () => {
       </div>
       <div className="flex flex-row gap-4 w-full">
         <RecentOrder />
+      </div>
+      <div className="flex flex-row gap-4 w-full">
+        <ResultAi />
       </div>
       <RecentActualInventory />
       <RecentRevenueProduct />

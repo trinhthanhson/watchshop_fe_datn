@@ -58,26 +58,22 @@ const OrderShipperDetail = () => {
     fetchNextStatusName()
   }, [orderDetail])
 
+  // Xử lý xác nhận đơn hàng
   const handleConfirmOrder = async () => {
     try {
       const token = localStorage.getItem('token')
-      const currentStatus = parseInt(orderDetail?.status, 10)
-      const newStatus = (currentStatus + 1).toString()
-      axios
-        .put(
-          `http://localhost:9999/api/staff/order/${id}/status`,
-          { status: newStatus },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+      await axios.put(
+        `http://localhost:9999/api/shipper/order/${id}/status`,
+        { status_index: statusIndex, is_cancel: false },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
           }
-        )
-        .then(() => {
-          dispatch(getOrderDetailRequest(id))
-        })
+        }
+      )
+      dispatch(getOrderDetailRequest(id))
     } catch (error) {
-      console.error('Error change order status', error)
+      console.error('Error changing order status', error)
     }
   }
 

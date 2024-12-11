@@ -81,8 +81,21 @@ const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
           ) : (
             <div className="flex items-center justify-center mt-4 h-[42px] px-[10px] rounded-lg shadow-md">
               <IconButton
-                onClick={() => handleQuantityChange(-1)}
+                onClick={() => {
+                  const currentQuantity =
+                    cart_get.find(
+                      (item) => item.product_id === cart?.product_id
+                    )?.quantity || 0
+
+                  if (currentQuantity > 1) {
+                    handleQuantityChange(-1)
+                  }
+                }}
                 aria-label="remove"
+                disabled={
+                  (cart_get.find((item) => item.product_id === cart?.product_id)
+                    ?.quantity || 0) <= 1
+                }
               >
                 <RemoveIcon />
               </IconButton>

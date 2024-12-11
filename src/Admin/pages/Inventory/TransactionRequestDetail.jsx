@@ -25,11 +25,13 @@ const TransactionRequestDetail = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [currentRowIndex, setCurrentRowIndex] = useState(null)
+  const [isButtonVisible, setIsButtonVisible] = useState(true)
 
   useEffect(() => {
     try {
       dispatch(getAllProductsRequest())
       dispatch(getRequestDetailRequest(id))
+      dispatch(checkRequestExistsRequest(id))
     } catch (error) {
       console.error('Error dispatch', error)
     }
@@ -66,10 +68,15 @@ const TransactionRequestDetail = () => {
 
     setSearchResults(filteredProducts)
   }
-
   const handleCreateTransaction = async () => {
-    dispatch(createTransactionExportRequest(id))
-    dispatch(checkRequestExistsRequest(id))
+    try {
+      dispatch(createTransactionExportRequest(id))
+      setIsButtonVisible(false) // Ẩn nút ngay khi thao tác thành công
+
+      await dispatch(checkRequestExistsRequest(id))
+    } catch (error) {
+      console.error('Error updating data:', error)
+    }
   }
 
   const handleCancelOrder = async () => {
@@ -463,7 +470,8 @@ const TransactionRequestDetail = () => {
               </button>
             )}
 
-          {requestDetail?.status === 'WAITING' &&
+          {isButtonVisible &&
+            requestDetail?.status === 'WAITING' &&
             isDirector === 'WAREHOUSE_KEEPER' &&
             requestDetail?.type_request?.type_name === 'EXPORT' && (
               <button
