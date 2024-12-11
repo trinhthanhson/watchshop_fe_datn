@@ -42,9 +42,9 @@ import AdminUserStaffDetail from '../Admin/pages/AdminUserStaffDetail'
 import AllCouponDetail from '../Admin/pages/AllCouponDetail'
 import { decryptData } from '../cryptoUtils/cryptoUtils'
 import ProductByBrand from '../pages/Menu/ProductByBrand'
-import OrderAcceptShipper from '../Admin/pages/OrderAcceptShipper'
-import OrderShipperDetail from '../Admin/pages/OrderShipperDetail'
-import OrderReceiveShipper from '../Admin/pages/OrderReceiveShipper'
+import OrderAcceptShipper from '../Admin/pages/shipper/OrderAcceptShipper'
+import OrderShipperDetail from '../Admin/pages/shipper/OrderShipperDetail'
+import OrderReceiveShipper from '../Admin/pages/shipper/OrderReceiveShipper'
 import LayoutInventory from '../Admin/components/inventory/LayoutInventory'
 import ProductInventory from '../Admin/pages/Inventory/ProductInventory'
 import InventoryProductDetail from '../Admin/pages/Inventory/InventoryProductDetail'
@@ -119,6 +119,13 @@ const Routers = () => {
         currentPath.startsWith(NavigationPaths.STAFF)
       ) {
         // Điều hướng đến trang NOTFOUND nếu không hợp lệ
+        navigate(NavigationPaths.NOTFOUND)
+        return // Dừng lại, không điều hướng thêm
+      }
+      if (
+        role === UserRole.SHIPPER &&
+        currentPath.startsWith(NavigationPaths.SHIPPER)
+      ) {
         navigate(NavigationPaths.NOTFOUND)
         return // Dừng lại, không điều hướng thêm
       }

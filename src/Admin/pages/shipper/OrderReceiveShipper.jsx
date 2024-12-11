@@ -1,41 +1,50 @@
-import { getAllOrdersRequest } from '../../redux/actions/actions'
-import { getOrderStatus } from '../../constants/Status'
-import { useDispatch, useSelector } from 'react-redux'
+import { getOrderStatus } from '../../../constants/Status'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import Header from '../components/Header'
-import { DASHBOARD_SIDEBAR_TOP_LINKS_SHIPPER } from '../../constants/MenuLink'
+import Header from '../../components/Header'
+import { DASHBOARD_SIDEBAR_TOP_LINKS_SHIPPER } from '../../../constants/MenuLink'
+import axios from 'axios'
 
-const OrderAcceptShipper = () => {
-  const dispatch = useDispatch()
-  const orders = useSelector((state) => state.orders.orders)
+const OrderReceiveShipper = () => {
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
   const [status, setStatus] = useState('')
   const [totalPrice, setTotalPrice] = useState(0)
   const [filteredOrders, setFilteredOrders] = useState([])
   const navigate = useNavigate()
-
+  const [orders, setOrders] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   useEffect(() => {
-    try {
-      dispatch(getAllOrdersRequest())
-    } catch (error) {
-      console.error('Error dispatch', error)
+    const fetchOrders = async () => {
+      try {
+        const token = localStorage.getItem('token') // Adjust based on where you store the token
+        const response = await axios.get(
+          'http://localhost:9999/api/staff/order/all/shipper',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
+        setOrders(response.data)
+        setLoading(false)
+      } catch (error) {
+        console.error('Error fetching orders', error)
+        setError('Failed to fetch orders')
+        setLoading(false)
+      }
     }
-  }, [dispatch])
 
+    fetchOrders()
+  }, [])
   useEffect(() => {
     const filtered = orders?.data?.filter((order) => {
       const orderDate = new Date(order.created_at).getTime()
       const startDateTimestamp = startDate ? startDate.getTime() : null
       const endDateTimestamp = endDate ? endDate.getTime() : null
-
-      // Only include orders with status '2'
-      if (order.status !== '1') {
-        return false
-      }
 
       if (startDateTimestamp && orderDate < startDateTimestamp) {
         return false
@@ -65,6 +74,8 @@ const OrderAcceptShipper = () => {
     setStatus('')
   }
   const [hoveredIndex, setHoveredIndex] = useState(null)
+  if (loading) return <p>Loading...</p>
+  if (error) return <p>{error}</p>
   return (
     <>
       <Header />
@@ -229,4 +240,4 @@ const OrderAcceptShipper = () => {
   )
 }
 
-export default OrderAcceptShipper
+export default OrderReceiveShipper

@@ -43,6 +43,7 @@ import updateRequestReducer from './inventory/director/updateRequestReducer'
 import allStaffInventoryReducer from './inventory/director/allStaffInventoryReducer'
 import createTransactionExportReducer from './inventory/manager/createTransactionExportReducer'
 import checkRequestExistsReducer from './inventory/manager/checkTransactionExistReducer'
+import orderShipperReducer from './shipper/orderShipperReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -88,7 +89,8 @@ const rootReducer = combineReducers({
   update_request: updateRequestReducer,
   staff_inventory: allStaffInventoryReducer,
   create_export: createTransactionExportReducer,
-  check_transaction: checkRequestExistsReducer
+  check_transaction: checkRequestExistsReducer,
+  order_shipper: orderShipperReducer
 })
 
 export default rootReducer

@@ -1,25 +1,20 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
-import { getOrderDetailRequest } from '../../redux/actions/actions'
+import { getOrderDetailRequest } from '../../../redux/actions/actions'
 import axios from 'axios'
-import OrderTraker from '../../components/Order/OrderTraker'
-import { DASHBOARD_SIDEBAR_TOP_LINKS_SHIPPER } from '../../constants/MenuLink'
-
-const ORDER_STATUS_NEXT = {
-  0: 'Xác Nhận',
-  1: 'Nhận đơn',
-  2: 'Đang vận chuyển',
-  3: 'Chờ thanh toán',
-  4: 'Đã thanh toán',
-  5: 'Đã giao'
-}
+import { DASHBOARD_SIDEBAR_TOP_LINKS_SHIPPER } from '../../../constants/MenuLink'
+import OrderTracker from '../../../components/Order/OrderTraker'
 
 const OrderShipperDetail = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
   const orderDetail = useSelector((state) => state.orderDetail.orderDetail)
   const [hoveredIndex, setHoveredIndex] = useState(null)
+  const [nextStatusName, setNextStatusName] = useState('')
+  const [statusIndex, setStatusIndex] = useState(0)
+  const [statuses, setStatuses] = useState([])
+
   useEffect(() => {
     try {
       dispatch(getOrderDetailRequest(id))
@@ -27,27 +22,41 @@ const OrderShipperDetail = () => {
       console.error('Error dispatch', error)
     }
   }, [dispatch, id])
+  useEffect(() => {
+    const fetchNextStatusName = async () => {
+      if (!orderDetail || !orderDetail.order_status) {
+        setNextStatusName('Không có trạng thái hiện tại')
+        return
+      }
 
-  const handleCancelOrder = async () => {
-    try {
-      const token = localStorage.getItem('token')
-      axios
-        .put(
-          `http://localhost:9999/api/staff/order/${id}/status`,
-          { status: '4' },
+      try {
+        const token = localStorage.getItem('token')
+        const response = await axios.get(
+          'http://localhost:9999/api/manager/order-status/all',
           {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+            headers: { Authorization: `Bearer ${token}` }
           }
         )
-        .then(() => {
-          dispatch(getOrderDetailRequest(id))
-        })
-    } catch (error) {
-      console.error('Error change order status', error)
+        const statusesData = response?.data?.data || []
+        setStatuses(statusesData)
+
+        const currentStatusIndex = orderDetail.order_status.status_index
+        setStatusIndex(currentStatusIndex + 1)
+
+        const nextStatus = statusesData.find(
+          (status) => status.status_index === currentStatusIndex + 1
+        )
+
+        setNextStatusName(
+          nextStatus ? nextStatus.status_name : 'Không có trạng thái tiếp theo'
+        )
+      } catch (error) {
+        setNextStatusName('Không thể lấy trạng thái tiếp theo')
+      }
     }
-  }
+
+    fetchNextStatusName()
+  }, [orderDetail])
 
   const handleConfirmOrder = async () => {
     try {
@@ -71,8 +80,6 @@ const OrderShipperDetail = () => {
       console.error('Error change order status', error)
     }
   }
-
-  const activeStep = parseInt(orderDetail?.status, 10) + 1
 
   return (
     <>
@@ -113,7 +120,7 @@ const OrderShipperDetail = () => {
       </div>
       <div className="ml-[18%]">
         <h1 className="uppercase text-center sm:text-left font-RobotoSemibold text-main text-3xl md:text-3xl xl:text-[3rem] mb-5 mt-0 sm:mt-5 md:leading-tight">
-          <OrderTraker activeStep={activeStep} />
+          <OrderTracker orderDetail={orderDetail} />
         </h1>
       </div>
       <div className="flex">
@@ -220,9 +227,6 @@ const OrderShipperDetail = () => {
 
                   <td>
                     <p>{orderItem?.product_order.product_name}</p>
-                    <span className="text-[12px]">
-                      {orderItem?.product_order.category.category_name}
-                    </span>
                   </td>
                   <td>{orderItem?.quantity}</td>
                   <td>
@@ -240,26 +244,16 @@ const OrderShipperDetail = () => {
         </table>
       </div>
 
-      <div className="ml-[18%] w-[80%] flex justify-between">
-        <div></div>
-        <div className="flex gap-3">
-          {orderDetail?.status === '0' && (
-            <button
-              onClick={() => handleCancelOrder()}
-              className="mt-5 bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
-            >
-              Hủy Đơn Hàng
-            </button>
-          )}
-          {parseInt(orderDetail?.status, 10) < 5 && (
-            <button
-              className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
-              onClick={() => handleConfirmOrder()}
-            >
-              {ORDER_STATUS_NEXT[orderDetail?.status]}
-            </button>
-          )}
-        </div>
+      <div className="ml-[90%] w-[80%] flex justify-between">
+        {statusIndex <=
+          Math.max(...statuses.map((status) => status.status_index)) && (
+          <button
+            className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+            onClick={() => handleConfirmOrder()}
+          >
+            {orderDetail && <p>{nextStatusName}</p>}
+          </button>
+        )}
       </div>
     </>
   )

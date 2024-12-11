@@ -159,6 +159,17 @@ const Checkout = () => {
     }
   }
   const handlePayNow = async () => {
+    // Xử lý cart và loại bỏ các giá trị null
+    const cleanCart = cart?.data?.map((item) => {
+      return Object.entries(item).reduce((acc, [key, value]) => {
+        if (value !== null) {
+          acc[key] = value // Chỉ thêm các trường khác null
+        }
+        return acc
+      }, {})
+    })
+
+    // Kiểm tra địa chỉ nhận hàng
     if (!address) {
       setError('Please enter a shipping address.')
       return
@@ -166,39 +177,51 @@ const Checkout = () => {
 
     setLoading(true)
     setError(null)
+    setSuccess(null)
+
+    // Chuẩn bị dữ liệu body cho yêu cầu POST
+    const body = {
+      cart: cleanCart,
+      total_price,
+      address,
+      recipient_name: recipientName,
+      note,
+      recipient_phone: recipientPhone
+    }
+
     try {
+      // Gửi yêu cầu POST đến backend để tạo thanh toán
       const response = await fetch(
-        'http://localhost:9999/api/customer/payment/cart',
+        'http://localhost:9999/api/customer/payment/paypal',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
           },
-          body: JSON.stringify({
-            total_price,
-            address,
-            recipient_name: recipientName,
-            note,
-            recipient_phone: recipientPhone
-          })
+          body: JSON.stringify(body)
         }
       )
 
+      // Kiểm tra phản hồi
       if (!response.ok) {
-        throw new Error('Failed to initiate payment')
+        throw new Error('Failed to place order')
       }
 
+      // Lấy dữ liệu phản hồi từ backend
       const data = await response.json()
-      console.log(data.message)
-      if (data.message) {
-        // Chuyển hướng người dùng đến URL thanh toán
-        window.location.href = data.message
+      toast.success('Đặt hàng thành công')
+      // Kiểm tra và điều hướng người dùng đến trang thanh toán của PayPal
+      if (data.code === 200) {
+        const paymentUrl = data.message // URL chuyển hướng đến PayPal
+        window.location.href = paymentUrl // Chuyển hướng đến PayPal
       } else {
-        setError('Failed to retrieve payment URL')
+        setSuccess('Order placed fail!')
       }
     } catch (error) {
+      // Xử lý lỗi
       setError(error.message)
+      console.log('Error:', error.message)
     } finally {
       setLoading(false)
     }

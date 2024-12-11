@@ -134,7 +134,7 @@ const Login = () => {
         navigate('/manager')
       } else if (userRole === 'CUSTOMER') {
         navigate('/home')
-      } else if (userRole === 'SHIPPER') {
+      } else if (userRole === 'DELIVERY_STAFF') {
         navigate('/manager/shipper')
       } else if (
         userRole === 'WAREHOUSE_STAFF' ||
