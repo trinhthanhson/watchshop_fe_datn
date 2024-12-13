@@ -1,10 +1,6 @@
 import { Menu, Popover, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
-import {
-  HiOutlineBell,
-  HiOutlineChatAlt,
-  HiOutlineSearch
-} from 'react-icons/hi'
+import { HiOutlineBell, HiOutlineChatAlt } from 'react-icons/hi'
 import { FaUser, FaSignOutAlt } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { IoIosSettings } from 'react-icons/io'
@@ -18,18 +14,7 @@ const Header = () => {
 
   return (
     <div className="bg-white h-16 px-4 flex justify-between items-center">
-      <div className="relative m-[auto]">
-        <HiOutlineSearch
-          fontSize={20}
-          className="absolute top-1/2 left-2 transform -translate-y-1/2 text-gray-400"
-        />
-        <input
-          type="text"
-          placeholder="Search..."
-          className="w-[500px] border border-gray-300 rounded-md px-4 py-2 pl-9 focus:font-medium focus:text-primary focus:outline-none focus:ring-1 focus:ring-primary transition duration-500 ease-in-out"
-        />
-      </div>
-      <div className="flex items-center gap-2 mr-2">
+      <div className="flex items-center gap-2 mr-2 ml-[90%] mt-2">
         <Popover className="relative">
           {({ open }) => (
             <>

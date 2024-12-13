@@ -44,6 +44,8 @@ import staffInventorySaga from './inventory/director/allStaffInventorySaga'
 import createExportSaga from './inventory/manager/createTransactionExportSaga'
 import watchCheckRequestExists from './inventory/manager/checkRequestExistsSaga'
 import orderShipperSaga from './shipper/orderShipperSaga'
+import productPageSaga from './user/getAllProductPageSaga'
+import productSearchIdSaga from './user/getProductByIdSaga'
 export default function* rootSaga() {
   yield all([
     newSaga(),
@@ -90,6 +92,8 @@ export default function* rootSaga() {
     staffInventorySaga(),
     createExportSaga(),
     watchCheckRequestExists(),
-    orderShipperSaga()
+    orderShipperSaga(),
+    productPageSaga(),
+    productSearchIdSaga()
   ])
 }

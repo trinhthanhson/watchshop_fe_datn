@@ -1,29 +1,38 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllProductsRequest } from '../../redux/actions/actions'
 import { getStatus, getStatusText } from '../../constants/Status'
 import { IoIosAddCircle } from 'react-icons/io'
 import { MdModeEditOutline, MdDelete, MdFileDownload } from 'react-icons/md'
 import axios from 'axios'
 import * as XLSX from 'xlsx'
+import {
+  getAllProductsPageRequest,
+  searchProductByIdRequest
+} from '../../redux/actions/user/action'
+import { HiOutlineSearch } from 'react-icons/hi'
 
 const AllProducts = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const products = useSelector((state) => state.products.products)
+  const products = useSelector((state) => state.product_page.product_page)
+  const product_find = useSelector((state) => state?.product_find?.product_find)
   const [deletedProductId, setDeletedProductId] = useState(null)
   const [sortOrder, setSortOrder] = useState('all') // Trạng thái bộ lọc
-  const [currentPage, setCurrentPage] = useState(1) // Trang hiện tại
-  const itemsPerPage = 10 // Số sản phẩm mỗi trang
+  const [searchValue, setSearchValue] = useState('')
+  const [isSearching, setIsSearching] = useState(false) // Đánh dấu trạng thái tìm kiếm
+  const [timeoutId, setTimeoutId] = useState(null)
 
+  const [currentPage, setCurrentPage] = useState(1)
+  const recordsPerPage = 10 // Số bản ghi mỗi trang
+  const totalPages = products?.totalPages || 1 // Lấy totalPages từ API
   useEffect(() => {
     try {
-      dispatch(getAllProductsRequest())
+      dispatch(getAllProductsPageRequest(currentPage, recordsPerPage))
     } catch (error) {
       console.error('Error dispatch', error)
     }
-  }, [dispatch, deletedProductId])
+  }, [dispatch, deletedProductId, currentPage, recordsPerPage])
 
   const filteredAndSortedProducts = products?.data
     ?.filter(
@@ -36,20 +45,34 @@ const AllProducts = () => {
       return sortOrder === 'newest' ? dateB - dateA : dateA - dateB
     })
 
-  // Tính toán sản phẩm cho trang hiện tại
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const currentProducts = filteredAndSortedProducts?.slice(startIndex, endIndex)
-
-  const totalPages = Math.ceil(
-    (filteredAndSortedProducts?.length || 0) / itemsPerPage
-  )
-
-  const handlePageChange = (newPage) => {
-    if (newPage >= 1 && newPage <= totalPages) {
-      setCurrentPage(newPage)
+  const handleSearch = (value) => {
+    if (value.trim() !== '') {
+      dispatch(searchProductByIdRequest(value, currentPage, recordsPerPage))
+      setIsSearching(true) // Đang trong trạng thái tìm kiếm
+    } else {
+      setIsSearching(false) // Không tìm kiếm
     }
   }
+
+  const handleInputChange = (e) => {
+    const value = e.target.value
+    setSearchValue(value)
+
+    // Nếu có timeout trước đó, xóa nó
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+    }
+
+    // Đặt timeout mới
+    const newTimeoutId = setTimeout(() => {
+      handleSearch(value) // Gọi hàm tìm kiếm
+    }, 300) // Đợi 300ms trước khi gọi API
+    setTimeoutId(newTimeoutId)
+  }
+
+  const displayedProducts = isSearching
+    ? product_find
+    : filteredAndSortedProducts || []
 
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(
@@ -112,22 +135,40 @@ const AllProducts = () => {
   return (
     <div className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col  w-[90%] ml-[15%] rounded-md shadow-md bg-white">
-        {/* Bộ lọc theo ngày */}
-        <div className="flex justify-end p-4">
-          <select
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-            className="p-2 border rounded-md"
-          >
-            <option value="all">All</option>
-            <option value="newest">Mới nhất</option>
-            <option value="oldest">Cũ nhất</option>
-          </select>
-          <MdFileDownload
-            className="cursor-pointer text-primary mt-1 ml-1 hover:bg-gray-300 transition-transform rounded-full duration-200 transform"
-            fontSize={25}
-            onClick={exportToExcel}
-          />
+        <div className="flex justify-between items-center mt-5">
+          {/* Tìm kiếm */}
+          <div className="relative ml-[30%] mb-2">
+            <HiOutlineSearch
+              fontSize={20}
+              className="absolute top-1/2 left-2 transform -translate-y-1/2 text-gray-400"
+            />
+            <input
+              type="text"
+              placeholder="Search by Product ID..."
+              value={searchValue}
+              onChange={handleInputChange} // Gọi khi giá trị thay đổi
+              className="w-[500px] border border-gray-300 rounded-md px-4 py-2 pl-9 focus:font-medium focus:text-primary focus:outline-none focus:ring-1 focus:ring-primary transition duration-500 ease-in-out"
+            />
+          </div>
+          {/* Bộ lọc và xuất */}
+          <div className="flex items-center">
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="p-2 border rounded-md"
+            >
+              <option value="all">All</option>
+              <option value="newest">Mới nhất</option>
+              <option value="oldest">Cũ nhất</option>
+            </select>
+            <div className="border border-gray-300 rounded-md p-2 flex items-center ml-3 mr-2 hover:bg-gray-300">
+              <MdFileDownload
+                className="cursor-pointer text-primary  transition-transform rounded-full duration-200 transform"
+                fontSize={20}
+                onClick={exportToExcel}
+              />
+            </div>
+          </div>
         </div>
 
         <table className="w-full text-gray-700">
@@ -145,7 +186,7 @@ const AllProducts = () => {
             </tr>
           </thead>
           <tbody>
-            {currentProducts?.map((product) => (
+            {displayedProducts?.map((product) => (
               <tr
                 key={product.product_id}
                 className="cursor-pointer hover:bg-gray-100 transition-colors"
@@ -204,40 +245,26 @@ const AllProducts = () => {
             ))}
           </tbody>
         </table>
-
         {/* Điều khiển phân trang */}
-        <div className="flex justify-center mt-4 space-x-2 mb-2">
-          {/* Nút Previous */}
+        <div className="flex justify-center items-center gap-4 mt-4 border p-4 rounded-md">
           <button
-            className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
+            className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
+            disabled={currentPage === 1} // Disable khi đang ở trang đầu
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} // Tránh trang âm
           >
             Previous
           </button>
 
-          {/* Hiển thị số trang */}
-          {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-            (page) => (
-              <button
-                key={page}
-                className={`p-2 border rounded-md transition-transform duration-200 transform cursor-pointer ${
-                  currentPage === page
-                    ? 'bg-primary text-white'
-                    : 'hover:bg-gray-300'
-                }`}
-                onClick={() => handlePageChange(page)}
-              >
-                {page}
-              </button>
-            )
-          )}
+          <span className="text-lg font-medium">
+            Page {currentPage} of {totalPages}
+          </span>
 
-          {/* Nút Next */}
           <button
-            className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
+            disabled={currentPage === totalPages} // Disable khi đang ở trang cuối
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            } // Tránh vượt quá totalPages
           >
             Next
           </button>

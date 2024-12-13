@@ -44,6 +44,8 @@ import allStaffInventoryReducer from './inventory/director/allStaffInventoryRedu
 import createTransactionExportReducer from './inventory/manager/createTransactionExportReducer'
 import checkRequestExistsReducer from './inventory/manager/checkTransactionExistReducer'
 import orderShipperReducer from './shipper/orderShipperReducer'
+import getProductPageReducer from './user/getProductPageReducer'
+import getProductByIdReducer from './user/getProductByIdReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -90,7 +92,9 @@ const rootReducer = combineReducers({
   staff_inventory: allStaffInventoryReducer,
   create_export: createTransactionExportReducer,
   check_transaction: checkRequestExistsReducer,
-  order_shipper: orderShipperReducer
+  order_shipper: orderShipperReducer,
+  product_page: getProductPageReducer,
+  product_find: getProductByIdReducer
 })
 
 export default rootReducer

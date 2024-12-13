@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import * as XLSX from 'xlsx'
+import { HiOutlineSearch } from 'react-icons/hi'
 const AllOrder = () => {
   const dispatch = useDispatch()
   const orders = useSelector((state) => state.orders.orders)
@@ -150,6 +151,17 @@ const AllOrder = () => {
 
   return (
     <div className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative m-[auto] ml-[40%]">
+        <HiOutlineSearch
+          fontSize={20}
+          className="absolute top-1/2 left-2 transform -translate-y-1/2 text-gray-400"
+        />
+        <input
+          type="text"
+          placeholder="Search..."
+          className="w-[500px] border border-gray-300 rounded-md px-4 py-2 pl-9 focus:font-medium focus:text-primary focus:outline-none focus:ring-1 focus:ring-primary transition duration-500 ease-in-out"
+        />
+      </div>
       <div className="ml-[15%] w-[90%] font-RobotoMedium">
         <div className="flex justify-between">
           <div className="p-2 flex items-center justify-center gap-2">
