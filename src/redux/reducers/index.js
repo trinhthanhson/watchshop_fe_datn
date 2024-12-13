@@ -46,6 +46,8 @@ import checkRequestExistsReducer from './inventory/manager/checkTransactionExist
 import orderShipperReducer from './shipper/orderShipperReducer'
 import getProductPageReducer from './user/getProductPageReducer'
 import getProductByIdReducer from './user/getProductByIdReducer'
+import orderStatusReducer from './order-status/orderStatusReducer'
+import orderPageReducer from './order/orderPageReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -94,7 +96,9 @@ const rootReducer = combineReducers({
   check_transaction: checkRequestExistsReducer,
   order_shipper: orderShipperReducer,
   product_page: getProductPageReducer,
-  product_find: getProductByIdReducer
+  product_find: getProductByIdReducer,
+  order_status: orderStatusReducer,
+  order_page: orderPageReducer
 })
 
 export default rootReducer

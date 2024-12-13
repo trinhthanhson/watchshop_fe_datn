@@ -46,6 +46,8 @@ import watchCheckRequestExists from './inventory/manager/checkRequestExistsSaga'
 import orderShipperSaga from './shipper/orderShipperSaga'
 import productPageSaga from './user/getAllProductPageSaga'
 import productSearchIdSaga from './user/getProductByIdSaga'
+import getOrderStatusSaga from './order-status/getAllOrderStatus'
+import orderPageSaga from './order/orderPageSaga'
 export default function* rootSaga() {
   yield all([
     newSaga(),
@@ -94,6 +96,8 @@ export default function* rootSaga() {
     watchCheckRequestExists(),
     orderShipperSaga(),
     productPageSaga(),
-    productSearchIdSaga()
+    productSearchIdSaga(),
+    getOrderStatusSaga(),
+    orderPageSaga()
   ])
 }

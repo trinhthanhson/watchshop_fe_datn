@@ -9,25 +9,31 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import * as XLSX from 'xlsx'
 import { HiOutlineSearch } from 'react-icons/hi'
+import { getAllOrderStatusRequest } from '../../redux/actions/order-status/action'
+import { getAllOrderPageRequest } from '../../redux/actions/order/action'
 const AllOrder = () => {
   const dispatch = useDispatch()
-  const orders = useSelector((state) => state.orders.orders)
+  const orders = useSelector((state) => state.order_page.order_page)
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
   const [status, setStatus] = useState('')
   const [totalPrice, setTotalPrice] = useState(0)
   const [filteredOrders, setFilteredOrders] = useState([])
   const navigate = useNavigate()
-  const [currentPage, setCurrentPage] = useState(1) // Trang hiện tại
-  const itemsPerPage = 10 // Số sản phẩm mỗi trang
-
+  const [currentPage, setCurrentPage] = useState(1)
+  const recordsPerPage = 10 // Số bản ghi mỗi trang
+  const orderStatus = useSelector(
+    (state) => state.order_status?.order_status?.data
+  )
+  console.log(orders)
   useEffect(() => {
     try {
-      dispatch(getAllOrdersRequest())
+      dispatch(getAllOrderPageRequest(currentPage, recordsPerPage))
+      dispatch(getAllOrderStatusRequest())
     } catch (error) {
       console.error('Error dispatch', error)
     }
-  }, [dispatch])
+  }, [dispatch, currentPage, recordsPerPage])
 
   useEffect(() => {
     const filtered = orders?.data?.filter((order) => {
@@ -172,7 +178,6 @@ const AllOrder = () => {
               onChange={(date) => setStartDate(date)}
             />
           </div>
-
           <div className="p-2 flex items-center justify-center gap-2">
             <label className="text-[13px]">Ngày kết thúc</label>
             <DatePicker
@@ -181,7 +186,6 @@ const AllOrder = () => {
               onChange={(date) => setEndDate(date)}
             />
           </div>
-
           <div className="p-2 flex items-center justify-center gap-2">
             <label className="text-[13px]">Trạng thái</label>
             <select
@@ -189,14 +193,14 @@ const AllOrder = () => {
               value={status || ''}
               onChange={(e) => setStatus(e.target.value)}
             >
+              {/* Tùy chọn mặc định */}
               <option value="">Tất cả</option>
-              <option value="0">Chờ xác nhận</option>
-              <option value="1">Đã xác nhận</option>
-              <option value="2">Đang vận chuyển</option>
-              <option value="3">Chờ thanh toán</option>
-              <option value="4">Đã thanh toán</option>
-              <option value="5">Đã giao</option>
-              <option value="6">Đã huỷ</option>
+              {/* Lấy danh sách từ orderStatus */}
+              {orderStatus?.map((statusItem) => (
+                <option key={statusItem.status_id} value={statusItem.status_id}>
+                  {statusItem.status_name}
+                </option>
+              ))}
             </select>
           </div>
 

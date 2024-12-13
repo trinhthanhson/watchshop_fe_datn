@@ -1,0 +1,5 @@
+// #region get all order pageable
+export const GET_ALL_ORDER_PAGE_REQUEST = 'GET_ALL_ORDER_PAGE_REQUEST'
+export const GET_ALL_ORDER_PAGE_SUCCESS = 'GET_ALL_ORDER_PAGE_SUCCESS'
+export const GET_ALL_ORDER_PAGE_FAILURE = 'GET_ALL_ORDER_PAGE_FAILURE'
+// #endregion
