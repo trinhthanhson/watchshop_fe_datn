@@ -48,6 +48,8 @@ import productPageSaga from './user/getAllProductPageSaga'
 import productSearchIdSaga from './user/getProductByIdSaga'
 import getOrderStatusSaga from './order-status/getAllOrderStatus'
 import orderPageSaga from './order/orderPageSaga'
+import findOrderByStatusSaga from './order/findOrderByStatusSaga'
+import findOrderByDateSaga from './order/findOrderByDateSaga'
 export default function* rootSaga() {
   yield all([
     newSaga(),
@@ -98,6 +100,8 @@ export default function* rootSaga() {
     productPageSaga(),
     productSearchIdSaga(),
     getOrderStatusSaga(),
-    orderPageSaga()
+    orderPageSaga(),
+    findOrderByStatusSaga(),
+    findOrderByDateSaga()
   ])
 }

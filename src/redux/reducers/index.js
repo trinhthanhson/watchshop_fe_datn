@@ -48,6 +48,8 @@ import getProductPageReducer from './user/getProductPageReducer'
 import getProductByIdReducer from './user/getProductByIdReducer'
 import orderStatusReducer from './order-status/orderStatusReducer'
 import orderPageReducer from './order/orderPageReducer'
+import findOrderByStatusReducer from './order/findOrderByStatusReducer'
+import findOrderByDateReducer from './order/findOrderByDateReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -98,7 +100,9 @@ const rootReducer = combineReducers({
   product_page: getProductPageReducer,
   product_find: getProductByIdReducer,
   order_status: orderStatusReducer,
-  order_page: orderPageReducer
+  order_page: orderPageReducer,
+  orderByStatus: findOrderByStatusReducer,
+  orderByDate: findOrderByDateReducer
 })
 
 export default rootReducer

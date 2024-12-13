@@ -1,6 +1,5 @@
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
-import { getAllOrdersRequest } from '../../redux/actions/actions'
 import { getOrderStatusText } from '../../constants/Status'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
@@ -10,77 +9,142 @@ import 'react-datepicker/dist/react-datepicker.css'
 import * as XLSX from 'xlsx'
 import { HiOutlineSearch } from 'react-icons/hi'
 import { getAllOrderStatusRequest } from '../../redux/actions/order-status/action'
-import { getAllOrderPageRequest } from '../../redux/actions/order/action'
+import {
+  getAllOrderPageRequest,
+  searchOrderByDateRequest,
+  searchOrderByStatusRequest
+} from '../../redux/actions/order/action'
 const AllOrder = () => {
   const dispatch = useDispatch()
-  const orders = useSelector((state) => state.order_page.order_page)
+  const navigate = useNavigate()
+  const orders = useSelector((state) => state?.order_page?.order_page)
+  const dateFindOrder = useSelector((state) => state?.orderByDate?.orderByDate)
+  const orderStatus = useSelector((state) => state?.order_status?.order_status)
+  const statusFindOrder = useSelector(
+    (state) => state?.orderByStatus?.orderByStatus
+  )
+
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
-  const [status, setStatus] = useState('')
-  const [totalPrice, setTotalPrice] = useState(0)
-  const [filteredOrders, setFilteredOrders] = useState([])
-  const navigate = useNavigate()
+  const [selectedStatusId, setStatusId] = useState(0)
+  const [isFilter, setIsFilter] = useState(false)
+  const [isSearchDate, setSearchDate] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const recordsPerPage = 10 // Số bản ghi mỗi trang
-  const orderStatus = useSelector(
-    (state) => state.order_status?.order_status?.data
-  )
-  console.log(orders)
+
+  // Xác định dữ liệu hiển thị
+  const displayedOrder =
+    isSearchDate && dateFindOrder
+      ? dateFindOrder
+      : isFilter && statusFindOrder
+        ? statusFindOrder
+        : orders
+
+  // Tổng số trang
+  const totalPages = isSearchDate
+    ? dateFindOrder?.totalPages || 1
+    : isFilter
+      ? statusFindOrder?.totalPages || 1
+      : orders?.totalPages || 1
+
+  // Fetch dữ liệu khi có thay đổi
   useEffect(() => {
     try {
-      dispatch(getAllOrderPageRequest(currentPage, recordsPerPage))
+      if (isSearchDate) {
+        dispatch(
+          searchOrderByDateRequest(
+            startDate?.toISOString().split('T')[0],
+            endDate?.toISOString().split('T')[0],
+            currentPage,
+            recordsPerPage
+          )
+        )
+      } else if (isFilter) {
+        dispatch(
+          searchOrderByStatusRequest(
+            selectedStatusId,
+            currentPage,
+            recordsPerPage
+          )
+        )
+      } else {
+        dispatch(getAllOrderPageRequest(currentPage, recordsPerPage))
+      }
       dispatch(getAllOrderStatusRequest())
     } catch (error) {
       console.error('Error dispatch', error)
     }
-  }, [dispatch, currentPage, recordsPerPage])
+  }, [
+    dispatch,
+    isFilter,
+    isSearchDate,
+    currentPage,
+    recordsPerPage,
+    selectedStatusId,
+    startDate,
+    endDate
+  ])
 
-  useEffect(() => {
-    const filtered = orders?.data?.filter((order) => {
-      const orderDate = new Date(order.created_at).getTime()
-      const startDateTimestamp = startDate ? startDate.getTime() : null
-      const endDateTimestamp = endDate ? endDate.getTime() : null
-
-      if (startDateTimestamp && orderDate < startDateTimestamp) {
-        return false
-      }
-
-      if (endDateTimestamp && orderDate > endDateTimestamp) {
-        return false
-      }
-
-      if (status && order.status !== status) {
-        return false
-      }
-      return true
-    })
-    setFilteredOrders(filtered || [])
-
-    const total = filtered
-      ? filtered.reduce((acc, order) => acc + order.total_price, 0)
-      : 0
-    setTotalPrice(total)
-  }, [orders.data, startDate, endDate, status])
-
-  const handleReset = () => {
-    setStartDate(null)
-    setEndDate(null)
-    setStatus(null)
+  // Xử lý thay đổi trạng thái
+  const handleStatusChange = (e) => {
+    const status_id = e.target.value
+    setStatusId(status_id)
+    setIsFilter(true)
+    setSearchDate(false) // Vô hiệu tìm kiếm theo ngày
+    setCurrentPage(1) // Reset về trang đầu
+    dispatch(searchOrderByStatusRequest(status_id, 1, recordsPerPage))
   }
 
-  // Tính toán sản phẩm cho trang hiện tại
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const currentProducts = filteredOrders?.slice(startIndex, endIndex)
+  // Xử lý tìm kiếm theo ngày
+  const handleSearch = () => {
+    if (startDate && endDate) {
+      const startDateString = startDate.toLocaleDateString('en-CA') // yyyy-MM-dd
+      const endDateString = endDate.toLocaleDateString('en-CA') // yyyy-MM-dd
 
-  const totalPages = Math.ceil((filteredOrders?.length || 0) / itemsPerPage)
-
-  const handlePageChange = (newPage) => {
-    if (newPage >= 1 && newPage <= totalPages) {
-      setCurrentPage(newPage)
+      dispatch(
+        searchOrderByDateRequest(
+          startDateString,
+          endDateString,
+          currentPage,
+          recordsPerPage
+        )
+      )
+      setSearchDate(true)
+    } else {
+      alert('Vui lòng chọn ngày bắt đầu và ngày kết thúc')
     }
   }
 
+  // Xử lý chuyển trang
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+    if (isSearchDate) {
+      dispatch(
+        searchOrderByDateRequest(
+          startDate.toISOString().split('T')[0],
+          endDate.toISOString().split('T')[0],
+          page,
+          recordsPerPage
+        )
+      )
+    } else if (isFilter) {
+      dispatch(
+        searchOrderByStatusRequest(selectedStatusId, page, recordsPerPage)
+      )
+    } else {
+      dispatch(getAllOrderPageRequest(page, recordsPerPage))
+    }
+  }
+
+  // Reset bộ lọc ngày
+  const handleReset = () => {
+    setStartDate(null)
+    setEndDate(null)
+    setSearchDate(false)
+    setIsFilter(false)
+    setCurrentPage(1)
+    dispatch(getAllOrderPageRequest(1, recordsPerPage))
+  }
   const exportPDF = () => {
     const doc = new jsPDF()
 
@@ -96,7 +160,7 @@ const AllOrder = () => {
     ]
     const tableRows = []
 
-    filteredOrders.forEach((order, index) => {
+    orders?.data.forEach((order, index) => {
       const orderDetails = order.orderDetails
         .map((item) => item.product?.product_name)
         .join(', ')
@@ -134,7 +198,7 @@ const AllOrder = () => {
     doc.save('order-list.pdf')
   }
   const exportToExcel = () => {
-    const exportData = filteredOrders.map((order, index) => {
+    const exportData = orders.map((order, index) => {
       const orderDate = new Date(order.created_at).toLocaleDateString()
       return {
         STT: index + 1,
@@ -171,32 +235,41 @@ const AllOrder = () => {
       <div className="ml-[15%] w-[90%] font-RobotoMedium">
         <div className="flex justify-between">
           <div className="p-2 flex items-center justify-center gap-2">
-            <label className="text-[13px]">Ngày bắt đầu</label>
+            <label>Ngày bắt đầu</label>
             <DatePicker
-              className="text-center p-[3px] rounded-md border-primary border-[1px]"
               selected={startDate}
               onChange={(date) => setStartDate(date)}
+              className="border rounded p-2"
             />
           </div>
           <div className="p-2 flex items-center justify-center gap-2">
-            <label className="text-[13px]">Ngày kết thúc</label>
+            <label>Ngày kết thúc</label>
             <DatePicker
-              className="text-center p-[3px] rounded-md border-primary border-[1px]"
               selected={endDate}
               onChange={(date) => setEndDate(date)}
+              className="border rounded p-2"
             />
+            <div className="p-2 flex items-center justify-center gap-2">
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                onClick={handleSearch}
+              >
+                Tìm kiếm
+              </button>
+            </div>
           </div>
+
           <div className="p-2 flex items-center justify-center gap-2">
-            <label className="text-[13px]">Trạng thái</label>
+            Trạng thái
             <select
               className="p-[3px] rounded-md border-primary border-[1px] text-center text-[13px]"
               value={status || ''}
-              onChange={(e) => setStatus(e.target.value)}
+              onChange={handleStatusChange}
             >
               {/* Tùy chọn mặc định */}
               <option value="">Tất cả</option>
               {/* Lấy danh sách từ orderStatus */}
-              {orderStatus?.map((statusItem) => (
+              {orderStatus?.data?.map((statusItem) => (
                 <option key={statusItem.status_id} value={statusItem.status_id}>
                   {statusItem.status_name}
                 </option>
@@ -204,7 +277,7 @@ const AllOrder = () => {
             </select>
           </div>
 
-          <div className="p-2">
+          <div className="p-2 mt-3">
             <button
               onClick={() => handleReset()}
               className="text-center text-[10px] bg-primary text-white rounded-md shadow-md uppercase px-1 py-[7px] font-RobotoMedium hover:bg-hoverPrimary transition duration-200 ease-in-out mr-5"
@@ -232,7 +305,7 @@ const AllOrder = () => {
             </tr>
           </thead>
           <tbody>
-            {currentProducts.map((order, index) => (
+            {displayedOrder?.data?.map((order, index) => (
               <tr
                 key={index}
                 className="cursor-pointer hover:bg-gray-100 transition-colors "
@@ -301,52 +374,28 @@ const AllOrder = () => {
         </table>
 
         {/* Điều khiển phân trang */}
-        <div className="flex justify-center mt-2 space-x-2 mb-2">
-          {/* Nút Previous */}
+        <div className="flex justify-center items-center gap-4 mt-4 border p-4 rounded-md">
           <button
-            className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
+            className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
+            disabled={currentPage === 1} // Disable khi đang ở trang đầu
+            onClick={() => handlePageChange(Math.max(currentPage - 1, 1))} // Chuyển về trang trước hoặc giữ nguyên nếu trang đầu
           >
             Previous
           </button>
 
-          {/* Hiển thị số trang */}
-          {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-            (page) => (
-              <button
-                key={page}
-                className={`p-2 border rounded-md transition-transform duration-200 transform cursor-pointer ${
-                  currentPage === page
-                    ? 'bg-primary text-white'
-                    : 'hover:bg-gray-300'
-                }`}
-                onClick={() => handlePageChange(page)}
-              >
-                {page}
-              </button>
-            )
-          )}
+          <span className="text-lg font-medium">
+            Page {currentPage} of {totalPages}
+          </span>
 
-          {/* Nút Next */}
           <button
-            className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
+            disabled={currentPage === totalPages} // Disable khi đang ở trang cuối
+            onClick={() =>
+              handlePageChange(Math.min(currentPage + 1, totalPages))
+            } // Chuyển sang trang sau hoặc giữ nguyên nếu trang cuối
           >
             Next
           </button>
-        </div>
-      </div>
-
-      <div className="w-[80%] ml-[18%] mt-2">
-        <div className="flex justify-between font-RobotoMedium">
-          <div className="text-primary rounded-md p-2 ml-[45%]">
-            Số đơn hàng: {filteredOrders ? filteredOrders.length : 0}
-          </div>
-          <div className="text-primary rounded-md p-2">
-            Tổng: {totalPrice.toLocaleString('en')} VNĐ
-          </div>
         </div>
       </div>
 
