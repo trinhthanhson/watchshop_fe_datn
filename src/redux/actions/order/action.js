@@ -7,7 +7,13 @@ import {
   SEARCH_ORDER_BY_STATUS_SUCCESS,
   SEARCH_ORDER_BY_DATE_REQUEST,
   SEARCH_ORDER_BY_DATE_SUCCESS,
-  SEARCH_ORDER_BY_DATE_FAILURE
+  SEARCH_ORDER_BY_DATE_FAILURE,
+  SEARCH_ORDER_BY_DATE_STATUS_REQUEST,
+  SEARCH_ORDER_BY_DATE_STATUS_SUCCESS,
+  SEARCH_ORDER_BY_DATE_STATUS_FAILURE,
+  SEARCH_ORDER_BY_INFO_REQUEST,
+  SEARCH_ORDER_BY_INFO_SUCCESS,
+  SEARCH_ORDER_BY_INFO_FAILURE
 } from './type'
 
 // #region get all order
@@ -60,6 +66,65 @@ export const searchOrderByDateSuccess = (orderByStatus) => ({
 // Action khi tìm kiếm thất bại
 export const searchOrderByDateFailure = (error) => ({
   type: SEARCH_ORDER_BY_DATE_FAILURE,
+  payload: error
+})
+// #endregion
+
+// #region find order by status id
+export const searchOrderByDateAndStatusRequest = (
+  startDate,
+  endDate,
+  status_id,
+  page,
+  limit
+) => ({
+  type: SEARCH_ORDER_BY_DATE_STATUS_REQUEST,
+  payload: { startDate, endDate, status_id, page, limit }
+})
+
+// Action khi tìm kiếm thành công
+export const searchOrderByDateAndStatusSuccess = (orderByStatus) => ({
+  type: SEARCH_ORDER_BY_DATE_STATUS_SUCCESS,
+  payload: orderByStatus
+})
+
+// Action khi tìm kiếm thất bại
+export const searchOrderByDateAndStatusFailure = (error) => ({
+  type: SEARCH_ORDER_BY_DATE_STATUS_FAILURE,
+  payload: error
+})
+// #endregion
+// #region find order by info
+export const searchOrderByInfoRequest = (
+  startDate,
+  endDate,
+  status_id,
+  recipient_name,
+  recipient_phone,
+  page,
+  limit
+) => ({
+  type: SEARCH_ORDER_BY_INFO_REQUEST,
+  payload: {
+    startDate,
+    endDate,
+    status_id,
+    recipient_name,
+    recipient_phone,
+    page,
+    limit
+  }
+})
+
+// Action khi tìm kiếm thành công
+export const searchOrderByInfoSuccess = (orderByStatus) => ({
+  type: SEARCH_ORDER_BY_INFO_SUCCESS,
+  payload: orderByStatus
+})
+
+// Action khi tìm kiếm thất bại
+export const searchOrderByInfoFailure = (error) => ({
+  type: SEARCH_ORDER_BY_INFO_FAILURE,
   payload: error
 })
 // #endregion

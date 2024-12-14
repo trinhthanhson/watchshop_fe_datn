@@ -50,6 +50,8 @@ import orderStatusReducer from './order-status/orderStatusReducer'
 import orderPageReducer from './order/orderPageReducer'
 import findOrderByStatusReducer from './order/findOrderByStatusReducer'
 import findOrderByDateReducer from './order/findOrderByDateReducer'
+import findOrderByDateAndStatusReducer from './order/findOrderByDateAndStatusReducer'
+import findOrderByInfo from './order/findOrderByInfoReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -102,7 +104,9 @@ const rootReducer = combineReducers({
   order_status: orderStatusReducer,
   order_page: orderPageReducer,
   orderByStatus: findOrderByStatusReducer,
-  orderByDate: findOrderByDateReducer
+  orderByDate: findOrderByDateReducer,
+  orderByDateStatus: findOrderByDateAndStatusReducer,
+  orderByInfo: findOrderByInfo
 })
 
 export default rootReducer

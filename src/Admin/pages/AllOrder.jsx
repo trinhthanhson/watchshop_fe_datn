@@ -7,11 +7,12 @@ import { useNavigate } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import * as XLSX from 'xlsx'
-import { HiOutlineSearch } from 'react-icons/hi'
 import { getAllOrderStatusRequest } from '../../redux/actions/order-status/action'
 import {
   getAllOrderPageRequest,
+  searchOrderByDateAndStatusRequest,
   searchOrderByDateRequest,
+  searchOrderByInfoRequest,
   searchOrderByStatusRequest
 } from '../../redux/actions/order/action'
 const AllOrder = () => {
@@ -20,60 +21,152 @@ const AllOrder = () => {
   const orders = useSelector((state) => state?.order_page?.order_page)
   const dateFindOrder = useSelector((state) => state?.orderByDate?.orderByDate)
   const orderStatus = useSelector((state) => state?.order_status?.order_status)
+  const orderInfo = useSelector((state) => state?.orderByInfo?.orderByInfo)
+  const orderStatusDate = useSelector(
+    (state) => state?.orderByDateStatus?.orderByDateStatus
+  )
+
   const statusFindOrder = useSelector(
     (state) => state?.orderByStatus?.orderByStatus
   )
 
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
-  const [selectedStatusId, setStatusId] = useState(0)
+  const [selectedStatusId, setStatusId] = useState('')
+  const [searchRecipientName, setRecipientName] = useState('')
+  const [searchRecipientPhone, setRecipientPhone] = useState('')
   const [isFilter, setIsFilter] = useState(false)
   const [isSearchDate, setSearchDate] = useState(false)
+  const [isSearchRecipientName, setIsSearchRecipientName] = useState(false)
+  const [isSearchRecipientPhone, setIsSearchRecipientPhone] = useState(false)
+
   const [currentPage, setCurrentPage] = useState(1)
   const recordsPerPage = 10 // Số bản ghi mỗi trang
 
-  // Xác định dữ liệu hiển thị
-  const displayedOrder =
-    isSearchDate && dateFindOrder
-      ? dateFindOrder
-      : isFilter && statusFindOrder
-        ? statusFindOrder
-        : orders
+  const displayedOrder = (() => {
+    if (
+      startDate &&
+      endDate &&
+      isSearchRecipientName &&
+      isSearchRecipientPhone
+    ) {
+      return orderInfo
+    }
+    if (
+      isSearchDate &&
+      isFilter &&
+      startDate &&
+      endDate &&
+      selectedStatusId &&
+      !isSearchRecipientName &&
+      !isSearchRecipientPhone
+    ) {
+      // Khi tìm kiếm theo ngày và trạng thái
+
+      return orderStatusDate
+    }
+
+    if (
+      isSearchDate &&
+      startDate &&
+      endDate &&
+      !isSearchRecipientName &&
+      !isSearchRecipientPhone
+    ) {
+      return dateFindOrder
+    }
+
+    if (
+      isFilter &&
+      statusFindOrder &&
+      !isSearchRecipientName &&
+      !isSearchRecipientPhone
+    ) {
+      return statusFindOrder
+    }
+
+    // Mặc định hiển thị tất cả đơn hàng
+    return orders
+  })()
 
   // Tổng số trang
-  const totalPages = isSearchDate
-    ? dateFindOrder?.totalPages || 1
-    : isFilter
-      ? statusFindOrder?.totalPages || 1
-      : orders?.totalPages || 1
+  const totalPages =
+    isSearchDate && isFilter && orderStatusDate
+      ? orderStatusDate?.totalPages || 1
+      : isSearchDate
+        ? dateFindOrder?.totalPages || 1
+        : isFilter
+          ? statusFindOrder?.totalPages || 1
+          : orders?.totalPages || 1
 
   // Fetch dữ liệu khi có thay đổi
   useEffect(() => {
-    try {
-      if (isSearchDate) {
-        dispatch(
-          searchOrderByDateRequest(
-            startDate?.toISOString().split('T')[0],
-            endDate?.toISOString().split('T')[0],
-            currentPage,
-            recordsPerPage
+    const fetchData = async () => {
+      try {
+        if (
+          isSearchRecipientName &&
+          isSearchRecipientPhone &&
+          startDate &&
+          endDate
+        ) {
+          // Khi tìm kiếm theo name, phone, và ngày
+          await dispatch(
+            searchOrderByInfoRequest(
+              formatDate(startDate),
+              formatDate(endDate),
+              selectedStatusId || '', // Nếu không chọn trạng thái, để chuỗi rỗng
+              searchRecipientName,
+              searchRecipientPhone,
+              currentPage,
+              recordsPerPage
+            )
           )
-        )
-      } else if (isFilter) {
-        dispatch(
-          searchOrderByStatusRequest(
-            selectedStatusId,
-            currentPage,
-            recordsPerPage
+        } else if (
+          isSearchDate &&
+          isFilter &&
+          startDate &&
+          endDate &&
+          selectedStatusId
+        ) {
+          // Khi tìm kiếm theo date và trạng thái
+          await dispatch(
+            searchOrderByDateAndStatusRequest(
+              formatDate(startDate),
+              formatDate(endDate),
+              selectedStatusId,
+              currentPage,
+              recordsPerPage
+            )
           )
-        )
-      } else {
-        dispatch(getAllOrderPageRequest(currentPage, recordsPerPage))
+        } else if (isSearchDate && startDate && endDate) {
+          // Khi tìm kiếm chỉ theo ngày
+          await dispatch(
+            searchOrderByDateRequest(
+              formatDate(startDate),
+              formatDate(endDate),
+              currentPage,
+              recordsPerPage
+            )
+          )
+        } else if (isFilter && selectedStatusId) {
+          // Khi tìm kiếm chỉ theo trạng thái
+          await dispatch(
+            searchOrderByStatusRequest(
+              selectedStatusId,
+              currentPage,
+              recordsPerPage
+            )
+          )
+        } else {
+          // Mặc định hiển thị tất cả đơn hàng
+          await dispatch(getAllOrderPageRequest(currentPage, recordsPerPage))
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error)
       }
-      dispatch(getAllOrderStatusRequest())
-    } catch (error) {
-      console.error('Error dispatch', error)
     }
+
+    fetchData()
   }, [
     dispatch,
     isFilter,
@@ -82,47 +175,144 @@ const AllOrder = () => {
     recordsPerPage,
     selectedStatusId,
     startDate,
-    endDate
+    endDate,
+    isSearchRecipientName,
+    isSearchRecipientPhone,
+    searchRecipientName,
+    searchRecipientPhone
   ])
 
+  // Fetch danh sách trạng thái khi component render lần đầu
+  useEffect(() => {
+    dispatch(getAllOrderStatusRequest())
+  }, [dispatch])
   // Xử lý thay đổi trạng thái
   const handleStatusChange = (e) => {
     const status_id = e.target.value
-    setStatusId(status_id)
-    setIsFilter(true)
-    setSearchDate(false) // Vô hiệu tìm kiếm theo ngày
-    setCurrentPage(1) // Reset về trang đầu
-    dispatch(searchOrderByStatusRequest(status_id, 1, recordsPerPage))
+    if (status_id === '') {
+      setStatusId('')
+      setIsFilter(false)
+      setCurrentPage(1)
+      dispatch(getAllOrderPageRequest(1, recordsPerPage))
+    } else {
+      setStatusId(status_id) // Cập nhật trạng thái
+      setIsFilter(true)
+      setSearchDate(false) // Vô hiệu tìm kiếm theo ngày
+      setCurrentPage(1) // Reset về trang đầu
+      dispatch(searchOrderByStatusRequest(status_id, 1, recordsPerPage)) // Dispatch action
+    }
   }
-
+  const formatDate = (date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0') // Tháng bắt đầu từ 0
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
   // Xử lý tìm kiếm theo ngày
   const handleSearch = () => {
-    if (startDate && endDate) {
-      const startDateString = startDate.toLocaleDateString('en-CA') // yyyy-MM-dd
-      const endDateString = endDate.toLocaleDateString('en-CA') // yyyy-MM-dd
+    if (
+      startDate &&
+      endDate &&
+      !isSearchRecipientName &&
+      !isSearchRecipientPhone
+    ) {
+      const startDateString = formatDate(startDate) // yyyy-MM-dd
+      const endDateString = formatDate(endDate) // yyyy-MM-dd
+
+      if (
+        selectedStatusId &&
+        !isSearchRecipientName &&
+        !isSearchRecipientPhone
+      ) {
+        dispatch(
+          searchOrderByDateAndStatusRequest(
+            startDateString,
+            endDateString,
+            selectedStatusId,
+            1,
+            recordsPerPage
+          )
+        )
+        setSearchDate(true)
+        setIsFilter(true)
+      } else if (
+        !selectedStatusId &&
+        !isSearchRecipientName &&
+        !isSearchRecipientPhone
+      ) {
+        dispatch(
+          searchOrderByDateRequest(
+            startDateString,
+            endDateString,
+            1,
+            recordsPerPage
+          )
+        )
+        setSearchDate(true)
+        setIsFilter(false)
+      }
+      setCurrentPage(1) // Reset về trang đầu
+    } else {
+      alert('Vui lòng chọn ngày bắt đầu và ngày kết thúc')
+    }
+  }
+
+  const handleSearchInfo = () => {
+    if (startDate && endDate && searchRecipientName && searchRecipientPhone) {
+      const startDateString = formatDate(startDate) // yyyy-MM-dd
+      const endDateString = formatDate(endDate) // yyyy-MM-dd
+
+      setIsSearchRecipientName(true)
+      setIsSearchRecipientPhone(true)
+      setSearchDate(false)
+      setIsFilter(false)
 
       dispatch(
-        searchOrderByDateRequest(
+        searchOrderByInfoRequest(
           startDateString,
           endDateString,
-          currentPage,
+          selectedStatusId || '', // Để trạng thái rỗng nếu không có
+          searchRecipientName,
+          searchRecipientPhone,
+          1,
           recordsPerPage
         )
       )
-      setSearchDate(true)
+      setCurrentPage(1) // Reset về trang đầu
     } else {
-      alert('Vui lòng chọn ngày bắt đầu và ngày kết thúc')
+      alert('Vui lòng nhập đầy đủ thông tin tên và số điện thoại')
     }
   }
 
   // Xử lý chuyển trang
   const handlePageChange = (page) => {
     setCurrentPage(page)
-    if (isSearchDate) {
+    if (
+      isSearchDate &&
+      isFilter &&
+      !isSearchRecipientName &&
+      !isSearchRecipientPhone
+    ) {
+      const startDateString = formatDate(startDate) // yyyy-MM-dd
+      const endDateString = formatDate(endDate) // yyyy-MM-dd
+
+      dispatch(
+        searchOrderByDateAndStatusRequest(
+          startDateString,
+          endDateString,
+          selectedStatusId,
+          page,
+          recordsPerPage
+        )
+      )
+    } else if (isSearchDate) {
+      const startDateString = formatDate(startDate) // yyyy-MM-dd
+      const endDateString = formatDate(endDate) // yyyy-MM-dd
+
       dispatch(
         searchOrderByDateRequest(
-          startDate.toISOString().split('T')[0],
-          endDate.toISOString().split('T')[0],
+          startDateString,
+          endDateString,
           page,
           recordsPerPage
         )
@@ -136,10 +326,20 @@ const AllOrder = () => {
     }
   }
 
-  // Reset bộ lọc ngày
+  // Xử lý thay đổi trạng thái
+  const handleSearchRecipientNameChange = (e) => {
+    const recipient_name = e.target.value
+    setRecipientName(recipient_name)
+  }
+  const handleSearchRecipientPhoneChange = (e) => {
+    const recipient_phone = e.target.value
+    setRecipientPhone(recipient_phone)
+  }
+  // Reset bộ lọc và tìm kiếm
   const handleReset = () => {
     setStartDate(null)
     setEndDate(null)
+    setStatusId('')
     setSearchDate(false)
     setIsFilter(false)
     setCurrentPage(1)
@@ -221,17 +421,45 @@ const AllOrder = () => {
 
   return (
     <div className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="relative m-[auto] ml-[40%]">
-        <HiOutlineSearch
-          fontSize={20}
-          className="absolute top-1/2 left-2 transform -translate-y-1/2 text-gray-400"
-        />
-        <input
-          type="text"
-          placeholder="Search..."
-          className="w-[500px] border border-gray-300 rounded-md px-4 py-2 pl-9 focus:font-medium focus:text-primary focus:outline-none focus:ring-1 focus:ring-primary transition duration-500 ease-in-out"
-        />
+      <div className="relative m-[auto] ml-[10%]">
+        <div className="p-2 flex items-center gap-4 ml-[75px]">
+          {/* Ô nhập tên người nhận */}
+          <div className="flex flex-col flex-1">
+            <label className="text-sm font-medium mb-1">Tên người nhận</label>
+            <input
+              type="text"
+              value={searchRecipientName}
+              onChange={handleSearchRecipientNameChange}
+              className="border border-gray-300 rounded-md px-4 py-2 focus:font-medium focus:outline-none focus:ring-1 focus:ring-primary w-full"
+              placeholder="Nhập tên người nhận..."
+            />
+          </div>
+
+          {/* Ô nhập số điện thoại */}
+          <div className="flex flex-col flex-1">
+            <label className="text-sm font-medium mb-1">Số điện thoại</label>
+            <input
+              type="number"
+              value={searchRecipientPhone}
+              onChange={handleSearchRecipientPhoneChange}
+              className="border border-gray-300 rounded-md px-4 py-2 focus:font-medium focus:outline-none focus:ring-1 focus:ring-primary w-full"
+              placeholder="Nhập số điện thoại..."
+            />
+          </div>
+
+          {/* Nút Tra đơn hàng */}
+          <div className="self-end">
+            <button
+              className="text-center text-[15px] bg-primary text-white rounded-md shadow-md uppercase px-4 py-2 font-RobotoMedium
+             hover:bg-hoverPrimary transition duration-200 ease-in-out"
+              onClick={handleSearchInfo}
+            >
+              Tra đơn hàng
+            </button>
+          </div>
+        </div>
       </div>
+
       <div className="ml-[15%] w-[90%] font-RobotoMedium">
         <div className="flex justify-between">
           <div className="p-2 flex items-center justify-center gap-2">
@@ -249,21 +477,13 @@ const AllOrder = () => {
               onChange={(date) => setEndDate(date)}
               className="border rounded p-2"
             />
-            <div className="p-2 flex items-center justify-center gap-2">
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                onClick={handleSearch}
-              >
-                Tìm kiếm
-              </button>
-            </div>
           </div>
 
           <div className="p-2 flex items-center justify-center gap-2">
             Trạng thái
             <select
-              className="p-[3px] rounded-md border-primary border-[1px] text-center text-[13px]"
-              value={status || ''}
+              className="p-[3px] rounded-md border-primary border-[1px] text-center text-[15px]"
+              value={selectedStatusId}
               onChange={handleStatusChange}
             >
               {/* Tùy chọn mặc định */}
@@ -276,11 +496,18 @@ const AllOrder = () => {
               ))}
             </select>
           </div>
-
-          <div className="p-2 mt-3">
+          <div className="p-2 flex items-center justify-center gap-2">
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+              onClick={handleSearch}
+            >
+              Tìm kiếm
+            </button>
+          </div>
+          <div className="p-2 flex items-center justify-center gap-2">
             <button
               onClick={() => handleReset()}
-              className="text-center text-[10px] bg-primary text-white rounded-md shadow-md uppercase px-1 py-[7px] font-RobotoMedium hover:bg-hoverPrimary transition duration-200 ease-in-out mr-5"
+              className="text-center text-[15px]  bg-primary text-white rounded-md shadow-md uppercase px-1 py-[7px] font-RobotoMedium hover:bg-hoverPrimary transition duration-200 ease-in-out mr-5"
             >
               Đặt lại
             </button>
