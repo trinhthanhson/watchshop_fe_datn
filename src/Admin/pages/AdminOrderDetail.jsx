@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { getOrderDetailRequest } from '../../redux/actions/actions'
 import axios from 'axios'
 import { getAllRequestExportRequest } from '../../redux/actions/inventory/manager/action'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 
 const AdminOrderDetail = () => {
   const { id } = useParams()
@@ -18,6 +20,7 @@ const AdminOrderDetail = () => {
   const [nextStatusName, setNextStatusName] = useState('')
   const [statusIndex, setStatusIndex] = useState(0)
   const [statuses, setStatuses] = useState([])
+  const [showModal, setShowModal] = useState(false) // State điều khiển modal
 
   const [check, setCheck] = useState(null)
 
@@ -148,6 +151,21 @@ const AdminOrderDetail = () => {
 
     fetchNextStatusName()
   }, [orderDetail])
+
+  const invoiceRef = useRef() // Tạo tham chiếu tới hóa đơn
+
+  // Hàm xuất PDF
+  const generatePDF = () => {
+    const input = invoiceRef.current
+    html2canvas(input, { scale: 2 }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF('p', 'mm', 'a4')
+      const imgWidth = 210
+      const imgHeight = (canvas.height * imgWidth) / canvas.width
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight)
+      pdf.save('hoa_don.pdf')
+    })
+  }
 
   return (
     <>
@@ -281,8 +299,89 @@ const AdminOrderDetail = () => {
         </table>
       </div>
 
+      {/* Nút hiển thị modal */}
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+          <div className="bg-white p-8 rounded-md w-3/4">
+            <h2 className="text-center text-2xl font-bold mb-4">
+              HÓA ĐƠN BÁN HÀNG
+            </h2>
+
+            {/* Nội dung hóa đơn */}
+            <div ref={invoiceRef} className="p-4 border rounded">
+              <p>
+                <strong>Họ và Tên:</strong> {orderDetail?.recipient_name}
+              </p>
+              <p>
+                <strong>Địa Chỉ:</strong> {orderDetail?.address}
+              </p>
+              <p>
+                <strong>Số Điện Thoại:</strong> {orderDetail?.recipient_phone}
+              </p>
+
+              <table className="table-auto w-full mt-4 border-collapse border">
+                <thead>
+                  <tr>
+                    <th className="border">STT</th>
+                    <th className="border">Tên sản phẩm</th>
+                    <th className="border">Hình ảnh</th>
+                    <th className="border">Số lượng</th>
+                    <th className="border">Giá</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orderDetail?.orderDetails &&
+                    orderDetail.orderDetails.map((item, index) => (
+                      <tr key={index} className="text-center">
+                        <td className="border">{index + 1}</td>
+                        <td className="border">
+                          {item?.product_order?.product_name}
+                        </td>
+                        <td className="border">
+                          <img
+                            src={item?.product_order?.image}
+                            alt={item?.product_order?.product_name}
+                            className="w-[50px] mx-auto"
+                          />
+                        </td>
+                        <td className="border">{item?.quantity}</td>
+                        <td className="border">
+                          {item.price.toLocaleString()} VNĐ
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Nút điều khiển */}
+            <div className="mt-6 flex justify-end gap-4">
+              <button
+                onClick={generatePDF}
+                className="mt-5 ml-[65%] bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+              >
+                Xuất PDF
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="mt-5  bg-gray-600 text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="ml-[18%] w-[80%] flex justify-between">
-        <div></div>
+        <button
+          onClick={() => setShowModal(true)}
+          className="mt-5 ml-[65%] bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+        >
+          Tạo Hóa Đơn
+        </button>
+
         <div className="flex gap-3">
           {!orderDetail?.is_cancel &&
             (check === 'False' || check === null) &&
