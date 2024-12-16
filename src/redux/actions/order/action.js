@@ -82,18 +82,17 @@ export const searchOrderByDateAndStatusRequest = (
   payload: { startDate, endDate, status_id, page, limit }
 })
 
-// Action khi tìm kiếm thành công
 export const searchOrderByDateAndStatusSuccess = (orderByStatus) => ({
   type: SEARCH_ORDER_BY_DATE_STATUS_SUCCESS,
   payload: orderByStatus
 })
 
-// Action khi tìm kiếm thất bại
 export const searchOrderByDateAndStatusFailure = (error) => ({
   type: SEARCH_ORDER_BY_DATE_STATUS_FAILURE,
   payload: error
 })
 // #endregion
+
 // #region find order by info
 export const searchOrderByInfoRequest = (
   startDate,

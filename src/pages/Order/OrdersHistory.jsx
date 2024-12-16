@@ -5,22 +5,27 @@ import { useDispatch, useSelector } from 'react-redux'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { sortByDate } from '../../utils/sort'
+import { getAllOrderStatusCustomerRequest } from '../../redux/actions/order-status/action'
 
 const OrdersHistory = () => {
   const dispatch = useDispatch()
   const customerOrders = useSelector(
     (state) => state.customerOrders.customerOrders
   )
+  const orderStatusCustomer = useSelector(
+    (state) => state.orderStatusCustomer?.orderStatusCustomer
+  )
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
   const [status, setStatus] = useState(null)
   const [totalPrice, setTotalPrice] = useState(0)
   const [filteredOrders, setFilteredOrders] = useState([])
+  const [selectedStatusId, setStatusId] = useState('')
 
   useEffect(() => {
     dispatch(getCustomerOrdersRequest())
+    dispatch(getAllOrderStatusCustomerRequest())
   }, [dispatch])
-
   useEffect(() => {
     if (customerOrders.data) {
       const sortedOrders = sortByDate(customerOrders.data, 'create_at')
@@ -58,7 +63,22 @@ const OrdersHistory = () => {
     setEndDate(null)
     setStatus(null)
   }
-
+  const handleStatusChange = (e) => {
+    const status_id = e.target.value
+    setStatusId(status_id)
+    // if (status_id === '') {
+    //   setStatusId('')
+    //   setIsFilter(false)
+    //   setCurrentPage(1)
+    //   dispatch(getAllOrderPageRequest(1, recordsPerPage))
+    // } else {
+    //   setStatusId(status_id) // Cập nhật trạng thái
+    //   setIsFilter(true)
+    //   setSearchDate(false) // Vô hiệu tìm kiếm theo ngày
+    //   setCurrentPage(1) // Reset về trang đầu
+    //   dispatch(searchOrderByStatusRequest(status_id, 1, recordsPerPage)) // Dispatch action
+    // }
+  }
   return (
     <>
       <section className="relative flex flex-col-reverse md:flex-row items-center bg-[url('https://www.highlandscoffee.com.vn/vnt_upload/cake/SPECIALTYCOFFEE/Untitled-1-01.png')]">
@@ -92,20 +112,20 @@ const OrdersHistory = () => {
           </div>
 
           <div className="p-2 flex items-center justify-center gap-2">
-            <label>Trạng thái</label>
+            Trạng thái
             <select
-              className="p-[3px] rounded-md border-primary border-[1px] text-center"
-              value={status || ''}
-              onChange={(e) => setStatus(e.target.value)}
+              className="p-[3px] rounded-md border-primary border-[1px] text-center text-[15px]"
+              value={selectedStatusId}
+              onChange={handleStatusChange}
             >
+              {/* Tùy chọn mặc định */}
               <option value="">Tất cả</option>
-              <option value="0">Chờ xác nhận</option>
-              <option value="1">Đã xác nhận</option>
-              <option value="2">Đang vận chuyển</option>
-              <option value="3">Chờ thanh toán</option>
-              <option value="4">Đã thanh toán</option>
-              <option value="5">Đã giao</option>
-              <option value="6">Đã huỷ</option>
+              {/* Lấy danh sách từ orderStatus */}
+              {orderStatusCustomer?.data?.map((statusItem) => (
+                <option key={statusItem.status_id} value={statusItem.status_id}>
+                  {statusItem.status_name}
+                </option>
+              ))}
             </select>
           </div>
 

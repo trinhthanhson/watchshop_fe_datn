@@ -19,7 +19,7 @@ const orderStatusReducer = (state = initialState, action) => {
     case GET_ALL_ORDER_STATUS_FAILURE:
       return {
         ...state,
-        staffs: [],
+        order_status: [],
         error: action.payload
       }
     default:
