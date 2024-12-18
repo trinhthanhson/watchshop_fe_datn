@@ -53,6 +53,7 @@ import findOrderByDateSaga from './order/findOrderByDateSaga'
 import findOrderByDateAndStatusSaga from './order/findOrderByDateAndStatusSaga'
 import findOrderByInfoSaga from './order/findOrderByInfoSaga'
 import getOrderStatusCustomerSaga from './order-status/getAllOrderStatusCustomerSaga'
+import getDataAiSaga from './ai/getDataAiSaga'
 export default function* rootSaga() {
   yield all([
     newSaga(),
@@ -108,6 +109,7 @@ export default function* rootSaga() {
     findOrderByDateSaga(),
     findOrderByDateAndStatusSaga(),
     findOrderByInfoSaga(),
-    getOrderStatusCustomerSaga()
+    getOrderStatusCustomerSaga(),
+    getDataAiSaga()
   ])
 }

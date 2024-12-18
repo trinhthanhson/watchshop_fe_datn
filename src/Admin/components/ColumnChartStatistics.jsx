@@ -10,14 +10,56 @@ import {
 } from 'recharts'
 import * as XLSX from 'xlsx'
 import { MdFileDownload } from 'react-icons/md'
+import { useSelector, useDispatch } from 'react-redux'
+import { getDataAIByQuantityLimitRequest } from '../../redux/actions/ai/action'
 
 const ColumnChartStatistics = () => {
   const [data, setData] = useState([])
   const [selectedYear, setSelectedYear] = useState(2024)
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
-  const [viewMode, setViewMode] = useState('chart') // 'chart' or 'table'
-  // Fetch yearly data
+  const [viewMode, setViewMode] = useState('chart')
+  const dataAI = useSelector((state) => state?.dataAIByQuantity?.dataAI)
+  const dispatch = useDispatch()
+
+  const [showModal, setShowModal] = useState(false)
+  const [inputPrediction, setInputPrediction] = useState('')
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
+  const totalPages = Math.ceil(dataAI?.data?.length / itemsPerPage)
+
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const currentData = (dataAI?.data || []).slice(
+    startIndex,
+    startIndex + itemsPerPage
+  )
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1)
+  }
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1)
+  }
+
+  const handlePredictionSubmit = () => {
+    dispatch(getDataAIByQuantityLimitRequest(inputPrediction))
+    setInputPrediction('')
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [selectedYear, startDate, endDate])
+
+  const handlePredictionClick = () => {
+    setShowModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setShowModal(false)
+    setInputPrediction('') // Reset input khi đóng modal
+  }
+
   const fetchData = async () => {
     try {
       const token = localStorage.getItem('token')
@@ -141,7 +183,29 @@ const ColumnChartStatistics = () => {
     // Save to file
     XLSX.writeFile(wb, 'Statistics.xlsx')
   }
+  const handleExportToExcel = () => {
+    // Chuẩn bị dữ liệu cho Excel
+    const formattedData = dataAI?.data.map((item, index) => ({
+      STT: index + 1,
+      'Mã Sản Phẩm': item.productId,
+      Tuần: item.week,
+      'Giá Nhập': item.importPrice,
+      'Tồn Đầu Kỳ': item.beginInventory,
+      'Số Lượng Nhập': item.importQuantity,
+      'Số Lượng Xuất': item.exportQuantity,
+      'Tồn Cuối Kỳ': item.endQuantity,
+      'Giá Xuất': item.exportPrice || 0,
+      'Tỷ Lệ Giá': item.priceRatio
+    }))
 
+    // Tạo workbook và worksheet
+    const worksheet = XLSX.utils.json_to_sheet(formattedData)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data')
+
+    // Xuất file
+    XLSX.writeFile(workbook, 'data.xlsx')
+  }
   // Helper function to get month names
   const getMonthName = (monthNumber) => {
     const months = [
@@ -165,6 +229,12 @@ const ColumnChartStatistics = () => {
     <div className="h-[30rem] bg-white p-4 rounded-md border border-gray-200 flex flex-col flex-1 ">
       <strong className="text-sub font-semibold">Thống kê doanh thu</strong>
       <div className="flex justify-end items-start mt-3">
+        <button
+          onClick={handlePredictionClick} // Nút Dự Đoán
+          className="px-4 py-2 rounded-md ml-2 bg-blue-500 text-white"
+        >
+          Dự Đoán
+        </button>
         <div className="flex gap-4 items-center">
           <input
             type="date"
@@ -203,6 +273,112 @@ const ColumnChartStatistics = () => {
           </select>
         </div>
       </div>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-md p-4 w-1/3 shadow-lg z-50">
+            <h2 className="text-lg font-bold mb-4">Nhập thông tin dự đoán</h2>
+            <input
+              type="text"
+              value={inputPrediction}
+              onChange={(e) => setInputPrediction(e.target.value)}
+              placeholder="Nhập dự đoán doanh thu"
+              className="w-full border p-2 rounded-md mb-4"
+            />
+            <div className="flex justify-end gap-2 mb-4">
+              <button
+                onClick={handleCloseModal}
+                className="px-4 py-2 rounded-md bg-gray-300 text-black"
+              >
+                Đóng
+              </button>
+              <button
+                onClick={handlePredictionSubmit}
+                className="px-4 py-2 rounded-md bg-blue-500 text-white"
+              >
+                Xác Nhận
+              </button>
+            </div>
+
+            {/* Hiển thị bảng dữ liệu nếu có */}
+            <div>
+              <div className="flex justify-between items-center mb-4">
+                <MdFileDownload
+                  className="cursor-pointer text-primary"
+                  fontSize={25}
+                  onClick={handleExportToExcel}
+                />
+              </div>
+              {currentData && currentData.length > 0 && (
+                <div className="w-full overflow-x-auto">
+                  <table className="w-full border-collapse border">
+                    <thead>
+                      <tr>
+                        <th className="border p-2">STT</th>
+                        <th className="border p-2">Mã Sản Phẩm</th>
+                        <th className="border p-2">Tuần</th>
+                        <th className="border p-2">Giá Nhập</th>
+                        <th className="border p-2">Tồn Đầu Kỳ</th>
+                        <th className="border p-2">Số Lượng Nhập</th>
+                        <th className="border p-2">Số Lượng Xuất</th>
+                        <th className="border p-2">Tồn Cuối Kỳ</th>
+                        <th className="border p-2">Giá Xuất</th>
+                        <th className="border p-2">Tỷ Lệ Giá</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentData.map((item, index) => (
+                        <tr key={index} className="hover:bg-gray-100">
+                          <td className="border p-2 text-center">
+                            {startIndex + index + 1}
+                          </td>
+                          <td className="border p-2">{item.productId}</td>
+                          <td className="border p-2">{item.week}</td>
+                          <td className="border p-2">{item.importPrice}</td>
+                          <td className="border p-2">{item.beginInventory}</td>
+                          <td className="border p-2">{item.importQuantity}</td>
+                          <td className="border p-2">{item.exportQuantity}</td>
+                          <td className="border p-2">{item.endQuantity}</td>
+                          <td className="border p-2">
+                            {item.exportPrice || 0}
+                          </td>
+                          <td className="border p-2">{item.priceRatio}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  {/* Pagination Controls */}
+                  <div className="flex justify-between items-center mt-4">
+                    <button
+                      onClick={handlePreviousPage}
+                      disabled={currentPage === 1}
+                      className={`px-4 py-2 bg-gray-300 rounded-md ${
+                        currentPage === 1 && 'opacity-50 cursor-not-allowed'
+                      }`}
+                    >
+                      Previous
+                    </button>
+                    <span className="text-sm">
+                      Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                      onClick={handleNextPage}
+                      disabled={currentPage === totalPages}
+                      className={`px-4 py-2 bg-blue-500 text-white rounded-md ${
+                        currentPage === totalPages &&
+                        'opacity-50 cursor-not-allowed'
+                      }`}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Toggle between chart and table view */}
       <div className="flex justify-end mt-4">

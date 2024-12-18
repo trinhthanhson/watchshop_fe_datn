@@ -1,0 +1,5 @@
+// #region get all order pageable by status
+export const GET_DATA_AI_BY_QUANTITY_REQUEST = 'GET_DATA_AI_BY_QUANTITY_REQUEST'
+export const GET_DATA_AI_BY_QUANTITY_SUCCESS = 'GET_DATA_AI_BY_QUANTITY_SUCCESS'
+export const GET_DATA_AI_BY_QUANTITY_FAILURE = 'GET_DATA_AI_BY_QUANTITY_FAILURE'
+// #endregion
