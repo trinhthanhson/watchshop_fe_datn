@@ -12,6 +12,7 @@ import * as XLSX from 'xlsx'
 import { MdFileDownload } from 'react-icons/md'
 import { useSelector, useDispatch } from 'react-redux'
 import { getDataAIByQuantityLimitRequest } from '../../redux/actions/ai/action'
+import axios from 'axios'
 
 const ColumnChartStatistics = () => {
   const [data, setData] = useState([])
@@ -45,6 +46,58 @@ const ColumnChartStatistics = () => {
   const handlePredictionSubmit = () => {
     dispatch(getDataAIByQuantityLimitRequest(inputPrediction))
     setInputPrediction('')
+  }
+  const handleGetPrediction = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) {
+        alert('Token không tồn tại! Vui lòng đăng nhập lại.')
+        return
+      }
+
+      const inputPrediction = 30 // Thay đổi theo input người dùng nếu cần
+
+      const response = await axios.get(
+        'http://127.0.0.1:5000/predict', // Gọi đúng endpoint `/predict`
+        {
+          params: { quantity: inputPrediction },
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+
+      if (response.status === 200) {
+        const results = response.data.results
+        console.log(results)
+
+        // Xuất file Excel
+        const worksheet = XLSX.utils.json_to_sheet(results)
+        const workbook = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Predictions')
+
+        const excelBuffer = XLSX.write(workbook, {
+          bookType: 'xlsx',
+          type: 'array'
+        })
+        const blob = new Blob([excelBuffer], {
+          type: 'application/octet-stream'
+        })
+
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', 'predictions.xlsx')
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      } else {
+        alert('Failed to fetch predictions.')
+      }
+    } catch (error) {
+      console.error('Error fetching predictions:', error)
+      alert('Có lỗi xảy ra trong quá trình xử lý.')
+    }
   }
 
   useEffect(() => {
@@ -190,12 +243,12 @@ const ColumnChartStatistics = () => {
       'Mã Sản Phẩm': item.productId,
       Tuần: item.week,
       'Giá Nhập': item.importPrice,
-      'Tồn Đầu Kỳ': item.beginInventory,
-      'Số Lượng Nhập': item.importQuantity,
-      'Số Lượng Xuất': item.exportQuantity,
-      'Tồn Cuối Kỳ': item.endQuantity,
-      'Giá Xuất': item.exportPrice || 0,
-      'Tỷ Lệ Giá': item.priceRatio
+      'Số lượng nhập': item.importQuantity,
+      'Số Lượng xuất': item.exportQuantity,
+      'Giá xuất': item.exportPrice,
+      'Biến động giá': item.priceVolatility,
+      'Chênh lệch SL': item.quantityDifference || 0,
+      'Tồn kho cuối': item.endQuantity
     }))
 
     // Tạo workbook và worksheet
@@ -275,8 +328,8 @@ const ColumnChartStatistics = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-md p-4 w-1/3 shadow-lg z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 ">
+          <div className="bg-white rounded-md p-4 w-2/3 shadow-lg z-50">
             <h2 className="text-lg font-bold mb-4">Nhập thông tin dự đoán</h2>
             <input
               type="text"
@@ -298,6 +351,12 @@ const ColumnChartStatistics = () => {
               >
                 Xác Nhận
               </button>
+              <button
+                onClick={handleGetPrediction}
+                className="px-4 py-2 rounded-md bg-blue-500 text-white"
+              >
+                Lấy kết quả
+              </button>
             </div>
 
             {/* Hiển thị bảng dữ liệu nếu có */}
@@ -310,62 +369,62 @@ const ColumnChartStatistics = () => {
                 />
               </div>
               {currentData && currentData.length > 0 && (
-                <div className="w-full overflow-x-auto">
-                  <table className="w-full border-collapse border">
+                <div className="w-full overflow-x-auto ">
+                  <table className="w-full border-collapse border text-lg">
                     <thead>
                       <tr>
-                        <th className="border p-2">STT</th>
-                        <th className="border p-2">Mã Sản Phẩm</th>
-                        <th className="border p-2">Tuần</th>
-                        <th className="border p-2">Giá Nhập</th>
-                        <th className="border p-2">Tồn Đầu Kỳ</th>
-                        <th className="border p-2">Số Lượng Nhập</th>
-                        <th className="border p-2">Số Lượng Xuất</th>
-                        <th className="border p-2">Tồn Cuối Kỳ</th>
-                        <th className="border p-2">Giá Xuất</th>
-                        <th className="border p-2">Tỷ Lệ Giá</th>
+                        <th className="border p-4">STT</th>
+                        <th className="border p-4">Mã Sản Phẩm</th>
+                        <th className="border p-4">Tuần</th>
+                        <th className="border p-4">Giá Nhập</th>
+                        <th className="border p-4">Số Lượng Nhập</th>
+                        <th className="border p-4">Số Lượng Xuất</th>
+                        <th className="border p-4">Giá Xuất</th>
+                        <th className="border p-4">Biến Động Giá</th>
+                        <th className="border p-4">Chênh Lệch SL</th>
+                        <th className="border p-4">Tồn Kho Cuối</th>
                       </tr>
                     </thead>
                     <tbody>
                       {currentData.map((item, index) => (
                         <tr key={index} className="hover:bg-gray-100">
-                          <td className="border p-2 text-center">
+                          <td className="border p-4 text-center">
                             {startIndex + index + 1}
                           </td>
-                          <td className="border p-2">{item.productId}</td>
-                          <td className="border p-2">{item.week}</td>
-                          <td className="border p-2">{item.importPrice}</td>
-                          <td className="border p-2">{item.beginInventory}</td>
-                          <td className="border p-2">{item.importQuantity}</td>
-                          <td className="border p-2">{item.exportQuantity}</td>
-                          <td className="border p-2">{item.endQuantity}</td>
-                          <td className="border p-2">
-                            {item.exportPrice || 0}
+                          <td className="border p-4">{item.productId}</td>
+                          <td className="border p-4">{item.week}</td>
+                          <td className="border p-4">{item.importPrice}</td>
+                          <td className="border p-4">{item.importQuantity}</td>
+                          <td className="border p-4">{item.exportQuantity}</td>
+                          <td className="border p-4">{item.exportPrice}</td>
+                          <td className="border p-4">{item.priceVolatility}</td>
+                          <td className="border p-4">
+                            {item.quantityDifference}
                           </td>
-                          <td className="border p-2">{item.priceRatio}</td>
+                          <td className="border p-4">{item.endQuantity}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
 
                   {/* Pagination Controls */}
-                  <div className="flex justify-between items-center mt-4">
+                  <div className="flex justify-between items-center mt-8">
                     <button
                       onClick={handlePreviousPage}
                       disabled={currentPage === 1}
-                      className={`px-4 py-2 bg-gray-300 rounded-md ${
+                      className={`text-lg px-6 py-3 bg-gray-300 rounded-md ${
                         currentPage === 1 && 'opacity-50 cursor-not-allowed'
                       }`}
                     >
                       Previous
                     </button>
-                    <span className="text-sm">
+                    <span className="text-lg">
                       Page {currentPage} of {totalPages}
                     </span>
                     <button
                       onClick={handleNextPage}
                       disabled={currentPage === totalPages}
-                      className={`px-4 py-2 bg-blue-500 text-white rounded-md ${
+                      className={`text-lg px-6 py-3 bg-blue-500 text-white rounded-md ${
                         currentPage === totalPages &&
                         'opacity-50 cursor-not-allowed'
                       }`}

@@ -17,9 +17,7 @@ const AdminOrderDetail = () => {
   const isOrderInRequest = tranRequest?.some(
     (request) => request?.order_id === orderDetail?.order_id
   )
-  const [nextStatusName, setNextStatusName] = useState('')
-  const [statusIndex, setStatusIndex] = useState(0)
-  const [statuses, setStatuses] = useState([])
+
   const [showModal, setShowModal] = useState(false) // State điều khiển modal
 
   const [check, setCheck] = useState(null)
@@ -116,41 +114,6 @@ const AdminOrderDetail = () => {
     }
   }
   // Lấy tên trạng thái tiếp theo
-  useEffect(() => {
-    const fetchNextStatusName = async () => {
-      if (!orderDetail || !orderDetail.order_status) {
-        setNextStatusName('Không có trạng thái hiện tại')
-        return
-      }
-
-      try {
-        const token = localStorage.getItem('token')
-        const response = await axios.get(
-          'http://localhost:9999/api/manager/order-status/all',
-          {
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        )
-        const statusesData = response?.data?.data || []
-        setStatuses(statusesData)
-
-        const currentStatusIndex = orderDetail.order_status.status_index
-        setStatusIndex(currentStatusIndex + 1)
-
-        const nextStatus = statusesData.find(
-          (status) => status.status_index === currentStatusIndex + 1
-        )
-
-        setNextStatusName(
-          nextStatus ? nextStatus.status_name : 'Không có trạng thái tiếp theo'
-        )
-      } catch (error) {
-        setNextStatusName('Không thể lấy trạng thái tiếp theo')
-      }
-    }
-
-    fetchNextStatusName()
-  }, [orderDetail])
 
   const invoiceRef = useRef() // Tạo tham chiếu tới hóa đơn
 
@@ -158,7 +121,7 @@ const AdminOrderDetail = () => {
   const generatePDF = () => {
     const input = invoiceRef.current
     html2canvas(input, { scale: 2 }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png')
+      const imgData = canvas.toDataURL('')
       const pdf = new jsPDF('p', 'mm', 'a4')
       const imgWidth = 210
       const imgHeight = (canvas.height * imgWidth) / canvas.width
