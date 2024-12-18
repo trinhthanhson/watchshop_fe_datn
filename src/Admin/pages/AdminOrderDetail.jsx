@@ -134,9 +134,13 @@ const AdminOrderDetail = () => {
     <>
       <div className="flex justify-center items-center bg-gray-200 border border-gray-300 rounded-lg p-4 w-[80%] ml-[18%]">
         <h1 className="uppercase font-RobotoSemibold text-main text-3xl md:text-3xl xl:text-[3rem] text-center">
-          {orderDetail?.is_cancel
-            ? 'Đã huỷ'
-            : orderDetail?.order_status?.status_name}
+          {orderDetail?.is_delivery
+            ? 'Đã chuyển giao hàng'
+            : orderDetail?.order_status?.status_index > 1
+              ? orderDetail?.order_status?.status_name
+              : orderDetail?.is_cancel
+                ? 'Đã huỷ'
+                : orderDetail?.order_status?.status_name}
         </h1>
       </div>
 
@@ -340,7 +344,7 @@ const AdminOrderDetail = () => {
       <div className="ml-[18%] w-[80%] flex justify-between">
         <button
           onClick={() => setShowModal(true)}
-          className="mt-5 ml-[65%] bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+          className="mt-5 ml-auto bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
         >
           Tạo Hóa Đơn
         </button>
@@ -351,37 +355,39 @@ const AdminOrderDetail = () => {
             orderDetail?.order_status?.status_index === 1 && (
               <button
                 onClick={() => handleCancelOrder()}
-                className="mt-5 bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+                className={`mt-5 bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform transition-all ${
+                  orderDetail?.is_cancel &&
+                  (check === 'True' || check === null) &&
+                  orderDetail?.order_status?.status_index !== 1
+                    ? 'translate-x-20 opacity-0'
+                    : 'translate-x-0 opacity-100'
+                }`}
               >
                 Hủy Đơn Hàng
               </button>
             )}
-          {/* {!orderDetail?.is_cancel &&
-            check === 'True' &&
-            statusIndex <=
-              Math.max(...statuses.map((status) => status.status_index)) && (
-              <button
-                className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
-                onClick={() => handleConfirmOrder()}
-              >
-                {orderDetail && <p>{nextStatusName}</p>}
-              </button>
-            )} */}
-
           {!orderDetail?.is_cancel &&
             check === 'True' &&
             !orderDetail?.is_delivery && (
               <button
-                className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
                 onClick={() => handleConfirmOrder()}
+                className={`mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform transition-all ${
+                  orderDetail?.is_delivery
+                    ? 'translate-x-20 opacity-0'
+                    : 'translate-x-0 opacity-100'
+                }`}
               >
-                <p>Chuyển giao hàng</p>
+                Chuyển giao hàng
               </button>
             )}
           {!isOrderInRequest && (
             <button
-              className="mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
               onClick={() => handleCreateExportInventory()}
+              className={`mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform transition-all ${
+                isOrderInRequest
+                  ? 'translate-x-20 opacity-0'
+                  : 'translate-x-0 opacity-100'
+              }`}
             >
               Tạo phiếu đề nghị xuất kho
             </button>

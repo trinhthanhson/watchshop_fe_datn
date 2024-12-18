@@ -369,7 +369,10 @@ const ColumnChartStatistics = () => {
                 />
               </div>
               {currentData && currentData.length > 0 && (
-                <div className="w-full overflow-x-auto ">
+                <div
+                  className="w-full overflow-x-auto"
+                  style={{ maxHeight: '400px', overflowY: 'auto' }}
+                >
                   <table className="w-full border-collapse border text-lg">
                     <thead>
                       <tr>
@@ -406,34 +409,34 @@ const ColumnChartStatistics = () => {
                       ))}
                     </tbody>
                   </table>
-
-                  {/* Pagination Controls */}
-                  <div className="flex justify-between items-center mt-8">
-                    <button
-                      onClick={handlePreviousPage}
-                      disabled={currentPage === 1}
-                      className={`text-lg px-6 py-3 bg-gray-300 rounded-md ${
-                        currentPage === 1 && 'opacity-50 cursor-not-allowed'
-                      }`}
-                    >
-                      Previous
-                    </button>
-                    <span className="text-lg">
-                      Page {currentPage} of {totalPages}
-                    </span>
-                    <button
-                      onClick={handleNextPage}
-                      disabled={currentPage === totalPages}
-                      className={`text-lg px-6 py-3 bg-blue-500 text-white rounded-md ${
-                        currentPage === totalPages &&
-                        'opacity-50 cursor-not-allowed'
-                      }`}
-                    >
-                      Next
-                    </button>
-                  </div>
                 </div>
               )}
+
+              {/* Pagination Controls */}
+              <div className="flex justify-between items-center mt-8">
+                <button
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                  className={`text-lg px-6 py-3 bg-gray-300 rounded-md ${
+                    currentPage === 1 && 'opacity-50 cursor-not-allowed'
+                  }`}
+                >
+                  Previous
+                </button>
+                <span className="text-lg">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                  className={`text-lg px-6 py-3 bg-blue-500 text-white rounded-md ${
+                    currentPage === totalPages &&
+                    'opacity-50 cursor-not-allowed'
+                  }`}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -109,14 +109,7 @@ const RecentActualInventory = () => {
               <td className="text-center align-middle">Số lượng tồn kho</td>
               <td className="text-center align-middle">Tổng nhập</td>
               <td className="text-center align-middle">Tổng xuất</td>
-              <td className="text-center align-middle">Tồn kho hiện tại</td>
-              {/* Hiển thị cột Period Value nếu có giá trị */}
-              {currentProducts?.some((item) => item.period_value) && (
-                <td className="rounded-e-md text-center align-middle">
-                  Chu kỳ
-                </td>
-              )}
-              {/* Hiển thị cột Date Range nếu có giá trị */}
+
               {currentProducts?.some((item) => item.date_range) && (
                 <td className="rounded-e-md text-center align-middle">
                   Khoảng thời gian
@@ -152,15 +145,7 @@ const RecentActualInventory = () => {
                   <td className="text-center align-middle">
                     {item.total_export}
                   </td>
-                  <td className="text-center align-middle">
-                    {item.current_stock}
-                  </td>
-                  {/* Hiển thị giá trị Period Value nếu có */}
-                  {item.period_value && (
-                    <td className="text-center align-middle">
-                      {item.period_value}
-                    </td>
-                  )}
+
                   {/* Hiển thị giá trị Date Range nếu có */}
                   {item.date_range && (
                     <td className="text-center align-middle">
