@@ -141,29 +141,44 @@ const OrderAcceptShipper = () => {
                   {[
                     ...new Map(
                       order.orderDetails.map((item) => [
-                        item.product_order.image,
+                        item.product_order?.image,
                         item
                       ])
                     ).values()
-                  ].map((uniqueItem, index) => (
-                    <img
-                      key={index}
-                      className="w-[50px] mt-[2px] rounded-full shadow-md mr-2"
-                      src={
-                        uniqueItem.product_order &&
-                        uniqueItem.product_order.image
-                      }
-                      alt={
-                        uniqueItem.product_order &&
-                        uniqueItem.product_order.product_name
-                      }
-                    />
-                  ))}
+                  ]
+                    .slice(0, 2) // Lấy tối đa 2 hình ảnh
+                    .map((uniqueItem, index) => (
+                      <img
+                        key={index}
+                        className="w-[50px] h-[50px] rounded-full object-cover shadow-md mr-2"
+                        src={
+                          uniqueItem.product_order?.image ||
+                          '/default-image.jpg'
+                        }
+                        alt={
+                          uniqueItem.product_order?.product_name ||
+                          'No product name'
+                        }
+                        title={
+                          uniqueItem.product_order?.product_name ||
+                          'No product name'
+                        } // Hiển thị tooltip khi hover
+                      />
+                    ))}
+                  {order.orderDetails.length > 2 && (
+                    <span className="text-sm font-medium text-gray-600 ml-2">
+                      +{order.orderDetails.length - 2} ...
+                    </span>
+                  )}
                 </td>
                 <td>
                   {order.orderDetails.map((item, index) => (
-                    <div key={index}>
-                      {item.product_order && item.product_order.product_name}
+                    <div
+                      key={index}
+                      className="truncate overflow-hidden text-ellipsis whitespace-nowrap max-w-[150px]"
+                      title={item.product_order?.product_name} // Hiển thị toàn bộ tên khi hover
+                    >
+                      {item.product_order?.product_name}
                     </div>
                   ))}
                 </td>

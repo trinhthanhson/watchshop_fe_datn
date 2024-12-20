@@ -136,10 +136,7 @@ const CreateRequest = () => {
 
   return (
     <div className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8">
-      <div
-        className="bg-white p-8 rounded-lg shadow-md w-full max-w-6xl"
-        style={{ marginLeft: '230px' }}
-      >
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-6xl ml-[10%]">
         <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
           Phiếu Đề Nghị Nhập Kho
         </h2>

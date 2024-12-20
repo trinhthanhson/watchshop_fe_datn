@@ -16,7 +16,6 @@ const ProductDetail = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
   const [quantity, setQuantity] = useState(1)
-  const [discountedPrice, setDiscountedPrice] = useState(null)
   const navigate = useNavigate()
   const [priceDiscount, setPriceDiscount] = useState(null)
   const productsCustomer = useSelector(
@@ -38,40 +37,6 @@ const ProductDetail = () => {
     dispatch(getAllCouponsRequest())
     dispatch(getReviewProductRequest(id)) // Thêm dòng này
   }, [dispatch, id])
-
-  useEffect(() => {
-    if (selectedProduct && Array.isArray(coupons) && coupons.length > 0) {
-      const now = new Date()
-
-      const validCoupon = coupons.find((coupon) => {
-        const startDate = new Date(coupon.start_date)
-        const endDate = new Date(coupon.end_date)
-        return now >= startDate && now <= endDate
-      })
-
-      if (validCoupon && validCoupon.couponDetails.length > 0) {
-        const activeCouponDetails = validCoupon.couponDetails.filter(
-          (detail) =>
-            detail.status === 'Active' &&
-            detail.product_id === selectedProduct.product_id
-        )
-
-        if (activeCouponDetails.length > 0) {
-          const maxPercent = Math.max(
-            ...activeCouponDetails.map(
-              (detail) => parseFloat(detail.percent) || 0
-            )
-          )
-
-          const price = selectedProduct.updatePrices[0]?.price_new || 0
-          const discountAmount = price * maxPercent
-          const newPrice = price - discountAmount
-          setDiscountedPrice(Math.ceil(newPrice).toLocaleString('en'))
-          setPriceDiscount(Math.ceil(newPrice))
-        }
-      }
-    }
-  }, [coupons, selectedProduct])
 
   const handleAddToCart = () => {
     dispatch(
@@ -99,7 +64,7 @@ const ProductDetail = () => {
       state: {
         product: selectedProduct,
         quantity: quantity,
-        price: priceDiscount || selectedProduct.updatePrices[0]?.price_new
+        price: selectedProduct?.discounted_price
       }
     })
   }

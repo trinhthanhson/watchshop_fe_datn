@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import CardProductItem from '../../components/Products/CardProductItem'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  getAllProductsCustomerRequest,
   getAllCategoriesRequest,
   getAllBrandRequest
 } from '../../redux/actions/actions'
