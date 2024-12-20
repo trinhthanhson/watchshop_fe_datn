@@ -12,30 +12,30 @@ const TransactionImport = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const transaction = useSelector(
-    (state) => state.transaction_import?.transaction_import
+    (state) => state.transactionImport?.transactionImport
   )
-  const [sortOrder, setSortOrder] = useState('all') // Trạng thái bộ lọc
+  const [sortOrder, setSortOrder] = useState('asc') // Trạng thái bộ lọc
+  const [currentPage, setCurrentPage] = useState(1)
+  const recordsPerPage = 10 // Số bản ghi mỗi trang
+  const totalPages = transaction?.totalPages || 1 // Tổng số trang từ API
   useEffect(() => {
     try {
-      dispatch(getAllTransactionImportRequest())
+      dispatch(
+        getAllTransactionImportRequest(
+          currentPage,
+          recordsPerPage,
+          'created_at',
+          sortOrder
+        )
+      )
     } catch (error) {
       console.error('Error dispatch', error)
     }
-  }, [dispatch])
+  }, [dispatch, currentPage, sortOrder])
 
-  const filteredAndSortedRequest = transaction?.data
-    ?.filter(
-      () => (sortOrder === 'all' ? true : Request.quantity > 0) // Nếu 'all' được chọn, không lọc
-    )
-    ?.slice()
-    .sort((a, b) => {
-      const dateA = new Date(a.created_at)
-      const dateB = new Date(b.created_at)
-      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB
-    })
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(
-      filteredAndSortedRequest.map((Request) => ({
+      transaction?.data.map((Request) => ({
         ID: Request.Request_id,
         Image: Request.image,
         Name: Request.Request_name,
@@ -76,9 +76,8 @@ const TransactionImport = () => {
             onChange={(e) => setSortOrder(e.target.value)}
             className="p-2 border rounded-md"
           >
-            <option value="all">All</option>
-            <option value="newest">Mới nhất</option>
-            <option value="oldest">Cũ nhất</option>
+            <option value="asc">Tăng dần</option>
+            <option value="desc">Giảm dần</option>
           </select>
           <MdFileDownload
             className="cursor-pointer text-primary"
@@ -101,7 +100,7 @@ const TransactionImport = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredAndSortedRequest?.map((transaction, index) => (
+            {transaction?.data?.map((transaction, index) => (
               <tr key={transaction.request_id}>
                 <td>{index + 1}</td>
                 <td>{transaction?.transaction_code}</td>
@@ -132,6 +131,29 @@ const TransactionImport = () => {
             ))}
           </tbody>
         </table>
+        <div className="flex justify-center items-center gap-4 mt-4 border p-4 rounded-md ml-[200px]">
+          <button
+            className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          >
+            Previous
+          </button>
+
+          <span className="text-lg font-medium">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <button
+            className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
+            disabled={currentPage === totalPages}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+          >
+            Next
+          </button>
+        </div>
       </div>
       <div className="fixed right-6 bottom-3 hover:bg-gray-300 transition-transform rounded-full duration-200 transform hover:scale-125 p-2 ">
         <IoIosAddCircle

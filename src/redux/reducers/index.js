@@ -54,6 +54,7 @@ import findOrderByDateAndStatusReducer from './order/findOrderByDateAndStatusRed
 import findOrderByInfo from './order/findOrderByInfoReducer'
 import orderStatusCustomerReducer from './order-status/orderStatusCustomerReducer'
 import getDataAiReducer from './ai/getDataAiReducer'
+import requestExportPageReducer from './inventory/manager/requestExportPageReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -84,7 +85,7 @@ const rootReducer = combineReducers({
   request_import: requestImportReducer,
   request_export: requestExportReducer,
   requestDetail: requestDetailReducer,
-  transaction_import: transactionImportReducer,
+  transactionImport: transactionImportReducer,
   transaction_export: transactionExportReducer,
   transactionDetail: transactionDetailReducer,
   type: typeReducer,
@@ -110,7 +111,8 @@ const rootReducer = combineReducers({
   orderByDateStatus: findOrderByDateAndStatusReducer,
   orderByInfo: findOrderByInfo,
   orderStatusCustomer: orderStatusCustomerReducer,
-  dataAIByQuantity: getDataAiReducer
+  dataAIByQuantity: getDataAiReducer,
+  requestExport: requestExportPageReducer
 })
 
 export default rootReducer

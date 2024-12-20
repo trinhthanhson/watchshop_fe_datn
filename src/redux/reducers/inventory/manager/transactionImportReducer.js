@@ -4,8 +4,10 @@ import {
 } from '../../../actions/inventory/manager/type'
 
 const initialState = {
-  transaction_import: [],
-  error: null
+  transactionImport: [],
+  error: null,
+  currentPage: 1,
+  totalPages: 0
 }
 
 const transactionImportReducer = (state = initialState, action) => {
@@ -13,13 +15,15 @@ const transactionImportReducer = (state = initialState, action) => {
     case GET_ALL_TRANSACTION_IMPORT_SUCCESS:
       return {
         ...state,
-        transaction_import: action.payload,
-        error: null
+        transactionImport: action.payload,
+        error: null,
+        currentPage: action.payload.currentPage,
+        totalPages: action.payload.totalPages
       }
     case GET_ALL_TRANSACTION_IMPORT_FAILURE:
       return {
         ...state,
-        transaction_import: [],
+        transactionImport: [],
         error: action.payload
       }
     default:

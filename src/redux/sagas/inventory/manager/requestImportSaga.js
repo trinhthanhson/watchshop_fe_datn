@@ -9,11 +9,11 @@ import { GET_ALL_REQUEST_IMPORT_REQUEST } from '../../../actions/inventory/manag
 function* getAllRequestImportSaga(action) {
   try {
     const token = localStorage.getItem('token')
-    const { page, limit } = action.payload // Nhận page và limit từ payload
+    const { page, limit, sortField, sortDirection } = action.payload // Nhận thêm sortField và sortDirection từ payload
 
     const response = yield call(
       axios.get,
-      `http://localhost:9999/api/inventory/request/all/import?page=${page}&limit=${limit}`,
+      `http://localhost:9999/api/inventory/request/all/import?page=${page}&limit=${limit}&sortField=${sortField}&sortDirection=${sortDirection}`,
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -26,7 +26,6 @@ function* getAllRequestImportSaga(action) {
     yield put(getAllRequestImportFailure(error))
   }
 }
-
 export default function* requestImportSaga() {
   yield takeLatest(GET_ALL_REQUEST_IMPORT_REQUEST, getAllRequestImportSaga)
 }

@@ -14,31 +14,26 @@ const TransactionRequestImport = () => {
 
   // Dữ liệu từ API
   const request = useSelector((state) => state.request_import?.request_import)
-  const [sortOrder, setSortOrder] = useState('all') // Trạng thái bộ lọc
+  const [sortOrder, setSortOrder] = useState('asc') // Trạng thái bộ lọc
   const [currentPage, setCurrentPage] = useState(1)
   const recordsPerPage = 10 // Số bản ghi mỗi trang
-  useEffect(() => {
-    dispatch(getAllRequestImportRequest(currentPage, recordsPerPage))
-  }, [dispatch, currentPage, recordsPerPage])
-
-  const filteredAndSortedRequest = request?.data
-    ?.filter(() => {
-      if (sortOrder === 'all') return true
-      return sortOrder === 'newest' || sortOrder === 'oldest'
-    })
-    ?.slice()
-    .sort((a, b) => {
-      const dateA = new Date(a.created_at)
-      const dateB = new Date(b.created_at)
-      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB
-    })
-
   const totalPages = request?.totalPages || 1 // Lấy totalPages từ API
+
+  useEffect(() => {
+    dispatch(
+      getAllRequestImportRequest(
+        currentPage,
+        recordsPerPage,
+        'created_at',
+        sortOrder
+      )
+    )
+  }, [dispatch, currentPage, recordsPerPage, sortOrder])
 
   // Xuất file Excel
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(
-      filteredAndSortedRequest.map((Request) => ({
+      request?.data?.map((Request) => ({
         ID: Request.Request_id,
         Image: Request.image,
         Name: Request.Request_name,
@@ -47,7 +42,7 @@ const TransactionRequestImport = () => {
         Price: Request.updatePrices[0]?.price_new.toLocaleString('en'),
         Quantity: Request.quantity,
         Status: getStatusText(Request.status)
-      }))
+      })) || []
     )
 
     const wb = XLSX.utils.book_new()
@@ -59,13 +54,11 @@ const TransactionRequestImport = () => {
     })
     const fileURL = URL.createObjectURL(file)
 
-    // Tạo liên kết để tải xuống và kích hoạt sự kiện click
     const a = document.createElement('a')
     a.href = fileURL
     a.download = 'Requests.xlsx'
     a.click()
 
-    // Giải phóng URL sau khi sử dụng
     URL.revokeObjectURL(fileURL)
   }
 
@@ -79,9 +72,8 @@ const TransactionRequestImport = () => {
             onChange={(e) => setSortOrder(e.target.value)}
             className="p-2 border rounded-md"
           >
-            <option value="all">All</option>
-            <option value="newest">Mới nhất</option>
-            <option value="oldest">Cũ nhất</option>
+            <option value="asc">Tăng dần</option>
+            <option value="desc">Giảm dần</option>
           </select>
           <MdFileDownload
             className="cursor-pointer text-primary"
@@ -105,7 +97,7 @@ const TransactionRequestImport = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredAndSortedRequest?.map((request, index) => (
+            {request?.data?.map((request, index) => (
               <tr key={request.request_id}>
                 <td>{index + 1}</td>
                 <td>{request?.transaction_code}</td>
@@ -117,7 +109,6 @@ const TransactionRequestImport = () => {
                     ' ' +
                     request?.staff_created_request?.last_name}
                 </td>
-
                 <td>{request?.type_request?.type_name}</td>
                 <td>{getStatusRequest(request?.status)}</td>
                 <td>
@@ -139,8 +130,8 @@ const TransactionRequestImport = () => {
       <div className="flex justify-center items-center gap-4 mt-4 border p-4 rounded-md ml-[200px]">
         <button
           className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
-          disabled={currentPage === 1} // Disable khi đang ở trang đầu
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} // Tránh trang âm
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
         >
           Previous
         </button>
@@ -151,10 +142,10 @@ const TransactionRequestImport = () => {
 
         <button
           className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
-          disabled={currentPage === totalPages} // Disable khi đang ở trang cuối
+          disabled={currentPage === totalPages}
           onClick={() =>
             setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          } // Tránh vượt quá totalPages
+          }
         >
           Next
         </button>

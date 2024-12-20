@@ -1,28 +1,29 @@
 import {
-  GET_ALL_TRANSACTION_EXPORT_FAILURE,
-  GET_ALL_TRANSACTION_EXPORT_SUCCESS
+  GET_ALL_REQUEST__EXPORT_PAGE_FAILURE,
+  GET_ALL_REQUEST_EXPORT_PAGE_SUCCESS
 } from '../../../actions/inventory/manager/type'
+
 const initialState = {
-  transaction_export: [],
+  requestExport: [],
   error: null,
   currentPage: 1,
   totalPages: 0
 }
 
-const transactionExportReducer = (state = initialState, action) => {
+const requestExportPageReducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_ALL_TRANSACTION_EXPORT_SUCCESS:
+    case GET_ALL_REQUEST_EXPORT_PAGE_SUCCESS:
       return {
         ...state,
-        transaction_export: action.payload,
+        requestExport: action.payload,
         error: null,
         currentPage: action.payload.currentPage,
         totalPages: action.payload.totalPages
       }
-    case GET_ALL_TRANSACTION_EXPORT_FAILURE:
+    case GET_ALL_REQUEST__EXPORT_PAGE_FAILURE:
       return {
         ...state,
-        transaction_export: [],
+        requestExport: [],
         error: action.payload
       }
     default:
@@ -30,4 +31,4 @@ const transactionExportReducer = (state = initialState, action) => {
   }
 }
 
-export default transactionExportReducer
+export default requestExportPageReducer

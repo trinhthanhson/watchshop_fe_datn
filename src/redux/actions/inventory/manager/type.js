@@ -37,10 +37,19 @@ export const GET_ALL_TRANSACTION_EXPORT_FAILURE =
   'GET_ALL_TRANSACTION_EXPORT_FAILURE'
 // --------------------------------------------------------------
 
-// -------------Get all request import----------------------
+// -------------Get all request import page ----------------------
 export const GET_ALL_REQUEST_IMPORT_REQUEST = 'GET_ALL_REQUEST_IMPORT_REQUEST'
 export const GET_ALL_REQUEST_IMPORT_SUCCESS = 'GET_ALL_REQUEST_IMPORT_SUCCESS'
 export const GET_ALL_REQUEST_IMPORT_FAILURE = 'GET_ALL_REQUEST_IMPORT_FAILURE'
+// --------------------------------------------------------------
+
+// -------------create transaction export page----------------------
+export const GET_ALL_REQUEST_EXPORT_PAGE_REQUEST =
+  'GET_ALL_REQUEST_EXPORT_PAGE_REQUEST'
+export const GET_ALL_REQUEST_EXPORT_PAGE_SUCCESS =
+  'GET_ALL_REQUEST_EXPORT_PAGE_SUCCESS'
+export const GET_ALL_REQUEST__EXPORT_PAGE_FAILURE =
+  'GET_ALL_REQUEST__EXPORT_PAGE_FAILURE'
 // --------------------------------------------------------------
 
 // -------------Get all request export----------------------

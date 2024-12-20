@@ -8,7 +8,10 @@ import {
   CREATE_TRANSACTION_EXPORT_FAILURE,
   CREATE_TRANSACTION_EXPORT_REQUEST,
   CREATE_TRANSACTION_EXPORT_SUCCESS,
+  GET_ALL_REQUEST__EXPORT_PAGE_FAILURE,
   GET_ALL_REQUEST_EXPORT_FAILURE,
+  GET_ALL_REQUEST_EXPORT_PAGE_REQUEST,
+  GET_ALL_REQUEST_EXPORT_PAGE_SUCCESS,
   GET_ALL_REQUEST_EXPORT_REQUEST,
   GET_ALL_REQUEST_EXPORT_SUCCESS,
   GET_ALL_REQUEST_IMPORT_FAILURE,
@@ -79,14 +82,19 @@ export const getAllRequestNotFullFailure = (error) => ({
 })
 // ----------------------------------------------
 
-// -------- Get all transaction import ---------
-export const getAllTransactionImportRequest = () => ({
-  type: GET_ALL_TRANSACTION_IMPORT_REQUEST
+// -------- Get all transaction import page---------
+export const getAllTransactionImportRequest = (
+  page,
+  limit,
+  sortField = 'created_at',
+  sortDirection = 'asc'
+) => ({
+  type: GET_ALL_TRANSACTION_IMPORT_REQUEST,
+  payload: { page, limit, sortField, sortDirection }
 })
-
-export const getAllTransactionImportSuccess = (transaction) => ({
+export const getAllTransactionImportSuccess = (request_import) => ({
   type: GET_ALL_TRANSACTION_IMPORT_SUCCESS,
-  payload: transaction
+  payload: request_import
 })
 
 export const getAllTransactionImportFailure = (error) => ({
@@ -95,14 +103,19 @@ export const getAllTransactionImportFailure = (error) => ({
 })
 // -----------------------------------------------
 
-// -------- Get all transaction export ---------
-export const getAllTransactionExportRequest = () => ({
-  type: GET_ALL_TRANSACTION_EXPORT_REQUEST
+// -------- Get all transaction export page---------
+export const getAllTransactionExportRequest = (
+  page,
+  limit,
+  sortField = 'created_at',
+  sortDirection = 'asc'
+) => ({
+  type: GET_ALL_TRANSACTION_EXPORT_REQUEST,
+  payload: { page, limit, sortField, sortDirection }
 })
-
-export const getAllTransactionExportSuccess = (transaction) => ({
+export const getAllTransactionExportSuccess = (request_import) => ({
   type: GET_ALL_TRANSACTION_EXPORT_SUCCESS,
-  payload: transaction
+  payload: request_import
 })
 
 export const getAllTransactionExportFailure = (error) => ({
@@ -110,11 +123,15 @@ export const getAllTransactionExportFailure = (error) => ({
   payload: error
 })
 // -----------------------------------------------
-
-// -------- Get all transaction import ---------
-export const getAllRequestImportRequest = (page, limit) => ({
+// -------- Get all transaction request import page---------
+export const getAllRequestImportRequest = (
+  page,
+  limit,
+  sortField = 'created_at',
+  sortDirection = 'asc'
+) => ({
   type: GET_ALL_REQUEST_IMPORT_REQUEST,
-  payload: { page, limit }
+  payload: { page, limit, sortField, sortDirection }
 })
 export const getAllRequestImportSuccess = (request_import) => ({
   type: GET_ALL_REQUEST_IMPORT_SUCCESS,
@@ -123,6 +140,27 @@ export const getAllRequestImportSuccess = (request_import) => ({
 
 export const getAllRequestImportFailure = (error) => ({
   type: GET_ALL_REQUEST_IMPORT_FAILURE,
+  payload: error
+})
+// -----------------------------------------------
+
+// -------- Get all transaction import page---------
+export const getAllRequestExportPageRequest = (
+  page,
+  limit,
+  sortField = 'created_at',
+  sortDirection = 'asc'
+) => ({
+  type: GET_ALL_REQUEST_EXPORT_PAGE_REQUEST,
+  payload: { page, limit, sortField, sortDirection }
+})
+export const getAllRequestExportPageSuccess = (requestExport) => ({
+  type: GET_ALL_REQUEST_EXPORT_PAGE_SUCCESS,
+  payload: requestExport
+})
+
+export const getAllRequestExportPageFailure = (error) => ({
+  type: GET_ALL_REQUEST__EXPORT_PAGE_FAILURE,
   payload: error
 })
 // -----------------------------------------------
