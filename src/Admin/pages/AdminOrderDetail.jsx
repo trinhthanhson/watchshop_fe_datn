@@ -11,12 +11,6 @@ const AdminOrderDetail = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
   const orderDetail = useSelector((state) => state.orderDetail.orderDetail)
-  const tranRequest = useSelector(
-    (state) => state.request_export.request_export.data
-  )
-  const isOrderInRequest = tranRequest?.some(
-    (request) => request?.order_id === orderDetail?.order_id
-  )
 
   const [showModal, setShowModal] = useState(false) // State điều khiển modal
 
@@ -134,13 +128,13 @@ const AdminOrderDetail = () => {
     <>
       <div className="flex justify-center items-center bg-gray-200 border border-gray-300 rounded-lg p-4 w-[80%] ml-[18%]">
         <h1 className="uppercase font-RobotoSemibold text-main text-3xl md:text-3xl xl:text-[3rem] text-center">
-          {orderDetail?.is_delivery
-            ? 'Đã chuyển giao hàng'
-            : orderDetail?.order_status?.status_index > 1
-              ? orderDetail?.order_status?.status_name
-              : orderDetail?.is_cancel
-                ? 'Đã huỷ'
-                : orderDetail?.order_status?.status_name}
+          {orderDetail?.is_cancel
+            ? 'Đã huỷ'
+            : orderDetail?.is_delivery
+              ? orderDetail?.order_status?.status_index > 1
+                ? orderDetail?.order_status?.status_name
+                : 'Đã chuyển giao hàng'
+              : orderDetail?.order_status?.status_name}
         </h1>
       </div>
 
@@ -200,21 +194,14 @@ const AdminOrderDetail = () => {
                 </span>
               )}
             </p>
-            <p className="p-5">
-              <span className="text-primary font-RobotoMedium mr-2">
-                Phí vận chuyển:
-              </span>
-              <span className="text-primary font-RobotoSemibold">
-                {(20000).toLocaleString('en')} VNĐ
-              </span>
-            </p>
+
             <p className="p-5">
               <span className="text-primary font-RobotoMedium mr-2">
                 Thanh toán:
               </span>
               {orderDetail?.total_price && (
                 <span className="text-primary font-RobotoSemibold">
-                  {(orderDetail.total_price + 20000).toLocaleString('en')} VNĐ
+                  {orderDetail.total_price.toLocaleString('en')} VNĐ
                 </span>
               )}
             </p>
@@ -344,9 +331,9 @@ const AdminOrderDetail = () => {
       <div className="ml-[18%] w-[80%] flex justify-between">
         <button
           onClick={() => setShowModal(true)}
-          className="mt-5 ml-auto bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+          className=" mr-5 mt-5 ml-auto bg-main text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverRed ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
         >
-          Tạo Hóa Đơn
+          Xuất hoá đơn
         </button>
 
         <div className="flex gap-3">
@@ -380,14 +367,10 @@ const AdminOrderDetail = () => {
                 Chuyển giao hàng
               </button>
             )}
-          {!isOrderInRequest && (
+          {check == 'False' && (
             <button
               onClick={() => handleCreateExportInventory()}
-              className={`mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform transition-all ${
-                isOrderInRequest
-                  ? 'translate-x-20 opacity-0'
-                  : 'translate-x-0 opacity-100'
-              }`}
+              className={`mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform transition-all `}
             >
               Tạo phiếu đề nghị xuất kho
             </button>

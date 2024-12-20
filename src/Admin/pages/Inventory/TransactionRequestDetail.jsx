@@ -19,10 +19,12 @@ const TransactionRequestDetail = () => {
   const requestDetail = useSelector(
     (state) => state.requestDetail?.requestDetail
   )
-
+  const checkTransaction = useSelector(
+    (state) => state?.check_transaction?.check_transaction?.message
+  )
+  console.log(checkTransaction)
   const isDirector = decryptData(localStorage.getItem('role_name'))
   const products = useSelector((state) => state.products?.products?.data)
-  const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [currentRowIndex, setCurrentRowIndex] = useState(null)
   const [isButtonVisible, setIsButtonVisible] = useState(true)
@@ -49,12 +51,10 @@ const TransactionRequestDetail = () => {
       stock: product.quantity // Thêm số lượng hiện có nếu cần
     }
     setEditingData(updatedData)
-    setSearchQuery('') // Xóa nội dung tìm kiếm
     setSearchResults([]) // Ẩn danh sách gợi ý
   }
   const handleSearchChange = (e, index) => {
     const { value } = e.target
-    setSearchQuery(value)
     setCurrentRowIndex(index) // Lưu index của hàng hiện tại
     handleInputChange(index, 'product_request.product_name', value)
     const filteredProducts = products.filter(
@@ -314,14 +314,15 @@ const TransactionRequestDetail = () => {
             ))}
           </tbody>
         </table>
-        {requestDetail?.type_request?.type_name === 'IMPORT' && (
-          <button
-            className="bg-primary px-4 py-2 rounded-md text-white w-[7%] ml-[92%] mb-[20px]"
-            onClick={openEditModal}
-          >
-            Sửa
-          </button>
-        )}
+        {requestDetail?.type_request?.type_name === 'IMPORT' &&
+          !checkTransaction && (
+            <button
+              className="bg-primary px-4 py-2 rounded-md text-white w-[7%] ml-[92%] mb-[20px]"
+              onClick={openEditModal}
+            >
+              Sửa
+            </button>
+          )}
 
         {/* Modal chỉnh sửa */}
         {isEditModalOpen && (
