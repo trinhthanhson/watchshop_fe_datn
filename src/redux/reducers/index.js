@@ -55,6 +55,8 @@ import findOrderByInfo from './order/findOrderByInfoReducer'
 import orderStatusCustomerReducer from './order-status/orderStatusCustomerReducer'
 import getDataAiReducer from './ai/getDataAiReducer'
 import requestExportPageReducer from './inventory/manager/requestExportPageReducer'
+import orderCustomerPageReducer from './customer/orderCustomerPageReducer'
+import orderStatusCustomerPageReducer from './customer/orderStatusCustomerPageReducer'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -112,7 +114,9 @@ const rootReducer = combineReducers({
   orderByInfo: findOrderByInfo,
   orderStatusCustomer: orderStatusCustomerReducer,
   dataAIByQuantity: getDataAiReducer,
-  requestExport: requestExportPageReducer
+  requestExport: requestExportPageReducer,
+  orderCustomerPage: orderCustomerPageReducer,
+  orderStatusCustomerPage: orderStatusCustomerPageReducer
 })
 
 export default rootReducer

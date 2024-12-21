@@ -1,71 +1,82 @@
 import { useEffect, useState } from 'react'
 import OrderItem from '../../components/Order/OrderItem'
-import { getCustomerOrdersRequest } from '../../redux/actions/actions'
 import { useDispatch, useSelector } from 'react-redux'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import { sortByDate } from '../../utils/sort'
 import { getAllOrderStatusCustomerRequest } from '../../redux/actions/order-status/action'
+import {
+  getAllOrderCustomerPageRequest,
+  getAllOrderStatusCustomerPageRequest
+} from '../../redux/actions/customer/action'
 
 const OrdersHistory = () => {
   const dispatch = useDispatch()
   const customerOrders = useSelector(
-    (state) => state.customerOrders.customerOrders
+    (state) => state?.orderCustomerPage?.orderCustomerPage
   )
   const orderStatusCustomer = useSelector(
-    (state) => state.orderStatusCustomer?.orderStatusCustomer
+    (state) => state?.orderStatusCustomer?.orderStatusCustomer
+  )
+
+  const orderStatusCustomerPage = useSelector(
+    (state) => state?.orderStatusCustomerPage?.orderStatusCustomerPage
   )
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
-  const [status, setStatus] = useState(null)
-  const [totalPrice, setTotalPrice] = useState(0)
-  const [filteredOrders, setFilteredOrders] = useState([])
+
   const [selectedStatusId, setStatusId] = useState('')
+  const [sortOrder, setSortOrder] = useState('asc') // Trạng thái bộ lọc
+  const [currentPage, setCurrentPage] = useState(1)
+  const recordsPerPage = 10 // Số bản ghi mỗi trang
+  const totalPages = customerOrders?.totalPages || 1 // Tổng số trang từ API
 
-  useEffect(() => {
-    dispatch(getCustomerOrdersRequest())
-    dispatch(getAllOrderStatusCustomerRequest())
-  }, [dispatch])
-  useEffect(() => {
-    if (customerOrders.data) {
-      const sortedOrders = sortByDate(customerOrders.data, 'create_at')
-
-      const filtered = sortedOrders.filter((order) => {
-        const orderDate = new Date(order.create_at).getTime()
-        const startDateTimestamp = startDate ? startDate.getTime() : null
-        const endDateTimestamp = endDate ? endDate.getTime() : null
-
-        if (startDateTimestamp && orderDate < startDateTimestamp) {
-          return false
-        }
-
-        if (endDateTimestamp && orderDate > endDateTimestamp) {
-          return false
-        }
-
-        if (status && order.status !== status) {
-          return false
-        }
-        return true
-      })
-
-      setFilteredOrders(filtered || [])
-
-      const total = filtered
-        ? filtered.reduce((acc, order) => acc + order.total_price, 0)
-        : 0
-      setTotalPrice(total)
+  const displayedOrder = (() => {
+    console.log(selectedStatusId)
+    if (selectedStatusId === '') {
+      return customerOrders
+    } else {
+      return orderStatusCustomerPage
     }
-  }, [customerOrders.data, startDate, endDate, status])
+  })()
+
+  console.log(displayedOrder)
+  useEffect(() => {
+    dispatch(getAllOrderStatusCustomerRequest())
+
+    try {
+      if (selectedStatusId === '') {
+        dispatch(
+          getAllOrderCustomerPageRequest(
+            currentPage,
+            recordsPerPage,
+            'created_at',
+            sortOrder
+          )
+        )
+      } else {
+        dispatch(
+          getAllOrderStatusCustomerPageRequest(
+            selectedStatusId,
+            currentPage,
+            recordsPerPage,
+            'created_at',
+            sortOrder
+          )
+        )
+      }
+    } catch (error) {
+      console.error('Error dispatch', error)
+    }
+  }, [dispatch, currentPage, sortOrder, selectedStatusId])
 
   const handleReset = () => {
     setStartDate(null)
     setEndDate(null)
-    setStatus(null)
   }
   const handleStatusChange = (e) => {
     const status_id = e.target.value
     setStatusId(status_id)
+
     // if (status_id === '') {
     //   setStatusId('')
     //   setIsFilter(false)
@@ -128,7 +139,16 @@ const OrdersHistory = () => {
               ))}
             </select>
           </div>
-
+          <div className="flex justify-end p-4">
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="p-2 border rounded-md"
+            >
+              <option value="asc">Tăng dần</option>
+              <option value="desc">Giảm dần</option>
+            </select>
+          </div>
           <div className="p-2">
             <button
               onClick={() => handleReset()}
@@ -141,8 +161,8 @@ const OrdersHistory = () => {
 
         <div className="w-full lg:px-32 relative my-10">
           <div className="space-y-3">
-            {filteredOrders.length > 0 ? (
-              filteredOrders.map((order, index) => (
+            {displayedOrder?.data?.length > 0 ? (
+              displayedOrder?.data?.map((order, index) => (
                 <OrderItem key={index} order={order} />
               ))
             ) : (
@@ -159,13 +179,35 @@ const OrdersHistory = () => {
             )}
           </div>
         </div>
+        <div className="flex justify-center items-center gap-4 mt-4 border p-4 rounded-md ml-[200px]">
+          <button
+            className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          >
+            Previous
+          </button>
 
+          <span className="text-lg font-medium">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <button
+            className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
+            disabled={currentPage === totalPages}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+          >
+            Next
+          </button>
+        </div>
         <div className="ml-[8%] flex py-3 justify-between font-RobotoMedium lg:w-10/12">
           <div className="text-primary rounded-md p-2">
-            Số đơn hàng: {filteredOrders ? filteredOrders.length : 0}
+            Số đơn hàng: {customerOrders.data ? customerOrders?.data.length : 0}
           </div>
           <div className="text-primary rounded-md p-2">
-            Tổng: {totalPrice.toLocaleString('en')} VNĐ
+            Tổng: {customerOrders.toLocaleString('en')} VNĐ
           </div>
         </div>
       </section>
