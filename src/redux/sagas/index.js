@@ -57,6 +57,7 @@ import getDataAiSaga from './ai/getDataAiSaga'
 import requestExportPageSaga from './inventory/manager/requestExportPageSaga'
 import orderCustomerPageSaga from './customer/orderCustomerPageSaga'
 import orderStatusCustomerPageSaga from './customer/orderStatusCustomerPageSaga'
+import searchOrderCustomerByDateSaga from './customer/searchOrderCustomerByDateSaga'
 export default function* rootSaga() {
   yield all([
     newSaga(),
@@ -116,6 +117,7 @@ export default function* rootSaga() {
     getDataAiSaga(),
     requestExportPageSaga(),
     orderCustomerPageSaga(),
-    orderStatusCustomerPageSaga()
+    orderStatusCustomerPageSaga(),
+    searchOrderCustomerByDateSaga()
   ])
 }

@@ -5,18 +5,19 @@ import {
   getAllOrderStatusCustomerPageFailure,
   getAllOrderStatusCustomerPageSuccess
 } from '../../actions/customer/action'
-
 function* AllorderStatusCustomerPageSaga(action) {
   try {
     const token = localStorage.getItem('token')
-    const { status_id, page, limit, sortField, sortDirection } = action.payload // Nhận thêm sortField và sortDirection từ payload
-
+    const { orders, page, limit, sortField, sortDirection } = action.payload
+    console.log(orders)
     const response = yield call(
-      axios.get,
-      `http://localhost:9999/api/customer/order/status/customer?status_id=${status_id}&page=${page}&limit=${limit}&sortField=${sortField}&sortDirection=${sortDirection}`,
+      axios.post,
+      `http://localhost:9999/api/customer/order/status/customer?page=${page}&limit=${limit}&sortField=${sortField}&sortDirection=${sortDirection}`,
+      orders, // Gửi orders trong body
       {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       }
     )
@@ -26,6 +27,7 @@ function* AllorderStatusCustomerPageSaga(action) {
     yield put(getAllOrderStatusCustomerPageFailure(error))
   }
 }
+
 export default function* orderStatusCustomerPageSaga() {
   yield takeLatest(
     GET_ALL_ORDER_STATUS_CUSTOMER_PAGE_REQUEST,

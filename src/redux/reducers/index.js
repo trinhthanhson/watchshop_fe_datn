@@ -57,6 +57,7 @@ import getDataAiReducer from './ai/getDataAiReducer'
 import requestExportPageReducer from './inventory/manager/requestExportPageReducer'
 import orderCustomerPageReducer from './customer/orderCustomerPageReducer'
 import orderStatusCustomerPageReducer from './customer/orderStatusCustomerPageReducer'
+import searchOrderCustomerByDateReducer from './customer/searchOrderCustomerByDateReducer.js'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -116,7 +117,8 @@ const rootReducer = combineReducers({
   dataAIByQuantity: getDataAiReducer,
   requestExport: requestExportPageReducer,
   orderCustomerPage: orderCustomerPageReducer,
-  orderStatusCustomerPage: orderStatusCustomerPageReducer
+  orderStatusCustomerPage: orderStatusCustomerPageReducer,
+  searchOrderByDate: searchOrderCustomerByDateReducer
 })
 
 export default rootReducer

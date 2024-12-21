@@ -6,7 +6,8 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { getAllOrderStatusCustomerRequest } from '../../redux/actions/order-status/action'
 import {
   getAllOrderCustomerPageRequest,
-  getAllOrderStatusCustomerPageRequest
+  getAllOrderStatusCustomerPageRequest,
+  seacrchOrderCustomerByDatePageRequest
 } from '../../redux/actions/customer/action'
 
 const OrdersHistory = () => {
@@ -21,32 +22,45 @@ const OrdersHistory = () => {
   const orderStatusCustomerPage = useSelector(
     (state) => state?.orderStatusCustomerPage?.orderStatusCustomerPage
   )
+
+  const searchOrderCustomerPage = useSelector(
+    (state) => state?.searchOrderByDate?.searchOrderByDate
+  )
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
-
-  const [selectedStatusId, setStatusId] = useState('')
+  const [filter, setFilter] = useState(false)
+  const [selectedStatusId, setStatusId] = useState(0)
   const [sortOrder, setSortOrder] = useState('asc') // Trạng thái bộ lọc
   const [currentPage, setCurrentPage] = useState(1)
   const recordsPerPage = 10 // Số bản ghi mỗi trang
   const totalPages = customerOrders?.totalPages || 1 // Tổng số trang từ API
 
   const displayedOrder = (() => {
-    console.log(selectedStatusId)
-    if (selectedStatusId === '') {
+    if (selectedStatusId == 0 && !filter) {
       return customerOrders
-    } else {
+    } else if (selectedStatusId != 0 && !filter) {
       return orderStatusCustomerPage
+    } else if (filter) {
+      return searchOrderCustomerPage
     }
   })()
 
-  console.log(displayedOrder)
   useEffect(() => {
     dispatch(getAllOrderStatusCustomerRequest())
-
     try {
-      if (selectedStatusId === '') {
+      if (selectedStatusId == 0 && !filter) {
         dispatch(
           getAllOrderCustomerPageRequest(
+            currentPage,
+            recordsPerPage,
+            'created_at',
+            sortOrder
+          )
+        )
+      } else if (selectedStatusId == -1) {
+        dispatch(
+          getAllOrderStatusCustomerPageRequest(
+            { status_id: selectedStatusId, is_cancel: true },
             currentPage,
             recordsPerPage,
             'created_at',
@@ -56,7 +70,7 @@ const OrdersHistory = () => {
       } else {
         dispatch(
           getAllOrderStatusCustomerPageRequest(
-            selectedStatusId,
+            { status_id: selectedStatusId, is_cancel: false },
             currentPage,
             recordsPerPage,
             'created_at',
@@ -68,27 +82,38 @@ const OrdersHistory = () => {
       console.error('Error dispatch', error)
     }
   }, [dispatch, currentPage, sortOrder, selectedStatusId])
-
+  const formatDate = (date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0') // Tháng bắt đầu từ 0
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
   const handleReset = () => {
     setStartDate(null)
     setEndDate(null)
+    setFilter(false)
+    setStatusId(0)
+    setSortOrder('asc')
   }
+  const handleSearch = () => {
+    dispatch(
+      seacrchOrderCustomerByDatePageRequest(
+        formatDate(startDate),
+        formatDate(endDate),
+        currentPage,
+        recordsPerPage,
+        'created_at',
+        sortOrder
+      )
+    )
+
+    setFilter(true)
+  }
+
   const handleStatusChange = (e) => {
     const status_id = e.target.value
-    setStatusId(status_id)
 
-    // if (status_id === '') {
-    //   setStatusId('')
-    //   setIsFilter(false)
-    //   setCurrentPage(1)
-    //   dispatch(getAllOrderPageRequest(1, recordsPerPage))
-    // } else {
-    //   setStatusId(status_id) // Cập nhật trạng thái
-    //   setIsFilter(true)
-    //   setSearchDate(false) // Vô hiệu tìm kiếm theo ngày
-    //   setCurrentPage(1) // Reset về trang đầu
-    //   dispatch(searchOrderByStatusRequest(status_id, 1, recordsPerPage)) // Dispatch action
-    // }
+    setStatusId(status_id)
   }
   return (
     <>
@@ -121,6 +146,12 @@ const OrdersHistory = () => {
               onChange={(date) => setEndDate(date)}
             />
           </div>
+          <button
+            className="text-[14px] bg-primary text-white rounded-md shadow-md uppercase px-5 py-[5px] font-RobotoMedium hover:bg-hoverPrimary transition duration-200 ease-in-out"
+            onClick={() => handleSearch()}
+          >
+            Tìm kiếm
+          </button>
 
           <div className="p-2 flex items-center justify-center gap-2">
             Trạng thái
@@ -130,13 +161,14 @@ const OrdersHistory = () => {
               onChange={handleStatusChange}
             >
               {/* Tùy chọn mặc định */}
-              <option value="">Tất cả</option>
+              <option value={0}>Tất cả</option>
               {/* Lấy danh sách từ orderStatus */}
               {orderStatusCustomer?.data?.map((statusItem) => (
                 <option key={statusItem.status_id} value={statusItem.status_id}>
                   {statusItem.status_name}
                 </option>
               ))}
+              <option value={-1}>Đã huỷ</option>
             </select>
           </div>
           <div className="flex justify-end p-4">

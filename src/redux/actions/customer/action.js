@@ -4,10 +4,13 @@ import {
   GET_ALL_ORDER_CUSTOMER_PAGE_SUCCESS,
   GET_ALL_ORDER_STATUS_CUSTOMER_PAGE_FAILURE,
   GET_ALL_ORDER_STATUS_CUSTOMER_PAGE_REQUEST,
-  GET_ALL_ORDER_STATUS_CUSTOMER_PAGE_SUCCESS
+  GET_ALL_ORDER_STATUS_CUSTOMER_PAGE_SUCCESS,
+  SEARCH_ORDER_CUSTOMER_BY_DATE_FAILURE,
+  SEARCH_ORDER_CUSTOMER_BY_DATE_REQUEST,
+  SEARCH_ORDER_CUSTOMER_BY_DATE_SUCCESS
 } from './type'
 
-// -------- Get all orders customer page---------
+// #region Get all orders customer page
 export const getAllOrderCustomerPageRequest = (
   page,
   limit,
@@ -26,18 +29,18 @@ export const getAllOrderCustomerPageFailure = (error) => ({
   type: GET_ALL_ORDER_CUSTOMER_PAGE_FAILURE,
   payload: error
 })
-// -----------------------------------------------
+// #endregion
 
-// -------- Get all orders status customer page---------
+// #region Get all orders customer by status page
 export const getAllOrderStatusCustomerPageRequest = (
-  status_id,
+  orders,
   page,
   limit,
   sortField = 'created_at',
   sortDirection = 'asc'
 ) => ({
   type: GET_ALL_ORDER_STATUS_CUSTOMER_PAGE_REQUEST,
-  payload: { status_id, page, limit, sortField, sortDirection }
+  payload: { orders, page, limit, sortField, sortDirection }
 })
 export const getAllOrderStatusCustomerPageSuccess = (
   orderStatusCustomerPage
@@ -50,4 +53,27 @@ export const getAllOrderStatusCustomerPageFailure = (error) => ({
   type: GET_ALL_ORDER_STATUS_CUSTOMER_PAGE_FAILURE,
   payload: error
 })
-// -----------------------------------------------
+// #endregion
+
+// #region search orders customer by date page
+export const seacrchOrderCustomerByDatePageRequest = (
+  startDate,
+  endDate,
+  page,
+  limit,
+  sortField = 'created_at',
+  sortDirection = 'asc'
+) => ({
+  type: SEARCH_ORDER_CUSTOMER_BY_DATE_REQUEST,
+  payload: { startDate, endDate, page, limit, sortField, sortDirection }
+})
+export const seacrchOrderCustomerByDatePageSuccess = (searchOrderByDate) => ({
+  type: SEARCH_ORDER_CUSTOMER_BY_DATE_SUCCESS,
+  payload: searchOrderByDate
+})
+
+export const seacrchOrderCustomerByDatePageFailure = (error) => ({
+  type: SEARCH_ORDER_CUSTOMER_BY_DATE_FAILURE,
+  payload: error
+})
+// #endregion

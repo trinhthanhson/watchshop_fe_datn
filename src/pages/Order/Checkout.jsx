@@ -390,17 +390,11 @@ const Checkout = () => {
               {cart.data &&
                 cart?.data?.length > 0 &&
                 cart?.data?.map((item, index) => (
-                  <CartItem key={index} cart={item} />
+                  <CartItem key={index} cart={item} isCheckout={true} />
                 ))}
             </div>
           </div>
         </div>
-        {/* <button onClick={() => setActiveStep((prevStep) => Math.min(prevStep + 1, 4))}>
-          Next Step
-        </button>
-        <button onClick={() => setActiveStep((prevStep) => Math.max(prevStep - 1, 0))}>
-          Previous Step
-        </button> */}
       </section>
     </>
   )

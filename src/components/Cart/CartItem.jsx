@@ -8,7 +8,8 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { useSelector, useDispatch } from 'react-redux'
 import { getAllCartRequest } from '../../redux/actions/actions'
 
-const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
+// eslint-disable-next-line react/prop-types
+const CartItem = ({ cart, onQuantityChange, onDeleteSuccess, isCheckout }) => {
   const dispatch = useDispatch()
 
   const cart_get = useSelector((state) => state.cart.cart.data)
@@ -75,57 +76,61 @@ const CartItem = ({ cart, onQuantityChange, onDeleteSuccess }) => {
             {cart?.discounted_price.toLocaleString('en')} VNĐ
           </p>
         </div>
-        <div className="lg:flex items-center lg:space-x-5 pt-2 ml-[30%]">
-          {cart?.quantity === 0 ? (
-            <p className="text-red-500 font-semibold text-lg">Hết hàng</p>
-          ) : (
-            <div className="flex items-center justify-center mt-4 h-[42px] px-[10px] rounded-lg shadow-md">
-              <IconButton
-                onClick={() => {
-                  const currentQuantity =
+        {!isCheckout && (
+          <div className="lg:flex items-center lg:space-x-5 pt-2 ml-[30%]">
+            {cart?.quantity === 0 ? (
+              <p className="text-red-500 font-semibold text-lg">Hết hàng</p>
+            ) : (
+              <div className="flex items-center justify-center mt-4 h-[42px] px-[10px] rounded-lg shadow-md">
+                <IconButton
+                  onClick={() => {
+                    const currentQuantity =
+                      cart_get.find(
+                        (item) => item.product_id === cart?.product_id
+                      )?.quantity || 0
+
+                    if (currentQuantity > 1) {
+                      handleQuantityChange(-1)
+                    }
+                  }}
+                  aria-label="remove"
+                  disabled={
+                    (cart_get.find(
+                      (item) => item.product_id === cart?.product_id
+                    )?.quantity || 0) <= 1
+                  }
+                >
+                  <RemoveIcon />
+                </IconButton>
+                <input
+                  type="text"
+                  className="input-small w-10 mx-2 text-center"
+                  step={null}
+                  min={1}
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  value={
                     cart_get.find(
                       (item) => item.product_id === cart?.product_id
                     )?.quantity || 0
-
-                  if (currentQuantity > 1) {
-                    handleQuantityChange(-1)
                   }
-                }}
-                aria-label="remove"
-                disabled={
-                  (cart_get.find((item) => item.product_id === cart?.product_id)
-                    ?.quantity || 0) <= 1
-                }
-              >
-                <RemoveIcon />
-              </IconButton>
-              <input
-                type="text"
-                className="input-small w-10 mx-2 text-center"
-                step={null}
-                min={1}
-                inputMode="numeric"
-                pattern="[0-9]*"
-                value={
-                  cart_get.find((item) => item.product_id === cart?.product_id)
-                    ?.quantity || 0
-                }
-                readOnly={true}
-              />
-              <IconButton
-                onClick={() => handleQuantityChange(1)}
-                aria-label="add"
-              >
-                <AddIcon />
+                  readOnly={true}
+                />
+                <IconButton
+                  onClick={() => handleQuantityChange(1)}
+                  aria-label="add"
+                >
+                  <AddIcon />
+                </IconButton>
+              </div>
+            )}
+            <div className="flex text-sm lg:text-base mt-4 lg:mt-4">
+              <IconButton onClick={handleDelete} aria-label="delete">
+                <DeleteIcon />
               </IconButton>
             </div>
-          )}
-          <div className="flex text-sm lg:text-base mt-4 lg:mt-4">
-            <IconButton onClick={handleDelete} aria-label="delete">
-              <DeleteIcon />
-            </IconButton>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )
