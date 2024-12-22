@@ -5,7 +5,9 @@ import {
 
 const initialState = {
   quantity_report: [],
-  error: null
+  error: null,
+  currentPage: 1,
+  totalPages: 0
 }
 
 const quantityReportReducer = (state = initialState, action) => {
@@ -14,7 +16,9 @@ const quantityReportReducer = (state = initialState, action) => {
       return {
         ...state,
         quantity_report: action.payload,
-        error: null
+        error: null,
+        currentPage: action.payload.currentPage,
+        totalPages: action.payload.totalPages
       }
     case GET_QUANTITY_PRODUCT_REPORT_FAILURE:
       return {

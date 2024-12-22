@@ -10,10 +10,12 @@ const RecentActualInventory = () => {
     (state) => state.quantity_report.quantity_report
   )
   const [filter, setFilter] = useState('all') // Giá trị mặc định là 'week'
-  const [startDate, setStartDate] = useState(null)
-  const [endDate, setEndDate] = useState(null)
-  const [currentPage, setCurrentPage] = useState(1) // Trang hiện tại
-  const itemsPerPage = 10 // Số sản phẩm mỗi trang
+  const [start, setStartDate] = useState(null)
+  const [end, setEndDate] = useState(null)
+  const [sortOrder, setSortOrder] = useState('asc') // Trạng thái bộ lọc
+  const [currentPage, setCurrentPage] = useState(1)
+  const recordsPerPage = 10 // Số bản ghi mỗi trang
+  const totalPages = quantity_report?.totalPages || 1 // Tổng số trang từ API
   const handleReset = () => {
     setStartDate(null)
     setEndDate(null)
@@ -22,31 +24,21 @@ const RecentActualInventory = () => {
   useEffect(() => {
     try {
       dispatch(
-        getAllQuantityProductRequest({
-          filter: filter,
-          start: startDate,
-          end: endDate
-        })
+        getAllQuantityProductRequest(
+          filter,
+          start,
+          end,
+          currentPage,
+          recordsPerPage,
+          'created_at',
+          sortOrder
+        )
       )
     } catch (error) {
       console.error('Error dispatch', error)
     }
-  }, [dispatch, filter, startDate, endDate])
+  }, [dispatch, filter])
 
-  // Tính toán sản phẩm cho trang hiện tại
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const currentProducts = quantity_report?.data?.slice(startIndex, endIndex)
-
-  const totalPages = Math.ceil(
-    (quantity_report?.data?.length || 0) / itemsPerPage
-  )
-
-  const handlePageChange = (newPage) => {
-    if (newPage >= 1 && newPage <= totalPages) {
-      setCurrentPage(newPage)
-    }
-  }
   return (
     <div className="bg-white px-4 pt-3 pb-4 ">
       <div className="flex justify-between">
@@ -61,7 +53,6 @@ const RecentActualInventory = () => {
             className="border rounded px-2 py-1"
           >
             <option value="all">Tất cả</option>
-            <option value="week">Tuần</option>
             <option value="month">Tháng</option>
             <option value="year">Năm</option>
           </select>
@@ -69,7 +60,7 @@ const RecentActualInventory = () => {
             <label>Từ ngày:</label>
             <input
               type="date"
-              value={startDate || ''}
+              value={start || ''}
               onChange={(e) => setStartDate(e.target.value)}
               className="border rounded px-2 py-1"
             />
@@ -78,7 +69,7 @@ const RecentActualInventory = () => {
             <label>Đến ngày:</label>
             <input
               type="date"
-              value={endDate || ''}
+              value={end || ''}
               onChange={(e) => setEndDate(e.target.value)}
               className="border rounded px-2 py-1"
             />
@@ -109,17 +100,12 @@ const RecentActualInventory = () => {
               <td className="text-center align-middle">Số lượng tồn kho</td>
               <td className="text-center align-middle">Tổng nhập</td>
               <td className="text-center align-middle">Tổng xuất</td>
-
-              {currentProducts?.some((item) => item.date_range) && (
-                <td className="rounded-e-md text-center align-middle">
-                  Khoảng thời gian
-                </td>
-              )}
+              <td className="text-center align-middle"> Khoảng thời gian</td>
             </tr>
           </thead>
           <tbody>
-            {currentProducts &&
-              currentProducts.map((item, index) => (
+            {quantity_report?.data &&
+              quantity_report?.data?.map((item, index) => (
                 <tr
                   key={index}
                   className="cursor-pointer hover:bg-gray-100 transition-colors "
@@ -145,51 +131,31 @@ const RecentActualInventory = () => {
                   <td className="text-center align-middle">
                     {item.total_export}
                   </td>
-
-                  {/* Hiển thị giá trị Date Range nếu có */}
-                  {item.date_range && (
-                    <td className="text-center align-middle">
-                      {item.date_range}
-                    </td>
-                  )}
+                  <td className="text-center align-middle">{item.info}</td>
                 </tr>
               ))}
           </tbody>
         </table>
 
-        {/* Điều khiển phân trang */}
-        <div className="flex justify-center mt-4 space-x-2 mb-2">
-          {/* Nút Previous */}
+        <div className="flex justify-center items-center gap-4 mt-4 border p-4 rounded-md ml-[200px]">
           <button
-            className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
-            onClick={() => handlePageChange(currentPage - 1)}
+            className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
             disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           >
             Previous
           </button>
 
-          {/* Hiển thị số trang */}
-          {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-            (page) => (
-              <button
-                key={page}
-                className={`p-2 border rounded-md transition-transform duration-200 transform cursor-pointer ${
-                  currentPage === page
-                    ? 'bg-primary text-white'
-                    : 'hover:bg-gray-300'
-                }`}
-                onClick={() => handlePageChange(page)}
-              >
-                {page}
-              </button>
-            )
-          )}
+          <span className="text-lg font-medium">
+            Page {currentPage} of {totalPages}
+          </span>
 
-          {/* Nút Next */}
           <button
-            className="p-2 border rounded-md hover:bg-gray-300 transition-transform duration-200 transform cursor-pointer"
-            onClick={() => handlePageChange(currentPage + 1)}
+            className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
             disabled={currentPage === totalPages}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
           >
             Next
           </button>

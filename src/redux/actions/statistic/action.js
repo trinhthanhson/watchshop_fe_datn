@@ -25,9 +25,17 @@ export const getStatisticFailure = (error) => ({
 })
 
 // -------- Get quantity product report ---------
-export const getAllQuantityProductRequest = (filter) => ({
+export const getAllQuantityProductRequest = (
+  filter,
+  start,
+  end,
+  page,
+  limit,
+  sortField = 'created_at',
+  sortDirection = 'asc'
+) => ({
   type: GET_QUANTITY_PRODUCT_REPORT_REQUEST,
-  payload: filter
+  payload: { filter, start, end, page, limit, sortField, sortDirection }
 })
 
 export const getAllQuantityProductSuccess = (quantity_report) => ({

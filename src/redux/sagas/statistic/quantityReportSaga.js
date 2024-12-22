@@ -7,7 +7,8 @@ import {
 import { GET_QUANTITY_PRODUCT_REPORT_REQUEST } from '../../actions/statistic/type'
 
 function* quantityProductReportSaga(action) {
-  const { filter, start, end } = action.payload // Lấy các tham số từ payload
+  const { filter, start, end, page, limit, sortField, sortDirection } =
+    action.payload // Lấy các tham số từ payload
   try {
     const token = localStorage.getItem('token')
     const response = yield call(
@@ -17,7 +18,11 @@ function* quantityProductReportSaga(action) {
         params: {
           filter: filter || '',
           start: start || '',
-          end: end || ''
+          end: end || '',
+          page,
+          limit,
+          sortField,
+          sortDirection
         },
         headers: {
           Authorization: `Bearer ${token}`
