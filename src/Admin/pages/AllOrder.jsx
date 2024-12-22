@@ -44,12 +44,7 @@ const AllOrder = () => {
   const recordsPerPage = 10 // Số bản ghi mỗi trang
 
   const displayedOrder = (() => {
-    if (
-      startDate &&
-      endDate &&
-      isSearchRecipientName &&
-      isSearchRecipientPhone
-    ) {
+    if (isSearchRecipientName && isSearchRecipientPhone) {
       return orderInfo
     }
     if (
@@ -174,12 +169,8 @@ const AllOrder = () => {
     currentPage,
     recordsPerPage,
     selectedStatusId,
-    startDate,
-    endDate,
     isSearchRecipientName,
-    isSearchRecipientPhone,
-    searchRecipientName,
-    searchRecipientPhone
+    isSearchRecipientPhone
   ])
 
   // Fetch danh sách trạng thái khi component render lần đầu
@@ -258,9 +249,14 @@ const AllOrder = () => {
   }
 
   const handleSearchInfo = () => {
-    if (startDate && endDate && searchRecipientName && searchRecipientPhone) {
-      const startDateString = formatDate(startDate) // yyyy-MM-dd
-      const endDateString = formatDate(endDate) // yyyy-MM-dd
+    var startDateString = ''
+    var endDateString = ''
+    console.log(startDate, endDate)
+    if (searchRecipientName && searchRecipientPhone) {
+      if (startDate && endDate) {
+        startDateString = formatDate(startDate) // yyyy-MM-dd
+        endDateString = formatDate(endDate) // yyyy-MM-dd
+      }
 
       setIsSearchRecipientName(true)
       setIsSearchRecipientPhone(true)
@@ -342,9 +338,11 @@ const AllOrder = () => {
     setStatusId('')
     setSearchDate(false)
     setIsFilter(false)
+    setIsSearchRecipientName(false)
     setCurrentPage(1)
     dispatch(getAllOrderPageRequest(1, recordsPerPage))
   }
+
   const exportPDF = () => {
     const doc = new jsPDF()
 

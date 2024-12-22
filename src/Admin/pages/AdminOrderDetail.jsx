@@ -39,7 +39,6 @@ const AdminOrderDetail = () => {
   useEffect(() => {
     try {
       dispatch(getOrderDetailRequest(id))
-      dispatch(getAllRequestExportRequest())
       checkTransactionStatus(id) // Gọi hàm kiểm tra trạng thái giao dịch
     } catch (error) {
       console.error('Error dispatch', error)
