@@ -8,6 +8,8 @@ import {
   updateProductRequest
 } from '../../../redux/actions/actions'
 import { uploadImageToFirebase } from '../../../firebase'
+import { updatePriceProductRequest } from '../../../redux/actions/inventory/product/action'
+import { toast } from 'react-toastify'
 
 const InventoryUpdateProduct = () => {
   const { id } = useParams()
@@ -160,7 +162,37 @@ const InventoryUpdateProduct = () => {
       navigate('/inventory/product')
     }
   }, [message, navigate])
+  const [isModalOpen, setIsModalOpen] = useState(false) // State quản lý modal
+  const [newPrice, setNewPrice] = useState('') // Giá mới
+  const [applyDate, setApplyDate] = useState('') // Ngày áp dụng
 
+  // Xử lý mở modal
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  // Xử lý đóng modal
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
+  // Xử lý cập nhật giá
+  const handleUpdate = async () => {
+    console.log('Payload:', { id, newPrice, applyDate })
+    try {
+      setLoading(true)
+      const formattedDate = new Date(applyDate).toISOString().split('T')[0]
+
+      await dispatch(updatePriceProductRequest(id, newPrice, formattedDate))
+      setIsModalOpen(false)
+      toast.success('Cập nhật thành công!')
+    } catch (error) {
+      console.error('Lỗi:', error)
+      alert('Đã xảy ra lỗi khi cập nhật giá.')
+    } finally {
+      setLoading(false)
+    }
+  }
   return (
     <>
       <div className="flex flex-col justify-center items-center ml-[18%]">
@@ -500,6 +532,79 @@ const InventoryUpdateProduct = () => {
               </button>
             </div>
           </form>
+          <button
+            className="w-full bg-primary text-white rounded-md shadow-md py-3 uppercase font-RobotoMedium"
+            type="button"
+            onClick={openModal}
+            disabled={loading}
+          >
+            Hiệu chỉnh giá
+          </button>
+          {isModalOpen && (
+            <>
+              {/* Overlay làm mờ */}
+              <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+
+              {/* Modal content */}
+              <div className="fixed inset-0 flex justify-center items-center z-50">
+                <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+                  <h2 className="text-xl font-bold mb-4">Hiệu chỉnh giá</h2>
+
+                  {/* Giá cũ */}
+                  <div className="mb-4">
+                    <label className="block font-medium mb-1">Giá cũ:</label>
+                    <input
+                      type="number"
+                      value={formData.data.price}
+                      disabled
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-primary"
+                    />
+                  </div>
+
+                  {/* Giá mới */}
+                  <div className="mb-4">
+                    <label className="block font-medium mb-1">Giá mới:</label>
+                    <input
+                      type="number"
+                      value={newPrice}
+                      onChange={(e) => setNewPrice(e.target.value)}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-primary"
+                      placeholder="Nhập giá mới"
+                    />
+                  </div>
+
+                  {/* Ngày áp dụng */}
+                  <div className="mb-6">
+                    <label className="block font-medium mb-1">
+                      Ngày áp dụng:
+                    </label>
+                    <input
+                      type="date"
+                      value={applyDate}
+                      onChange={(e) => setApplyDate(e.target.value)}
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-primary"
+                    />
+                  </div>
+
+                  {/* Nút hành động */}
+                  <div className="flex justify-end space-x-4">
+                    <button
+                      className="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300"
+                      onClick={closeModal}
+                    >
+                      Hủy
+                    </button>
+                    <button
+                      className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark"
+                      onClick={handleUpdate}
+                    >
+                      {loading ? 'Đang cập nhật...' : 'Cập nhật'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>

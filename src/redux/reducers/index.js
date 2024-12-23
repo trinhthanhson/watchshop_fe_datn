@@ -58,6 +58,7 @@ import requestExportPageReducer from './inventory/manager/requestExportPageReduc
 import orderCustomerPageReducer from './customer/orderCustomerPageReducer'
 import orderStatusCustomerPageReducer from './customer/orderStatusCustomerPageReducer'
 import searchOrderCustomerByDateReducer from './customer/searchOrderCustomerByDateReducer.js'
+import updatePriceProductReducer from './inventory/product/updatePriceProductReducer.js'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -118,7 +119,8 @@ const rootReducer = combineReducers({
   requestExport: requestExportPageReducer,
   orderCustomerPage: orderCustomerPageReducer,
   orderStatusCustomerPage: orderStatusCustomerPageReducer,
-  searchOrderByDate: searchOrderCustomerByDateReducer
+  searchOrderByDate: searchOrderCustomerByDateReducer,
+  update_price: updatePriceProductReducer
 })
 
 export default rootReducer

@@ -106,7 +106,11 @@ const AllProducts = () => {
     // Giải phóng URL sau khi sử dụng
     URL.revokeObjectURL(fileURL)
   }
-
+  const handleUpdateProduct = (id, e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    navigate(`/manager/update-product/${id}`)
+  }
   const handleDeleteProduct = async (productId) => {
     const confirmDelete = window.confirm(
       'Bạn có chắc chắn muốn xóa sản phẩm này không?'
@@ -222,15 +226,13 @@ const AllProducts = () => {
                 <td>{product?.quantity}</td>
                 <td>{getStatus(product?.status)}</td>
                 <td>
-                  <span className="cursor-pointer inline-flex rounded-full hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2">
+                  <span
+                    className="cursor-pointer inline-flex rounded-full hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2"
+                    onClick={(e) => handleUpdateProduct(product?.product_id, e)}
+                  >
                     <MdModeEditOutline
                       className="cursor-pointer text-primary"
                       fontSize={25}
-                      onClick={() =>
-                        navigate(
-                          `/manager/update-product/${product?.product_id}`
-                        )
-                      }
                     />
                   </span>
                   <span className="cursor-pointer inline-flex rounded-full hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2">

@@ -248,6 +248,7 @@ const UpdateProduct = () => {
                   className="border-b-2"
                   name="price"
                   type="number"
+                  disabled
                   onChange={handleChange}
                   value={formData.data.price}
                   style={{ marginTop: '20px' }}
@@ -367,6 +368,7 @@ const UpdateProduct = () => {
                   className="border-b-2"
                   name="quantity"
                   type="number"
+                  disabled
                   min={0}
                   onChange={handleChange}
                   value={formData.data.quantity}

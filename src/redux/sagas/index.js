@@ -58,6 +58,8 @@ import requestExportPageSaga from './inventory/manager/requestExportPageSaga'
 import orderCustomerPageSaga from './customer/orderCustomerPageSaga'
 import orderStatusCustomerPageSaga from './customer/orderStatusCustomerPageSaga'
 import searchOrderCustomerByDateSaga from './customer/searchOrderCustomerByDateSaga'
+import { updatePriceProductSuccess } from '../actions/inventory/product/action'
+import updatePriceProductSaga from './inventory/product/updatePriceProductSaga'
 export default function* rootSaga() {
   yield all([
     newSaga(),
@@ -118,6 +120,7 @@ export default function* rootSaga() {
     requestExportPageSaga(),
     orderCustomerPageSaga(),
     orderStatusCustomerPageSaga(),
-    searchOrderCustomerByDateSaga()
+    searchOrderCustomerByDateSaga(),
+    updatePriceProductSaga()
   ])
 }
