@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import {
   addCartRequest,
-  getAllProductsCustomerRequest,
   getAllCouponsRequest,
   getReviewProductRequest
 } from '../../redux/actions/actions'
@@ -17,13 +16,11 @@ const ProductDetail = () => {
   const dispatch = useDispatch()
   const [quantity, setQuantity] = useState(1)
   const navigate = useNavigate()
-  const [priceDiscount, setPriceDiscount] = useState(null)
   const productsCustomer = useSelector(
     (state) => state.product_coupon.product_coupon.data
   )
   const roleName = localStorage.getItem('role_name')
   const decryptedRole = decryptData(roleName)
-  const coupons = useSelector((state) => state.coupons.coupons.data)
   const reviews = useSelector((state) => state.reviewProduct?.reviews)
   const selectedProduct = productsCustomer
     ? productsCustomer.find((item) => item.product_id === id)
@@ -256,6 +253,7 @@ const ProductDetail = () => {
                   style={{ marginTop: '0.1em' }}
                 />
               </div>
+              {console.log(reviews)}
               {reviews?.data?.length > 0 ? (
                 reviews?.data.slice(0, 10).map((review, index) => (
                   <div

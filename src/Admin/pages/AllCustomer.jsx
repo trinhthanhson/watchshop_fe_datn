@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllCustomersRequest } from '../../redux/actions/actions'
 import { getStatus } from '../../constants/Status'
-import { getRank } from '../../constants/Rank'
 import { MdModeEditOutline } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 

@@ -1,81 +1,34 @@
-import { getOrderStatus } from '../../../constants/Status'
+import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import Header from '../../components/Header'
 import { DASHBOARD_SIDEBAR_TOP_LINKS_SHIPPER } from '../../../constants/MenuLink'
-import axios from 'axios'
+import { getAllOrderShipperAcceptRequest } from '../../../redux/actions/shipper/action'
 
 const OrderReceiveShipper = () => {
+  const dispatch = useDispatch()
+  const orders = useSelector(
+    (state) => state.orderShipperAccept?.orderShipperAccept
+  )
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
   const [status, setStatus] = useState('')
-  const [totalPrice, setTotalPrice] = useState(0)
-  const [filteredOrders, setFilteredOrders] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const recordsPerPage = 10 // Số bản ghi mỗi trang
+  const totalPages = orders?.totalPages || 1 // Lấy totalPages từ API
   const navigate = useNavigate()
-  const [orders, setOrders] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const token = localStorage.getItem('token') // Adjust based on where you store the token
-        const response = await axios.get(
-          'http://localhost:9999/api/staff/order/all/shipper',
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        )
-        setOrders(response.data)
-        setLoading(false)
-      } catch (error) {
-        console.error('Error fetching orders', error)
-        setError('Failed to fetch orders')
-        setLoading(false)
-      }
-    }
-
-    fetchOrders()
-  }, [])
-  useEffect(() => {
-    const filtered = orders?.data?.filter((order) => {
-      const orderDate = new Date(order.created_at).getTime()
-      const startDateTimestamp = startDate ? startDate.getTime() : null
-      const endDateTimestamp = endDate ? endDate.getTime() : null
-
-      if (startDateTimestamp && orderDate < startDateTimestamp) {
-        return false
-      }
-
-      if (endDateTimestamp && orderDate > endDateTimestamp) {
-        return false
-      }
-
-      if (status && order.status !== status) {
-        return false
-      }
-      return true
-    })
-
-    setFilteredOrders(filtered || [])
-
-    const total = filtered
-      ? filtered.reduce((acc, order) => acc + order.total_price, 0)
-      : 0
-    setTotalPrice(total)
-  }, [orders.data, startDate, endDate, status])
-
+    dispatch(getAllOrderShipperAcceptRequest(currentPage, recordsPerPage))
+  }, [dispatch, currentPage, recordsPerPage])
   const handleReset = () => {
     setStartDate(null)
     setEndDate(null)
     setStatus('')
   }
   const [hoveredIndex, setHoveredIndex] = useState(null)
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>{error}</p>
   return (
     <>
       <Header />
@@ -179,7 +132,7 @@ const OrderReceiveShipper = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredOrders.map((order, index) => (
+            {orders?.data?.map((order, index) => (
               <tr
                 key={index}
                 className="cursor-pointer"
@@ -190,29 +143,44 @@ const OrderReceiveShipper = () => {
                   {[
                     ...new Map(
                       order.orderDetails.map((item) => [
-                        item.product_order.image,
+                        item.product_order?.image,
                         item
                       ])
                     ).values()
-                  ].map((uniqueItem, index) => (
-                    <img
-                      key={index}
-                      className="w-[50px] mt-[2px] rounded-full shadow-md mr-2"
-                      src={
-                        uniqueItem.product_order &&
-                        uniqueItem.product_order.image
-                      }
-                      alt={
-                        uniqueItem.product_order &&
-                        uniqueItem.product_order.product_name
-                      }
-                    />
-                  ))}
+                  ]
+                    .slice(0, 2) // Lấy tối đa 2 hình ảnh
+                    .map((uniqueItem, index) => (
+                      <img
+                        key={index}
+                        className="w-[50px] h-[50px] rounded-full object-cover shadow-md mr-2"
+                        src={
+                          uniqueItem.product_order?.image ||
+                          '/default-image.jpg'
+                        }
+                        alt={
+                          uniqueItem.product_order?.product_name ||
+                          'No product name'
+                        }
+                        title={
+                          uniqueItem.product_order?.product_name ||
+                          'No product name'
+                        } // Hiển thị tooltip khi hover
+                      />
+                    ))}
+                  {order.orderDetails.length > 2 && (
+                    <span className="text-sm font-medium text-gray-600 ml-2">
+                      +{order.orderDetails.length - 2} ...
+                    </span>
+                  )}
                 </td>
                 <td>
                   {order.orderDetails.map((item, index) => (
-                    <div key={index}>
-                      {item.product_order && item.product_order.product_name}
+                    <div
+                      key={index}
+                      className="truncate overflow-hidden text-ellipsis whitespace-nowrap max-w-[150px]"
+                      title={item.product_order?.product_name} // Hiển thị toàn bộ tên khi hover
+                    >
+                      {item.product_order?.product_name}
                     </div>
                   ))}
                 </td>
@@ -220,13 +188,40 @@ const OrderReceiveShipper = () => {
                 <td>{order.total_quantity}</td>
                 <td>{order.total_price.toLocaleString('en')} VNĐ</td>
                 <td>{new Date(order.created_at).toLocaleDateString()}</td>
-                <td>{getOrderStatus(order.status)}</td>
+                <td className="text-center align-middle ">
+                  <span className="inline-block text-black px-2 py-1 border rounded-md text-sm bg-blue-200">
+                    {order?.order_status?.status_name || 'Unknown'}
+                  </span>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <div className="w-[80%] ml-[18%] mt-2">
+      <div className="flex justify-center items-center gap-4 mt-4 border p-4 rounded-md ml-[200px]">
+        <button
+          className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
+          disabled={currentPage === 1} // Disable khi đang ở trang đầu
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} // Tránh trang âm
+        >
+          Previous
+        </button>
+
+        <span className="text-lg font-medium">
+          Page {currentPage} of {totalPages}
+        </span>
+
+        <button
+          className="btn p-2 border border-gray-300 rounded-md hover:border-blue-500 disabled:border-gray-200 disabled:text-gray-400"
+          disabled={currentPage === totalPages} // Disable khi đang ở trang cuối
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          } // Tránh vượt quá totalPages
+        >
+          Next
+        </button>
+      </div>
+      {/* <div className="w-[80%] ml-[18%] mt-2">
         <div className="flex justify-between font-RobotoMedium">
           <div className="text-primary rounded-md p-2">
             Số đơn hàng: {filteredOrders ? filteredOrders.length : 0}
@@ -235,7 +230,7 @@ const OrderReceiveShipper = () => {
             Tổng: {totalPrice.toLocaleString('en')} VNĐ
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   )
 }

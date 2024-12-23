@@ -76,6 +76,24 @@ const OrderShipperDetail = () => {
       console.error('Error changing order status', error)
     }
   }
+
+  const handleReceiveOrder = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      await axios.put(
+        `http://localhost:9999/api/shipper/order/${id}/accept`,
+        { status_index: statusIndex, is_cancel: false },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      dispatch(getOrderDetailRequest(id))
+    } catch (error) {
+      console.error('Error changing order status', error)
+    }
+  }
   // Xử lý xác nhận đơn hàng
   const handleCancelOrder = async () => {
     try {
@@ -258,7 +276,8 @@ const OrderShipperDetail = () => {
         </table>
       </div>
       <div className="ml-[80%]  gap-4">
-        {!orderDetail?.is_cancel &&
+        {orderDetail.staff_id !== null &&
+          !orderDetail?.is_cancel &&
           statusIndex <=
             Math.max(...statuses.map((status) => status.status_index)) && (
             <button
@@ -268,7 +287,8 @@ const OrderShipperDetail = () => {
               <p>Giao không thành công</p>
             </button>
           )}
-        {!orderDetail?.is_cancel &&
+        {orderDetail.staff_id !== null &&
+          !orderDetail?.is_cancel &&
           statusIndex <=
             Math.max(...statuses.map((status) => status.status_index)) && (
             <button
@@ -278,6 +298,14 @@ const OrderShipperDetail = () => {
               {orderDetail && <p>{nextStatusName}</p>}
             </button>
           )}
+        {orderDetail.staff_id === null && !orderDetail?.is_cancel && (
+          <button
+            className=" mr-[10px] mt-5 bg-primary text-white font-RobotoMedium text-[16px] rounded-md p-2 shadow-md hover:bg-hoverPrimary ease-out duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-r border-none"
+            onClick={() => handleReceiveOrder()}
+          >
+            <p>Nhận đơn</p>
+          </button>
+        )}
       </div>
     </>
   )

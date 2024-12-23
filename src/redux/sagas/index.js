@@ -61,6 +61,7 @@ import searchOrderCustomerByDateSaga from './customer/searchOrderCustomerByDateS
 import updatePriceProductSaga from './inventory/product/updatePriceProductSaga'
 import getAllPriceProductSaga from './inventory/product/getAllPriceProduct'
 import getPriceByProductIdSaga from './inventory/product/getPriceByProductIdSaga'
+import orderShipperAcceptSaga from './shipper/orderShipperAcceptSaga'
 export default function* rootSaga() {
   yield all([
     newSaga(),
@@ -124,6 +125,7 @@ export default function* rootSaga() {
     searchOrderCustomerByDateSaga(),
     updatePriceProductSaga(),
     getAllPriceProductSaga(),
-    getPriceByProductIdSaga()
+    getPriceByProductIdSaga(),
+    orderShipperAcceptSaga()
   ])
 }
