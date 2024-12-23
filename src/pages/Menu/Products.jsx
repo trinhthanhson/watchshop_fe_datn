@@ -230,7 +230,7 @@ const ProductByCategory = () => {
           </div>
         </div>
 
-        <div className="w-full lg:w-10/12 md:gap-6 flex flex-wrap justify-center m-auto">
+        <div className="w-full  md:gap-6 flex flex-wrap justify-center m-auto">
           {(searchKeyword ? searchResults : filteredAndSortedProducts).map(
             (product) => (
               <CardProductItem key={product.product_id} product={product} />

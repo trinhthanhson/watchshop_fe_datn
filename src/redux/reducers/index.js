@@ -59,6 +59,8 @@ import orderCustomerPageReducer from './customer/orderCustomerPageReducer'
 import orderStatusCustomerPageReducer from './customer/orderStatusCustomerPageReducer'
 import searchOrderCustomerByDateReducer from './customer/searchOrderCustomerByDateReducer.js'
 import updatePriceProductReducer from './inventory/product/updatePriceProductReducer.js'
+import getAllPriceProductReducer from './inventory/product/getAllPriceProductReducer.js'
+import getPriceByProductIdReducer from './inventory/product/getPriceByProductIdReducer.js'
 
 const rootReducer = combineReducers({
   news: newsReducer,
@@ -120,7 +122,9 @@ const rootReducer = combineReducers({
   orderCustomerPage: orderCustomerPageReducer,
   orderStatusCustomerPage: orderStatusCustomerPageReducer,
   searchOrderByDate: searchOrderCustomerByDateReducer,
-  update_price: updatePriceProductReducer
+  update_price: updatePriceProductReducer,
+  all_price: getAllPriceProductReducer,
+  priceByProduct: getPriceByProductIdReducer
 })
 
 export default rootReducer

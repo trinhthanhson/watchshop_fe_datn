@@ -8,16 +8,9 @@ import { GET_ALL_PRODUCT_COUPON_REQUEST } from '../../actions/user/type'
 
 function* getAllProductCouponSaga() {
   try {
-    const token = localStorage.getItem('token')
-
     const response = yield call(
       axios.get,
-      'http://localhost:9999/api/user/product/all/product',
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
+      'http://localhost:9999/api/user/product/all/product'
     )
 
     yield put(getAllProductCouponSuccess(response.data))

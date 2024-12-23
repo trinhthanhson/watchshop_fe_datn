@@ -6,6 +6,7 @@ import {
   getReviewProductRequest
 } from '../../redux/actions/actions'
 import { getStatus } from '../../constants/Status'
+import { getPriceByProductIdRequest } from '../../redux/actions/inventory/product/action'
 
 const AdminProductDetail = () => {
   const { id } = useParams()
@@ -13,12 +14,16 @@ const AdminProductDetail = () => {
   const productDetail = useSelector(
     (state) => state.productDetail.productDetail?.data
   )
+  const priceProduct = useSelector(
+    (state) => state.priceByProduct.priceByProduct
+  )
   const reviews = useSelector((state) => state.reviewProduct?.reviews?.data)
   let latestReviews = []
   useEffect(() => {
     try {
       dispatch(getProductDetailRequest(id))
       dispatch(getReviewProductRequest(id))
+      dispatch(getPriceByProductIdRequest(id))
     } catch (error) {
       console.error('Error dispatch', error)
     }
@@ -72,19 +77,16 @@ const AdminProductDetail = () => {
                     {productDetail?.brand_product.brand_name}
                   </span>
                 </p>
-                {productDetail.updatePrices[0] && (
-                  <p className="p-5">
-                    <span className="text-primary font-RobotoMedium mr-2">
-                      Đơn Giá:
-                    </span>
-                    <span className="text-primary font-RobotoSemibold">
-                      {productDetail.updatePrices[0].price_new.toLocaleString(
-                        'en'
-                      )}{' '}
-                      VNĐ
-                    </span>
-                  </p>
-                )}
+                <p className="p-5">
+                  <span className="text-primary font-RobotoMedium mr-2">
+                    Đơn Giá:
+                  </span>
+                  <span className="text-primary font-RobotoSemibold">
+                    {priceProduct?.data?.price_new.toLocaleString('en') + ' '}
+                    VNĐ
+                  </span>
+                </p>
+
                 <p className="p-5">
                   <span className="text-primary font-RobotoMedium mr-2">
                     Tạo Bởi:

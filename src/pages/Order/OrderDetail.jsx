@@ -253,7 +253,7 @@ const OrderDetail = () => {
                 <td className="border border-gray-300">Số Lượng</td>
                 <td className="border border-gray-300">Đơn Giá</td>
                 <td className="border border-gray-300">Ngày Đặt</td>
-                {orderDetail?.status === '5' && (
+                {orderDetail?.order_status?.status_index === 6 && (
                   <td className="border border-gray-300">Đánh Giá</td>
                 )}
               </tr>
@@ -282,7 +282,7 @@ const OrderDetail = () => {
                     <td className="border border-gray-300">
                       {new Date(orderDetail.created_at).toLocaleDateString()}
                     </td>
-                    {orderDetail?.status === '5' && (
+                    {orderDetail?.order_status?.status_index === 6 && (
                       <td className="border border-gray-300">
                         {isReviewed(orderItem?.order_detail_id) ? (
                           <button

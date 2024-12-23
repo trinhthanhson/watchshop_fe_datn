@@ -8,21 +8,26 @@ import {
   updateProductRequest
 } from '../../../redux/actions/actions'
 import { uploadImageToFirebase } from '../../../firebase'
-import { updatePriceProductRequest } from '../../../redux/actions/inventory/product/action'
+import {
+  getPriceByProductIdRequest,
+  updatePriceProductRequest
+} from '../../../redux/actions/inventory/product/action'
 import { toast } from 'react-toastify'
 
 const InventoryUpdateProduct = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
-  const message = useSelector((state) => state.updateProduct)
   const productDetail = useSelector(
     (state) => state.productDetail.productDetail
+  )
+  const priceProduct = useSelector(
+    (state) => state.priceByProduct.priceByProduct
   )
   const categories = useSelector((state) => state.categories.categories)
   const brands = useSelector((state) => state.brands.brands)
   const [loading, setLoading] = useState(false) // State to manage loading
   const [errorMessage, setErrorMessage] = useState('') // State for error messages
-
+  console.log(priceProduct)
   const [formData, setFormData] = useState({
     data: {
       product_name: '',
@@ -56,6 +61,7 @@ const InventoryUpdateProduct = () => {
       dispatch(getAllBrandRequest())
       dispatch(getProductDetailRequest(id))
       dispatch(getAllCategoriesRequest())
+      dispatch(getPriceByProductIdRequest(id))
     } catch (error) {
       console.error('Error dispatch', error)
     }
@@ -70,7 +76,7 @@ const InventoryUpdateProduct = () => {
         ...formData,
         data: {
           product_name: productDetail?.data.product_name,
-          price: productDetail?.data.updatePrices[0]?.price_new,
+          price: priceProduct?.data?.price_new || 0, // Thay 0 bằng giá mặc định nếu không có giá mới
           detail: productDetail?.data.detail,
           status: productDetail?.data.status,
           category_name: productDetail?.data.category_product?.category_name,
@@ -154,14 +160,9 @@ const InventoryUpdateProduct = () => {
     }
 
     dispatch(updateProductRequest(id, dataToSend))
+    navigate('/inventory/product')
   }
 
-  useEffect(() => {
-    if (message.code === 200) {
-      setLoading(false) // Stop loading
-      navigate('/inventory/product')
-    }
-  }, [message, navigate])
   const [isModalOpen, setIsModalOpen] = useState(false) // State quản lý modal
   const [newPrice, setNewPrice] = useState('') // Giá mới
   const [applyDate, setApplyDate] = useState('') // Ngày áp dụng
@@ -279,9 +280,10 @@ const InventoryUpdateProduct = () => {
                 <input
                   className="border-b-2"
                   name="price"
+                  disabled
                   type="number"
                   onChange={handleChange}
-                  value={formData.data.price}
+                  value={priceProduct?.data?.price_new}
                   style={{ marginTop: '20px' }}
                 />
               </div>
@@ -398,6 +400,7 @@ const InventoryUpdateProduct = () => {
                 <input
                   className="border-b-2"
                   name="quantity"
+                  disabled
                   type="number"
                   min={0}
                   onChange={handleChange}
@@ -555,7 +558,7 @@ const InventoryUpdateProduct = () => {
                     <label className="block font-medium mb-1">Giá cũ:</label>
                     <input
                       type="number"
-                      value={formData.data.price}
+                      value={priceProduct?.data?.price_new}
                       disabled
                       className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-primary"
                     />
@@ -567,6 +570,7 @@ const InventoryUpdateProduct = () => {
                     <input
                       type="number"
                       value={newPrice}
+                      min={0}
                       onChange={(e) => setNewPrice(e.target.value)}
                       className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-primary"
                       placeholder="Nhập giá mới"

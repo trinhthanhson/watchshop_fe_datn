@@ -1,11 +1,16 @@
 import {
+  GET_ALL_UPDATE_PRICE_FAILURE,
+  GET_ALL_UPDATE_PRICE_REQUEST,
+  GET_ALL_UPDATE_PRICE_SUCCESS,
+  GET_PRICE_BY_PRODUCT_ID_FAILURE,
+  GET_PRICE_BY_PRODUCT_ID_REQUEST,
+  GET_PRICE_BY_PRODUCT_ID_SUCCESS,
   UPDATE_PRICE_FAILURE,
   UPDATE_PRICE_REQUEST,
   UPDATE_PRICE_SUCCESS
 } from './type'
 
 // #region update price product
-// Action request - Không cần payload trong trường hợp này
 export const updatePriceProductRequest = (
   product_id,
   price_new,
@@ -15,16 +20,45 @@ export const updatePriceProductRequest = (
   payload: { product_id, price_new, updated_at }
 })
 
-// Action success - Truyền dữ liệu từ API response
 export const updatePriceProductSuccess = (data) => ({
   type: UPDATE_PRICE_SUCCESS,
-  payload: data // payload chứa thông tin thành công
+  payload: data
 })
 
-// Action failure - Truyền lỗi nếu xảy ra
 export const updatePriceProductFailure = (error) => ({
   type: UPDATE_PRICE_FAILURE,
-  payload: error // payload chứa thông tin lỗi
+  payload: error
+})
+// #endregion
+
+// #region get all price product
+export const getAllPriceProductRequest = () => ({
+  type: GET_ALL_UPDATE_PRICE_REQUEST
 })
 
+export const getAllPriceProductSuccess = (data) => ({
+  type: GET_ALL_UPDATE_PRICE_SUCCESS,
+  payload: data
+})
+
+export const getAllPriceProductFailure = (error) => ({
+  type: GET_ALL_UPDATE_PRICE_FAILURE,
+  payload: error
+})
+// #endregion
+// #region get price by product id
+export const getPriceByProductIdRequest = (product_id) => ({
+  type: GET_PRICE_BY_PRODUCT_ID_REQUEST,
+  payload: { product_id }
+})
+
+export const getPriceByProductIdSuccess = (data) => ({
+  type: GET_PRICE_BY_PRODUCT_ID_SUCCESS,
+  payload: data
+})
+
+export const getPriceByProductIdFailure = (error) => ({
+  type: GET_PRICE_BY_PRODUCT_ID_FAILURE,
+  payload: error
+})
 // #endregion

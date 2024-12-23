@@ -8,13 +8,16 @@ import {
   getAllBrandRequest
 } from '../../redux/actions/actions'
 import { uploadImageToFirebase } from '../../firebase' // Import the function
+import { getPriceByProductIdRequest } from '../../redux/actions/inventory/product/action'
 
 const UpdateProduct = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
-  const message = useSelector((state) => state.updateProduct)
   const productDetail = useSelector(
     (state) => state.productDetail.productDetail
+  )
+  const priceProduct = useSelector(
+    (state) => state.priceByProduct.priceByProduct
   )
   const categories = useSelector((state) => state.categories.categories)
   const brands = useSelector((state) => state.brands.brands)
@@ -54,6 +57,7 @@ const UpdateProduct = () => {
       dispatch(getAllBrandRequest())
       dispatch(getProductDetailRequest(id))
       dispatch(getAllCategoriesRequest())
+      dispatch(getPriceByProductIdRequest(id))
     } catch (error) {
       console.error('Error dispatch', error)
     }
@@ -68,7 +72,7 @@ const UpdateProduct = () => {
         ...formData,
         data: {
           product_name: productDetail?.data.product_name,
-          price: productDetail?.data.updatePrices[0]?.price_new,
+          price: priceProduct?.data?.price_new || 0, // Thay 0 bằng giá mặc định nếu không có giá mới
           detail: productDetail?.data.detail,
           status: productDetail?.data.status,
           category_name: productDetail?.data.category_product?.category_name,
@@ -152,14 +156,8 @@ const UpdateProduct = () => {
     }
 
     dispatch(updateProductRequest(id, dataToSend))
+    navigate('/manager/products')
   }
-
-  useEffect(() => {
-    if (message.code === 200) {
-      setLoading(false) // Stop loading
-      navigate('/manager/products')
-    }
-  }, [message, navigate])
 
   return (
     <>
@@ -250,7 +248,7 @@ const UpdateProduct = () => {
                   type="number"
                   disabled
                   onChange={handleChange}
-                  value={formData.data.price}
+                  value={priceProduct?.data?.price_new}
                   style={{ marginTop: '20px' }}
                 />
               </div>

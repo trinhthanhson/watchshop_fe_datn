@@ -11,12 +11,14 @@ import {
   searchProductByIdRequest
 } from '../../redux/actions/user/action'
 import { HiOutlineSearch } from 'react-icons/hi'
+import { getAllPriceProductRequest } from '../../redux/actions/inventory/product/action'
 
 const AllProducts = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const products = useSelector((state) => state.product_page.product_page)
   const product_find = useSelector((state) => state?.product_find?.product_find)
+  const priceProduct = useSelector((state) => state.all_price.all_price)
   const [deletedProductId, setDeletedProductId] = useState(null)
   const [sortOrder, setSortOrder] = useState('all') // Trạng thái bộ lọc
   const [searchValue, setSearchValue] = useState('')
@@ -29,6 +31,7 @@ const AllProducts = () => {
   useEffect(() => {
     try {
       dispatch(getAllProductsPageRequest(currentPage, recordsPerPage))
+      dispatch(getAllPriceProductRequest())
     } catch (error) {
       console.error('Error dispatch', error)
     }
@@ -76,36 +79,33 @@ const AllProducts = () => {
 
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(
-      filteredAndSortedProducts.map((product) => ({
-        ID: product.product_id,
-        Image: product.image,
-        Name: product.product_name,
-        Category: product.category_product?.category_name,
-        Brand: product.brand_product?.brand_name,
-        Price: product.updatePrices[0]?.price_new.toLocaleString('en'),
-        Quantity: product.quantity,
-        Status: getStatusText(product.status)
-      }))
+      filteredAndSortedProducts.map((product) => {
+        // Lấy giá từ priceProduct
+        const productPrice = priceProduct?.data?.find(
+          (price) => price.product_id === product.product_id
+        )
+
+        return {
+          ID: product.product_id,
+          Image: product.image,
+          Name: product.product_name,
+          Category: product.category_product?.category_name,
+          Brand: product.brand_product?.brand_name,
+          Price: productPrice
+            ? productPrice.price_new.toLocaleString('en')
+            : 'N/A', // Nếu không có giá, hiển thị 'N/A'
+          Quantity: product.quantity,
+          Status: getStatusText(product.status)
+        }
+      })
     )
 
+    // Tiến hành xuất dữ liệu ra file Excel
     const wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, ws, 'Products')
-
-    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
-    const file = new Blob([excelBuffer], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
-    })
-    const fileURL = URL.createObjectURL(file)
-
-    // Tạo liên kết để tải xuống và kích hoạt sự kiện click
-    const a = document.createElement('a')
-    a.href = fileURL
-    a.download = 'products.xlsx'
-    a.click()
-
-    // Giải phóng URL sau khi sử dụng
-    URL.revokeObjectURL(fileURL)
+    XLSX.writeFile(wb, 'Products.xlsx')
   }
+
   const handleUpdateProduct = (id, e) => {
     e.preventDefault()
     e.stopPropagation()
@@ -190,61 +190,72 @@ const AllProducts = () => {
             </tr>
           </thead>
           <tbody>
-            {displayedProducts?.map((product) => (
-              <tr
-                key={product.product_id}
-                className="cursor-pointer hover:bg-gray-100 transition-colors"
-              >
-                <td>{product?.product_id}</td>
-                <td
-                  onClick={() =>
-                    navigate(`/manager/product/${product?.product_id}`)
-                  }
+            {displayedProducts?.map((product) => {
+              // Lấy giá mới tương ứng với product_id từ priceProduct
+              const productPrice = priceProduct?.data?.find(
+                (price) => price.product_id === product.product_id
+              )
+
+              return (
+                <tr
+                  key={product.product_id}
+                  className="cursor-pointer hover:bg-gray-100 transition-colors"
                 >
-                  <img
-                    src={product?.image}
-                    alt={product?.product_name}
-                    className="w-[88px] object-cover rounded-md"
-                  />
-                </td>
-                <td
-                  className="cursor-pointer truncate overflow-hidden text-ellipsis whitespace-nowrap max-w-[150px]"
-                  onClick={() =>
-                    navigate(`/manager/product/${product?.product_id}`)
-                  }
-                >
-                  {product?.product_name}
-                </td>
-                <td>{product?.category_product?.category_name}</td>
-                <td>{product?.brand_product?.brand_name}</td>
-                <td>
-                  {product?.updatePrices[0]?.price_new.toLocaleString('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND'
-                  })}
-                </td>
-                <td>{product?.quantity}</td>
-                <td>{getStatus(product?.status)}</td>
-                <td>
-                  <span
-                    className="cursor-pointer inline-flex rounded-full hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2"
-                    onClick={(e) => handleUpdateProduct(product?.product_id, e)}
+                  <td>{product?.product_id}</td>
+                  <td
+                    onClick={() =>
+                      navigate(`/manager/product/${product?.product_id}`)
+                    }
                   >
-                    <MdModeEditOutline
-                      className="cursor-pointer text-primary"
-                      fontSize={25}
+                    <img
+                      src={product?.image}
+                      alt={product?.product_name}
+                      className="w-[88px] object-cover rounded-md"
                     />
-                  </span>
-                  <span className="cursor-pointer inline-flex rounded-full hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2">
-                    <MdDelete
-                      className="cursor-pointer text-primary"
-                      fontSize={25}
-                      onClick={() => handleDeleteProduct(product?.product_id)}
-                    />
-                  </span>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  <td
+                    className="cursor-pointer truncate overflow-hidden text-ellipsis whitespace-nowrap max-w-[150px]"
+                    onClick={() =>
+                      navigate(`/manager/product/${product?.product_id}`)
+                    }
+                  >
+                    {product?.product_name}
+                  </td>
+                  <td>{product?.category_product?.category_name}</td>
+                  <td>{product?.brand_product?.brand_name}</td>
+                  <td>
+                    {productPrice
+                      ? productPrice.price_new.toLocaleString('vi-VN', {
+                          style: 'currency',
+                          currency: 'VND'
+                        })
+                      : 'Chưa có giá'}
+                  </td>
+                  <td>{product?.quantity}</td>
+                  <td>{getStatus(product?.status)}</td>
+                  <td>
+                    <span
+                      className="cursor-pointer inline-flex rounded-full hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2"
+                      onClick={(e) =>
+                        handleUpdateProduct(product?.product_id, e)
+                      }
+                    >
+                      <MdModeEditOutline
+                        className="cursor-pointer text-primary"
+                        fontSize={25}
+                      />
+                    </span>
+                    <span className="cursor-pointer inline-flex rounded-full hover:bg-gray-300 transition-transform duration-200 ease-in-out transform hover:scale-125 p-2">
+                      <MdDelete
+                        className="cursor-pointer text-primary"
+                        fontSize={25}
+                        onClick={() => handleDeleteProduct(product?.product_id)}
+                      />
+                    </span>
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
         {/* Điều khiển phân trang */}
